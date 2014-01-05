@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<lint>
+    <issue id="DefaultLocale">
+        <ignore path="src/com/japanzai/koroshiya/io_utils/ArchiveParser.java" />
+        <ignore path="src/com/japanzai/koroshiya/io_utils/ImageParser.java" />
+    </issue>
+    <issue id="ValidFragment">
+        <ignore path="src/com/japanzai/koroshiya/settings/GeneralSettings.java" />
+        <ignore path="src/com/japanzai/koroshiya/settings/PerformanceSettings.java" />
+    </issue>
+</lint>
