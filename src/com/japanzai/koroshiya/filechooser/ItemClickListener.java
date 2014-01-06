@@ -10,6 +10,14 @@ import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
 import org.apache.commons.compress.utils.IOUtils;
 
+import android.content.Intent;
+import android.os.Environment;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import com.actionbarsherlock.app.ActionBar;
 import com.japanzai.koroshiya.R;
 import com.japanzai.koroshiya.interfaces.ModalReturn;
@@ -22,23 +30,12 @@ import com.japanzai.koroshiya.reader.ToastThread;
 import com.japanzai.koroshiya.settings.SettingsView;
 import com.japanzai.koroshiya.settings.classes.Recent;
 
-import android.annotation.SuppressLint;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.text.InputType;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.EditText;
-import android.widget.Toast;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.TextView;
+import de.innosystec.unrar.exception.RarException;
 
 /**
  * Listener for OnItemClick events pertaining to items listed by the FileChooser tree of classes.
  * ie. It listens for clicks on files displayed for reading, deletion, navigation, etc.
  * */
-@SuppressLint("SdCardPath")
 public class ItemClickListener implements OnItemClickListener, ModalReturn {
 
 	private final FileChooser parent;
@@ -578,14 +575,7 @@ public class ItemClickListener implements OnItemClickListener, ModalReturn {
 				parent.finish();
 				return;
 			}else if (name.equals(parent.getString(R.string.home_directory))){
-				
-				File home = new File("/sdcard2/");
-				if (!home.exists()){
-					home = new File("/sdcard/");
-				}
-				
-				location = home.getAbsolutePath();
-				
+				location = Environment.getExternalStorageDirectory().getAbsolutePath();
 			}else if (name.equals(parent.getString(R.string.recent_general_settings))){
 				Intent i = new Intent(parent, SettingsView.class);
 				parent.startActivity(i);

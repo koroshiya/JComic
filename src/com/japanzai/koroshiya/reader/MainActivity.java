@@ -37,7 +37,6 @@ import com.japanzai.koroshiya.io_utils.ArchiveParser;
 import com.japanzai.koroshiya.io_utils.ImageParser;
 import com.japanzai.koroshiya.settings.SettingsManager;
 
-@SuppressLint("SdCardPath")
 public class MainActivity extends SherlockFragmentActivity {
 
 	private JImageSwitcher imgPanel;

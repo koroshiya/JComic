@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.Fragment;
@@ -38,7 +37,6 @@ import com.japanzai.koroshiya.settings.SettingsView;
  * This includes displaying favorites, recently viewed files, navigating through and
  * selecting files from disk, etc.
  * */
-@SuppressLint("SdCardPath")
 public class FileChooser extends SherlockFragmentActivity {
 
 	private File home = null;
@@ -56,14 +54,7 @@ public class FileChooser extends SherlockFragmentActivity {
 		if (smHome != null && smHome.exists() && smHome.isDirectory()){
 			this.home = smHome;
 		}else{
-			File home = Environment.getExternalStorageDirectory();
-			if (home == null){
-				home = new File("/sdcard2/");
-				if (!home.exists()){
-					home = new File("/sdcard/");
-				}
-			}
-			this.home = home;
+			this.home = Environment.getExternalStorageDirectory();
 		}
 		
 	}
