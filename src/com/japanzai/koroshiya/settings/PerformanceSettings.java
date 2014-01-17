@@ -7,6 +7,7 @@ import com.japanzai.koroshiya.settings.controls.CheckSetting;
 import com.japanzai.koroshiya.settings.controls.SpinnerSetting;
 
 import android.annotation.SuppressLint;
+import android.content.res.Resources.NotFoundException;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -51,41 +52,69 @@ public class PerformanceSettings extends SettingTab {
 	
 	private void instantiate(){
 		
-		cacheOnStartup = new CheckSetting(R.string.setting_cache_on_startup, true, true, this.parent);
-		archiveMode = new SpinnerSetting(this.parent, R.string.setting_archive, R.array.performance_setting_archive_mode, 0);
-		cacheMode = new SpinnerSetting(this.parent, R.string.setting_cache, R.array.performance_setting_cache_mode, 0);
-		cacheLevel = new SpinnerSetting(this.parent, R.string.advanced_setting_cache_level, R.array.advanced_setting_cache, 2);
-		resizeMode = new SpinnerSetting(this.parent, R.string.setting_resize, R.array.performance_setting_resize_mode, 0);
-		
 		LinearLayout lLayout = new LinearLayout(this.parent);
 		lLayout = (LinearLayout) this.parent.findViewById(R.id.tabGeneralSettings);
 		lLayout.removeAllViews();
 		
-		lLayout.addView(cacheOnStartup);
-		lLayout.addView(archiveMode);
-		lLayout.addView(cacheMode);
-		lLayout.addView(cacheLevel);
-		lLayout.addView(resizeMode);
+		try{
+			cacheOnStartup = new CheckSetting(R.string.setting_cache_on_startup, true, true, this.parent);
+			lLayout.addView(cacheOnStartup);
+		}catch (NotFoundException nfe){
+			nfe.printStackTrace();
+			cacheOnStartup = null;
+		}
+		
+		try{
+			archiveMode = new SpinnerSetting(this.parent, R.string.setting_archive, R.array.performance_setting_archive_mode, 0);
+			lLayout.addView(archiveMode);
+		}catch (NotFoundException nfe){
+			nfe.printStackTrace();
+			archiveMode = null;
+		}
+		
+		try{
+			cacheMode = new SpinnerSetting(this.parent, R.string.setting_cache, R.array.performance_setting_cache_mode, 0);
+			lLayout.addView(cacheMode);
+		}catch (NotFoundException nfe){
+			nfe.printStackTrace();
+			cacheMode = null;
+		}
+		
+		try{
+			cacheLevel = new SpinnerSetting(this.parent, R.string.advanced_setting_cache_level, R.array.advanced_setting_cache, 2);
+			lLayout.addView(cacheLevel);
+		}catch (NotFoundException nfe){
+			nfe.printStackTrace();
+			cacheLevel = null;
+		}
+		
+		try{
+			resizeMode = new SpinnerSetting(this.parent, R.string.setting_resize, R.array.performance_setting_resize_mode, 0);
+			lLayout.addView(resizeMode);
+		}catch (NotFoundException nfe){
+			nfe.printStackTrace();
+			resizeMode = null;
+		}
 		
 	}
 	
 	public void save(){
 
 		//settings.setExtractModeEnabled(extractMode.getState() == 1);
-		settings.setArchiveModeIndex(archiveMode.getState());
-		settings.setCacheModeIndex(cacheMode.getState());
-		settings.setCacheLevel(cacheLevel.getState());
-		settings.setDynamicResizing(resizeMode.getState());
+		if (archiveMode != null){settings.setArchiveModeIndex(archiveMode.getState());}
+		if (cacheMode != null){settings.setCacheModeIndex(cacheMode.getState());}
+		if (cacheLevel != null){settings.setCacheLevel(cacheLevel.getState());}
+		if (resizeMode != null){settings.setDynamicResizing(resizeMode.getState());}
 		
 	}
 	
 	public void load(){
 
 		//extractMode.setState(settings.getExtractModeEnabled() ? 1 : 0);
-		archiveMode.setState(settings.getArchiveModeIndex());
-		cacheMode.setState(settings.getCacheModeIndex());
-		cacheLevel.setState(settings.getCacheLevel());
-		resizeMode.setState(settings.getDynamicResizing());
+		if (archiveMode != null){archiveMode.setState(settings.getArchiveModeIndex());}
+		if (cacheMode != null){cacheMode.setState(settings.getCacheModeIndex());}
+		if (cacheLevel != null){cacheLevel.setState(settings.getCacheLevel());}
+		if (resizeMode != null){resizeMode.setState(settings.getDynamicResizing());}
 		
 	}
 		

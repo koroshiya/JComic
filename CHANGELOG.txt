@@ -1,3 +1,11 @@
+-Version 1.09.6
+
+Added excessive error handling to settings pages [1]
+
+[1] A bit overzealous, but basically every individual setting is now checked and loaded individually.
+This is because certain resources are reported as missing, but only on the minority of devices.
+The resources are always present, and there's no issue with the underlying resource, hence this over the top method.
+
 -Version 1.09.5
 
 Project made open source and moved to github
