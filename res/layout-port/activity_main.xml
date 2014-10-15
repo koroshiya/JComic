@@ -5,11 +5,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical" >
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -112,28 +107,6 @@
             </LinearLayout>
 
         </LinearLayout>
-
-		<LinearLayout
-		    android:layout_width="match_parent"
-		    android:layout_height="fill_parent"
-		    android:layout_marginBottom="40dp"
-		    android:gravity="center_horizontal"
-		    android:orientation="horizontal" >
-
-			<com.google.ads.AdView
-			    android:id="@+id/adView"
-			    android:layout_width="wrap_content"
-			    android:layout_height="wrap_content"
-			    android:layout_gravity="center_vertical"
-			    ads:adSize="BANNER"
-			    ads:adUnitId="a1515a682945754"
-			    ads:loadAdOnCreate="true" >
-
-			</com.google.ads.AdView>
-
-		</LinearLayout>
-
-    </LinearLayout>
 
         <ProgressBar
             android:id="@+id/progress"

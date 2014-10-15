@@ -1,3 +1,13 @@
+-Version 1.09.7
+
+Removed ads
+Removed internet permissions
+Added 0 size check for image files when indexing
+Added 0 size check for all files when listing in file viewer
+Added null check to JImageView. Stops warnings in the eclipse
+layout viewer, and may inadvertantly fix certain crashes
+Removed RAR password stuff
+
 -Version 1.09.6
 
 Added excessive error handling to settings pages [1]
