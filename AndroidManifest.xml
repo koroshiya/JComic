@@ -2,8 +2,8 @@
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.japanzai.koroshiya"
-    android:versionCode="27"
-    android:versionName="1.09.7" >
+    android:versionCode="28"
+    android:versionName="1.09.8" >
     
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-sdk android:targetSdkVersion="20" android:minSdkVersion="10"/>
@@ -33,9 +33,6 @@
             android:configChanges="orientation|keyboardHidden|screenSize" />
         <activity android:name="com.japanzai.koroshiya.About" />
         <activity android:name="com.japanzai.koroshiya.Credits" />
-    	<activity 
-    	    android:name="com.google.ads.AdActivity" 
-    	    android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" />
     	<activity android:name="com.japanzai.koroshiya.ErrorReport"></activity>
     
     </application>

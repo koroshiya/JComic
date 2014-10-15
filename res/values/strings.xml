@@ -94,6 +94,14 @@
     <string name="rating_button">Rate/Review</string>
     <string name="error_button">Report error</string>
     <string name="send_error_report">Send report</string>
+    <string name="setting_context_menu">Enable context menu</string>
+    <string name="setting_context_menu_head">Commands</string>
+    <string name="setting_back_to_file_chooser">Always return from comic to file chooser</string>
+    <string name="setting_context_menu_heading">Select Page</string>
+    <string name="setting_rar_password">Enable password-protected rar archives</string>
+    <string name="setting_rar_password_enter">Enter password</string>
+    <string name="error_report_line_1">Error log detected</string>
+    <string name="error_report_line_2">Send to developer?</string>
     <string name="error_report_para_1">If you have encountered an error, but weren\'t able to report the error at the time (or you simply want to add a personal note on the matter), you can send me an email directly by clicking the link below.</string>
     <string name="error_report_para_2">I will read any error reports I receive, so please enter as many details as you can. eg. If you encountered a problem while reading an image/archive, sending me information about the file, such as its size, format, etc. (or the file itself) would help tremendously.</string>
     <string name="error_report_para_3">By default, JComic will include the make and model of your device, the version of Android you are running, and the version of JComic you are using. You are free to remove these details if you don\'t want to include them, but the Android and JComic versions in particular are very useful when debugging.</string>
@@ -139,8 +147,8 @@
         <item>2 (default)</item>
     </string-array>    
     <string-array name="advanced_setting_recursion">
-        <item>0 (default)</item>
-        <item>1</item>
+        <item>0</item>
+        <item>1 (default)</item>
         <item>2</item>
         <item>All (not recommended)</item>
     </string-array>
@@ -188,6 +196,11 @@
         <item>Zoom in</item>
         <item>Zoom out</item>
         <item>Disabled</item>
+    </string-array>
+    <string-array name="array_context_menu">
+        <item>First page</item>
+        <item>Last page</item>
+        <item>Go to page…</item>
     </string-array>
 
 </resources>
