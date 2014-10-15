@@ -23,8 +23,10 @@ public class JImageView extends ImageView {
 	public JImageView(Context context) {
 		super(context);
 		
-		SettingsManager settings = MainActivity.mainActivity.getSettings();
-		this.currentZoom = settings.keepZoomOnPageChange() ? inheritedZoom : settings.getCurrentZoomRatio();
+		if (MainActivity.mainActivity != null){ //Removes null pointer warning (and maybe an obscure crash?) from layouts embedding this as an ImageView
+			SettingsManager settings = MainActivity.mainActivity.getSettings();
+			this.currentZoom = settings.keepZoomOnPageChange() ? inheritedZoom : settings.getCurrentZoomRatio();
+		}
 		 
 	}
 	
