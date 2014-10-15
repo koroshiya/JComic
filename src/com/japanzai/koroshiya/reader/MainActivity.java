@@ -22,8 +22,6 @@ import android.widget.Toast;
 import android.widget.ViewFlipper;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.google.ads.AdRequest;
-import com.google.ads.AdView;
 import com.japanzai.koroshiya.Progress;
 import com.japanzai.koroshiya.R;
 import com.japanzai.koroshiya.cache.Steppable;
@@ -41,7 +39,6 @@ public class MainActivity extends SherlockFragmentActivity {
 
 	private JImageSwitcher imgPanel;
 	private ViewFlipper vf;
-	private AdView adv;
 
 	private Steppable cache = null;
 	private Progress progressThread;
@@ -70,7 +67,6 @@ public class MainActivity extends SherlockFragmentActivity {
 		// requestWindowFeature(Window.FEATURE_NO_TITLE);
         SettingsManager.setFullScreen(this);
 		instantiate();
-		showAd();
 
 	}
 	
@@ -145,26 +141,6 @@ public class MainActivity extends SherlockFragmentActivity {
 
     }
 
-	// @SuppressWarnings("deprecation")
-	@SuppressLint("NewApi")
-	private void showAd() {
-
-		try{
-			adv = (AdView) findViewById(R.id.adView);
-			adv.loadAd(new AdRequest());
-			this.getSupportActionBar().show();
-		}catch (Exception e){
-			e.printStackTrace();
-		}catch (Error e){
-			e.printStackTrace();
-		}
-		
-	}
-
-	private void hideAd() {
-		adv = null;
-	}
-
 	@SuppressLint("NewApi")
 	@SuppressWarnings("deprecation")
 	public static Point getScreenDimensions() {
@@ -203,7 +179,6 @@ public class MainActivity extends SherlockFragmentActivity {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			hideAd();
 			// vf.showNext();
 		} else {
 			runOnUiThread(new ToastThread(R.string.no_images, this,
@@ -231,8 +206,6 @@ public class MainActivity extends SherlockFragmentActivity {
 			vf.showNext();
 			if (settings.isBackToFileChooser()){
 				scl.process(R.id.btnInitiate);
-			}else{
-				showAd();
 			}
 		} else {
 			super.onBackPressed();
@@ -353,10 +326,6 @@ public class MainActivity extends SherlockFragmentActivity {
 	@Override
 	public void onResume() {
 		super.onResume();
-
-		if (vf.getCurrentView() == vf.getRootView()) {
-			showAd(); // Don't show the ad if we're displaying an image
-		}
 
 		settings.forceOrientation(this);
 		enableResumeReading();
