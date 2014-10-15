@@ -83,12 +83,10 @@ public class Archive implements Closeable {
 	/** Number of bytes of compressed data read from current file. */
 	private long totalPackedRead = 0L;
 
-	private String password;
-
 	private boolean pass;
 
-	public Archive(File file, String password) throws RarException, IOException {
-		this(file, null, password);
+	public Archive(File file) throws RarException, IOException {
+		this(file, null);
 	}
 
 	/**
@@ -98,9 +96,7 @@ public class Archive implements Closeable {
 	 *            the file to extract
 	 * @throws RarException
 	 */
-	public Archive(File file, UnrarCallback unrarCallback, String password)
-			throws RarException, IOException {
-		this.password = password;
+	public Archive(File file, UnrarCallback unrarCallback) throws RarException, IOException {
 		dataIO = new ComprDataIO(this);
 		setFile(file);
 		this.unrarCallback = unrarCallback;
@@ -115,10 +111,8 @@ public class Archive implements Closeable {
 		totalPackedSize = 0L;
 		totalPackedRead = 0L;
 		close();
-		//if (this.password != null){
-			rof = new ReadOnlyAccessFile(file, this.password);
+		rof = new ReadOnlyAccessFile(file);
 		
-		// / readHeaders();
 		try {
 			readHeaders();
 			this.pass = true;
@@ -217,7 +211,6 @@ public class Archive implements Closeable {
 				rof.setPosition(newpos);
 				position = rof.getPosition();
 				rof.resetData();
-				rof.setSalt(null);
 			}
 
 			// Weird, but is trying to read beyond the end of the file
@@ -231,7 +224,6 @@ public class Archive implements Closeable {
 				if (size == 0) {
 					break;
 				}
-				rof.setSalt(salt);
 				size = 0; // init
 				// saltRead = true;
 			}

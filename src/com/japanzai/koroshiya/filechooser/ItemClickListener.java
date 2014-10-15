@@ -340,7 +340,7 @@ public class ItemClickListener implements OnItemClickListener, ModalReturn {
 			}
 		}else if (ArchiveParser.isSupportedArchive(file)){
 			try {
-				ReadableArchive archive = ArchiveParser.parseArchive(file, "");
+				ReadableArchive archive = ArchiveParser.parseArchive(file);
 				contents = archive.peekAtContents();
 			} catch (IOException ex) {
 				ex.printStackTrace();
@@ -402,7 +402,7 @@ public class ItemClickListener implements OnItemClickListener, ModalReturn {
 			if (ArchiveParser.isSupportedArchive(f)){
 				ReadableArchive arch = null;
 				try {
-					arch = ArchiveParser.parseArchive(f, "");
+					arch = ArchiveParser.parseArchive(f);
 				} catch (IOException e) {
 					e.printStackTrace();
 				} catch (Exception e) {

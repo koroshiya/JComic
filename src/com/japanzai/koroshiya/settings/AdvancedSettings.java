@@ -24,7 +24,6 @@ public class AdvancedSettings extends SettingTab {
 
 	private SpinnerSetting recursion;
 	private CheckSetting cacheSafety;
-	private CheckSetting passwordRarFiles;
 	
 	public AdvancedSettings(SettingsView parent) {
 		
@@ -62,14 +61,6 @@ public class AdvancedSettings extends SettingTab {
 		}
 		
 		try{
-			passwordRarFiles = new CheckSetting(getString(R.string.setting_rar_password), settings.isRarPasswordEnabled(), true, this.parent);
-			lLayout.addView(passwordRarFiles);
-		}catch (NotFoundException nfe){
-			nfe.printStackTrace();
-			passwordRarFiles = null;
-		}
-		
-		try{
 			recursion = new SpinnerSetting(this.parent, R.string.advanced_setting_recursion_level, R.array.advanced_setting_recursion, 0);
 			lLayout.addView(recursion);
 		}catch (NotFoundException nfe){
@@ -82,7 +73,6 @@ public class AdvancedSettings extends SettingTab {
 	public void save(){
 
 		if (recursion != null){settings.setRecursionLevel(recursion.getState());}
-		if (passwordRarFiles != null){settings.setRarPasswordEnabled(passwordRarFiles.getState() == 1);}
 		if (cacheSafety != null){settings.setCacheSafety(cacheSafety.getState() == 1);}
 		
 	}
@@ -90,7 +80,6 @@ public class AdvancedSettings extends SettingTab {
 	public void load(){
 
 		if (recursion != null){recursion.setState(settings.getRecursionLevel());}
-		if (passwordRarFiles != null){passwordRarFiles.setState(settings.isRarPasswordEnabled() ? 1 : 0);}
 		if (cacheSafety != null){cacheSafety.setState(settings.getCacheSafety() ? 1 : 0);}
 		
 	}

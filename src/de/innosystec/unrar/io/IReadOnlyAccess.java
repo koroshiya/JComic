@@ -17,8 +17,6 @@
  */
 package de.innosystec.unrar.io;
 
-import gnu.crypto.cipher.Rijndael;
-
 import java.io.IOException;
 
 
@@ -60,10 +58,6 @@ public interface IReadOnlyAccess {
 
     /** Close this file. */
     public void close() throws IOException;    
-    
-    public void setSalt(byte[] salt);
-    
-    public void initAES(Rijndael rin, byte[] salt, byte[] AESInit, byte[] AESKey);
 
 	public void readFully(byte[] tr, int i, int j) throws IOException;
 	
