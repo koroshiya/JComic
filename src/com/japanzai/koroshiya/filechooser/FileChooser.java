@@ -265,9 +265,7 @@ public class FileChooser extends SherlockFragmentActivity {
      * */
     public boolean isSupportedFile(File f){
     	
-    	if (f.isDirectory()){return true;}
-    	
-    	return ArchiveParser.isSupportedArchive(f) || ImageParser.isSupportedImage(f);
+    	return f.isDirectory() || f.length() > 0 && (ArchiveParser.isSupportedArchive(f) || ImageParser.isSupportedImage(f));
     	
     }
         

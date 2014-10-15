@@ -60,7 +60,7 @@ public class ArchiveParser {
      * @throws IOException if the archive couldn't be read
      * @throws RarException if a RAR archive couldn't be read
      * */
-    public static ReadableArchive parseArchive(File f, String password) throws IOException, RarException, ZipException{
+    public static ReadableArchive parseArchive(File f) throws IOException, RarException, ZipException{
     	
     	String s = f.getName().toLowerCase(Locale.getDefault());
     	String fPath = f.getAbsolutePath();
@@ -68,7 +68,7 @@ public class ArchiveParser {
     	if (s.endsWith(".zip") || s.endsWith(".cbz")){
     		return new JZipArchive(fPath, MainActivity.mainActivity);
     	}else if (s.endsWith(".rar") || s.endsWith(".cbr")){ //hybrid disk mode
-    		JRarArchive arch = new JRarArchive(fPath, MainActivity.mainActivity, password);
+    		JRarArchive arch = new JRarArchive(fPath, MainActivity.mainActivity);
     		if (arch.getArchive().isPasswordProtected()){
     			throw new RarException(new Exception("RAR is password protected"));
     		}else{

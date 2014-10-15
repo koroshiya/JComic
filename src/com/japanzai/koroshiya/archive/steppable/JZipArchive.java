@@ -48,7 +48,7 @@ public class JZipArchive extends SteppableArchive{
 			zipEntry = (ZipArchiveEntry) zips.nextElement();
 			
 			if (ImageParser.isSupportedImage(zipEntry.getName())){
-				addImageToCache(zipEntry, zipEntry.getName());
+				if (zipEntry.getSize() > 0) addImageToCache(zipEntry, zipEntry.getName());
 			}
 			
 		}

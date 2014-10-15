@@ -32,7 +32,7 @@ public class JRarArchive extends SteppableArchive{
 
 	private final Archive rar;
 	
-	public JRarArchive(String path, MainActivity parent, String password) throws IOException, RarException {
+	public JRarArchive(String path, MainActivity parent) throws IOException, RarException {
 		
 		super(parent, path);
 		
@@ -40,14 +40,14 @@ public class JRarArchive extends SteppableArchive{
 		//setSecondary(new PreviousRarThread(this, true));
 
 		FileHeader header = null;
-		rar = new Archive(new File(path), password);
+		rar = new Archive(new File(path));
 		List<FileHeader> heads = rar.getFileHeaders();
 		
 		for (int i = 0; i < heads.size(); i++){
 			
 			header = heads.get(i);
 			if (ImageParser.isSupportedImage(header.getFileNameString())){
-				addImageToCache(i, header.getFileNameString());
+				if (header.getUnpSize() > 0) addImageToCache(i, header.getFileNameString());
 			}
 			
 		}

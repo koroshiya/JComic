@@ -26,26 +26,16 @@ public class Progress extends Thread implements ModalReturn{
 	private final File f;
 	private final MainActivity parent;
 	private final int index;
-	private final String password;
 	private ReadableArchive temp;
 	
     public Progress(File f, MainActivity parent) {
         this(f, parent, -1);
     }
     
-    public Progress(File f, MainActivity parent, String password){
-    	this(f, parent, -1, "");
-    }
-	
-    public Progress(File f, MainActivity parent, int index) {
-        this(f, parent, index, "");
-    }
-    
-    public Progress(File f, MainActivity parent, int index, String password){
+    public Progress(File f, MainActivity parent, int index){
         this.f = f;
         this.parent = parent;
         this.index = index;
-        this.password = password;
     }
 	
     @Override
@@ -88,7 +78,7 @@ public class Progress extends Thread implements ModalReturn{
     public void parseFile(File file){
     	
     	if (ImageParser.isSupportedImage(file)){
-    		parent.addImageToCache(file.getAbsolutePath(), file.getAbsolutePath());
+    		if (file.length() > 0) parent.addImageToCache(file.getAbsolutePath(), file.getAbsolutePath());
     		//Log.e("New file", file.getAbsolutePath());
     	}else{
     		System.out.println(R.string.unsupported_file + file.getName());
@@ -105,8 +95,7 @@ public class Progress extends Thread implements ModalReturn{
     		if (f.isFile()){
     			parseFile(f);
     		}else{
-    			if (curLevel < settings.getRecursionLevel() ||
-    					settings.getRecursionLevel() == SettingsManager.RECURSION_ALL){
+    			if (curLevel < settings.getRecursionLevel() || settings.getRecursionLevel() == SettingsManager.RECURSION_ALL){
     				parseDir(f, curLevel + 1);
     			}
     		}
@@ -120,7 +109,7 @@ public class Progress extends Thread implements ModalReturn{
     	    	
     	try {
     		
-    		this.temp = ArchiveParser.parseArchive(f, password);
+    		this.temp = ArchiveParser.parseArchive(f);
     		int archiveIndex = parent.getSettings().getArchiveModeIndex(); //0 = do as I please, 1 = Index only, 2 = progressive
     		
     		if (temp == null){
