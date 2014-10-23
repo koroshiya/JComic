@@ -1,3 +1,11 @@
+-Version 1.09.9
+
+Workaround for NPE caused by null image object in image switcher
+
+-Version 1.09.8
+
+Fixed missing strings which were causing errors for certain locales
+
 -Version 1.09.7
 
 Removed ads

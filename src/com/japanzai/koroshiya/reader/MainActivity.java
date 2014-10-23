@@ -198,7 +198,7 @@ public class MainActivity extends SherlockFragmentActivity {
 			}
 			cache.emptyCache();
 			cache.clear();
-			imgPanel.getImageDrawable().closeBitmap();
+			if (imgPanel != null && imgPanel.getImageDrawable() != null) imgPanel.getImageDrawable().closeBitmap();
 			cache.close();
 			cache = null;
 			progressThread = null;
