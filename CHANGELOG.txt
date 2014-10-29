@@ -1,3 +1,9 @@
+-Version 1.09.11
+
+Re-implemented ability to click on "re-enable in General Settings" as link.
+Fixed bug in aforementioned link where the link would open 2 activities.
+Fixed bug where image clicked within directory would instead display first image in directory.
+
 -Version 1.09.10
 
 Fixed two minor UI bugs for list items

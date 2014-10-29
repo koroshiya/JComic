@@ -12,6 +12,7 @@ import org.apache.commons.compress.utils.IOUtils;
 
 import android.content.Intent;
 import android.os.Environment;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -55,17 +56,18 @@ public class ItemClickListener implements OnItemClickListener, ModalReturn {
 		final String location = tv.getText().toString();
 		
 		if (location.equals(getString(R.string.recent_function_disabled)) ||
-				location.equals(getString(R.string.recent_general_settings)) ||
 				location.equals(getString(R.string.recent_no_recent_files)))
 		{
 			return;
 		}
 		
 		ActionBar bar = parent.getSupportActionBar();
+		boolean processed = false;
 		if (bar.getSelectedTab() == bar.getTabAt(0)){
 			File file = new File(location);
 			if (!file.exists()){
 				processItem(false, location);
+				processed = true;
 			}
 			for (Recent recent : MainActivity.mainActivity.getSettings().getRecent()){
 				if (recent.getPath().equals(location)){
@@ -74,7 +76,7 @@ public class ItemClickListener implements OnItemClickListener, ModalReturn {
 				}
 			}
 		}
-		processItem(false, location);
+		if (!processed) processItem(false, location);
 		
 	}
 	
@@ -557,6 +559,7 @@ public class ItemClickListener implements OnItemClickListener, ModalReturn {
 			}else if (name.equals(parent.getString(R.string.home_directory))){
 				location = Environment.getExternalStorageDirectory().getAbsolutePath();
 			}else if (name.equals(parent.getString(R.string.recent_general_settings))){
+				Log.d("ItemClickListener", "Going to SettingsView");
 				Intent i = new Intent(parent, SettingsView.class);
 				parent.startActivity(i);
 				return;
@@ -584,7 +587,14 @@ public class ItemClickListener implements OnItemClickListener, ModalReturn {
 					return;
 				}
 			}
-			parent.returnValue(file, 0);
+			int i = 0;
+			for (File f : file.getParentFile().listFiles()){
+				if (f.equals(file)){
+					break;
+				}
+				i++;
+			}
+			parent.returnValue(file, i);
 		}else {
 			parent.reset(file);
 		}
