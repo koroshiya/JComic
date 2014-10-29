@@ -2,11 +2,11 @@
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.japanzai.koroshiya"
-    android:versionCode="29"
-    android:versionName="1.09.9" >
+    android:versionCode="30"
+    android:versionName="1.09.10" >
     
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-sdk android:targetSdkVersion="20" android:minSdkVersion="10"/>
+    <uses-sdk android:minSdkVersion="10" android:targetSdkVersion="21"/>
 
     <application
         android:icon="@drawable/ic_launcher"

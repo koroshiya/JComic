@@ -8,8 +8,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.SimpleAdapter;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.japanzai.koroshiya.R;
@@ -55,6 +55,12 @@ public class FavoriteTab extends SherlockFragment {
 	        fc.setItemClickListener(icl);
 	        
 	        ArrayList<String> listItems = new ArrayList<String>();
+            
+            String cancel = getString(R.string.cancel_selection);
+            String home = getString(R.string.home_directory);
+            String up = getString(R.string.up_directory);
+            
+            listItems.add(cancel);
 
         	for (String favorite : settings.getFavorite()){
         		if ((new File(favorite)).exists()){
@@ -62,15 +68,11 @@ public class FavoriteTab extends SherlockFragment {
         		}
         	}
         	
-            if (listItems.size() == 0){
-                listItems.add(getString(R.string.favorite_no_favorites));
-            }else{
-        		registerForContextMenu(lv);
-            }
-	
-	        ArrayAdapter<String> itemAdapter = new ArrayAdapter<String>(fc, 
-	                android.R.layout.simple_list_item_1,
-	                listItems);
+        	registerForContextMenu(lv);
+
+	        String[] from = {"image", "name"};
+	        int[] to = {R.id.row_image, R.id.row_text};
+	        SimpleAdapter itemAdapter = new SimpleAdapter(fc, fc.getHashList(listItems, home, cancel, up), R.layout.list_item, from, to);
 	        
 	        fc.reset();
 	        

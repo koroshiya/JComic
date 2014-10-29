@@ -3,10 +3,13 @@ package com.japanzai.koroshiya.filechooser;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
@@ -205,6 +208,8 @@ public class FileChooser extends SherlockFragmentActivity {
     	
     	super.onCreateContextMenu(menu, v, menuInfo);
     	
+    	Log.d("FileChooser", "Trying to instantiate context menu");
+    	
     	ActionBar bar = getSupportActionBar();
     	ActionBar.Tab tab = bar.getSelectedTab();
     	
@@ -212,7 +217,19 @@ public class FileChooser extends SherlockFragmentActivity {
 		int position = info.position;
 		
 		ListView lv = (ListView) v;
-		String name = lv.getAdapter().getItem(position).toString();
+		HashMap<String,String> item = (HashMap<String, String>) lv.getAdapter().getItem(position);
+		String name = item.get("name");
+		
+		if (name.equals(getString(R.string.recent_function_disabled)) ||
+				name.equals(getString(R.string.recent_general_settings)) ||
+				name.equals(getString(R.string.recent_no_recent_files)) ||
+				name.equals(getString(R.string.up_directory)) ||
+				name.equals(getString(R.string.cancel_selection)) ||
+				name.equals(getString(R.string.home_directory)))
+		{
+			Log.d("FileChooser", "Failed to instantiate context menu");
+			return;
+		}
 		
 		menu.setHeaderTitle(name);
 		if (icl == null){
@@ -244,11 +261,11 @@ public class FileChooser extends SherlockFragmentActivity {
     public boolean onContextItemSelected(android.view.MenuItem item){
     	
     	AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
-    	String s = (String)(getListView().getAdapter().getItem(info.position));
+		HashMap<String,String> s = (HashMap<String, String>) this.v.getAdapter().getItem(info.position);
     	String command = tempCommandList.get(item.getItemId());
     	
     	try {
-			icl.process(s, command);
+			icl.process(s.get("name"), command);
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (Exception e) {
@@ -411,6 +428,53 @@ public class FileChooser extends SherlockFragmentActivity {
 		}else{
 			super.onBackPressed();
 		}
+	}
+	
+	public List<HashMap<String, String>> getHashList(ArrayList<String> listItems, String home, String cancel, String up){
+        
+        List<HashMap<String,String>> aList = new ArrayList<HashMap<String,String>>();
+
+        for (String s : listItems){
+            HashMap<String, String> hm = new HashMap<String,String>();
+            hm.put("name", s);
+            
+            int img;
+            if (ImageParser.isSupportedImage(s)){
+            	img = R.drawable.image;
+            }else if (ArchiveParser.isSupportedZipArchive(s)){
+            	img = R.drawable.zip;
+            }else if (ArchiveParser.isSupportedRarArchive(s)){
+            	img = R.drawable.rar;
+            }else if (ArchiveParser.isSupportedMiscArchive(s)){
+            	img = R.drawable.archive;
+            }else if (s.equals(cancel)){
+            	img = R.drawable.cancel;
+            }else if (s.equals(home)){
+            	img = R.drawable.home;
+            }else if (s.equals(up)){
+            	img = R.drawable.up;
+            }else{
+            	img = R.drawable.folder;
+            }
+            hm.put("image", Integer.toString(img));
+            aList.add(hm);
+        }
+        
+        return aList;
+	}
+	
+	public List<HashMap<String, String>> getEmptyHashList(ArrayList<String> listItems, String cancel){
+        
+        List<HashMap<String,String>> aList = new ArrayList<HashMap<String,String>>();
+
+        for (String s : listItems){
+            HashMap<String, String> hm = new HashMap<String,String>();
+            hm.put("name", s);
+            hm.put("image", Integer.toString(s.equals(cancel) ? R.drawable.cancel : R.drawable.transparent));
+            aList.add(hm);
+        }
+        
+        return aList;
 	}
 	
 }

@@ -4,20 +4,20 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import com.actionbarsherlock.app.SherlockFragment;
-import com.japanzai.koroshiya.R;
-import com.japanzai.koroshiya.filechooser.FileChooser;
-import com.japanzai.koroshiya.filechooser.ItemClickListener;
-import com.japanzai.koroshiya.reader.MainActivity;
-
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.SimpleAdapter;
+
+import com.actionbarsherlock.app.SherlockFragment;
+import com.japanzai.koroshiya.R;
+import com.japanzai.koroshiya.filechooser.FileChooser;
+import com.japanzai.koroshiya.filechooser.ItemClickListener;
+import com.japanzai.koroshiya.reader.MainActivity;
 
 /**
  * Tab for displaying a list of files and directories to select/navigate
@@ -81,10 +81,14 @@ public class FileChooserTab extends SherlockFragment {
         if (fc.getHomeAsFile().list() != null){
 
             ArrayList<String> listItems = new ArrayList<String>();
+            
+            String cancel = getString(R.string.cancel_selection);
+            String home = getString(R.string.home_directory);
+            String up = getString(R.string.up_directory);
 
-            listItems.add(getString(R.string.cancel_selection));
-            listItems.add(getString(R.string.home_directory));
-            listItems.add(getString(R.string.up_directory));
+            listItems.add(cancel);
+            listItems.add(home);
+            listItems.add(up);
             
             ArrayList<String> tempList = new ArrayList<String>();
 	        for (File s : fc.getHomeAsFile().listFiles()){
@@ -95,10 +99,10 @@ public class FileChooserTab extends SherlockFragment {
 	        for (Object obj : tempArray){
 	        	listItems.add(obj.toString());
 	        }
-	
-	        ArrayAdapter<String> itemAdapter = new ArrayAdapter<String>(fc, 
-	                android.R.layout.simple_list_item_1,
-	                listItems);
+
+	        String[] from = {"image", "name"};
+	        int[] to = {R.id.row_image, R.id.row_text};
+	        SimpleAdapter itemAdapter = new SimpleAdapter(fc, fc.getHashList(listItems, home, cancel, up), R.layout.list_item, from, to);
 	        
 	        fc.reset();
 	        

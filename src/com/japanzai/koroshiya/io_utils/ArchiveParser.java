@@ -42,11 +42,24 @@ public class ArchiveParser {
      * @return If the file is supported, returns true. Otherwise, false.
      * */
 	public static boolean isSupportedArchive(File f){
+    	return isSupported(f.getName(), supportedArchives);
+    }
+	public static boolean isSupportedZipArchive(String s){
+    	return isSupported(s, new String[]{".zip", ".cbz"});
+    }
+	public static boolean isSupportedRarArchive(String s){
+    	return isSupported(s, new String[]{".rar", ".cbr"});
+    }
+	public static boolean isSupportedMiscArchive(String s){
+    	return isSupported(s, new String[]{".tar", ".ar"});
+    }
+	
+	public static boolean isSupported(String name, String[] exts){
+		
+		name = name.toLowerCase(Locale.getDefault());
     	
-    	String fileName = f.getName().toLowerCase(Locale.getDefault());
-    	
-    	for (String s : supportedArchives){
-    		if (fileName.endsWith(s)){return true;}
+    	for (String ext : exts){
+    		if (name.endsWith(ext)) return true;
     	}
     	
     	return false;

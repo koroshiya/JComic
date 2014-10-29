@@ -50,9 +50,16 @@ public class ItemClickListener implements OnItemClickListener, ModalReturn {
 	
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-
-		TextView tv = (TextView) arg1;
-		String location = tv.getText().toString();
+		
+		TextView tv = (TextView) arg1.findViewById(R.id.row_text);
+		final String location = tv.getText().toString();
+		
+		if (location.equals(getString(R.string.recent_function_disabled)) ||
+				location.equals(getString(R.string.recent_general_settings)) ||
+				location.equals(getString(R.string.recent_no_recent_files)))
+		{
+			return;
+		}
 		
 		ActionBar bar = parent.getSupportActionBar();
 		if (bar.getSelectedTab() == bar.getTabAt(0)){
@@ -177,33 +184,6 @@ public class ItemClickListener implements OnItemClickListener, ModalReturn {
 		}*/
 		
 	}
-	
-	/*private void prompt(final File f){
-		AlertDialog.Builder builder = new AlertDialog.Builder(parent);
-		builder.setTitle("Title");
-
-		// Set up the input
-		final EditText input = new EditText(parent);
-		// Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
-		input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-		builder.setView(input);
-
-		// Set up the buttons
-		builder.setPositiveButton("OK", new DialogInterface.OnClickListener() { 
-		    @Override
-		    public void onClick(DialogInterface dialog, int which) {
-		        m_Text = input.getText().toString();
-		    }
-		});
-		builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-		    @Override
-		    public void onClick(DialogInterface dialog, int which) {
-		        dialog.cancel();
-		    }
-		});
-
-		builder.show();
-	}*/
 	
 	/**
 	 * Displays a confirmation dialog for whether or not to delete a file

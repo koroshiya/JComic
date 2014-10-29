@@ -919,16 +919,25 @@ containing a value of this type.
         public static final int abs__textfield_searchview_right_holo_dark=0x7f02006d;
         public static final int abs__textfield_searchview_right_holo_light=0x7f02006e;
         public static final int abs__toast_frame=0x7f02006f;
-        public static final int ic_action_search=0x7f020070;
-        public static final int ic_credit=0x7f020071;
-        public static final int ic_error_report=0x7f020072;
-        public static final int ic_gear=0x7f020073;
-        public static final int ic_help=0x7f020074;
-        public static final int ic_launcher=0x7f020075;
-        public static final int ic_pro=0x7f020076;
-        public static final int ic_read=0x7f020077;
-        public static final int ic_saved=0x7f020078;
-        public static final int prompt=0x7f020079;
+        public static final int archive=0x7f020070;
+        public static final int cancel=0x7f020071;
+        public static final int folder=0x7f020072;
+        public static final int home=0x7f020073;
+        public static final int ic_action_search=0x7f020074;
+        public static final int ic_credit=0x7f020075;
+        public static final int ic_error_report=0x7f020076;
+        public static final int ic_gear=0x7f020077;
+        public static final int ic_help=0x7f020078;
+        public static final int ic_launcher=0x7f020079;
+        public static final int ic_pro=0x7f02007a;
+        public static final int ic_read=0x7f02007b;
+        public static final int ic_saved=0x7f02007c;
+        public static final int image=0x7f02007d;
+        public static final int prompt=0x7f02007e;
+        public static final int rar=0x7f02007f;
+        public static final int transparent=0x7f020080;
+        public static final int up=0x7f020081;
+        public static final int zip=0x7f020082;
     }
     public static final class id {
         public static final int FileChooserScrollView=0x7f060034;
@@ -987,18 +996,20 @@ containing a value of this type.
         public static final int homeAsUp=0x7f060006;
         public static final int imgPanel=0x7f06003f;
         public static final int listMode=0x7f060002;
-        public static final int menu_about=0x7f060053;
-        public static final int menu_cancel=0x7f06004e;
-        public static final int menu_credits=0x7f060054;
-        public static final int menu_home=0x7f060050;
-        public static final int menu_read=0x7f060051;
-        public static final int menu_settings=0x7f060052;
-        public static final int menu_up=0x7f06004f;
+        public static final int menu_about=0x7f060055;
+        public static final int menu_cancel=0x7f060050;
+        public static final int menu_credits=0x7f060056;
+        public static final int menu_home=0x7f060052;
+        public static final int menu_read=0x7f060053;
+        public static final int menu_settings=0x7f060054;
+        public static final int menu_up=0x7f060051;
         public static final int normal=0x7f060001;
         public static final int numberPicker=0x7f060047;
         public static final int progress=0x7f06003e;
         public static final int progressBar1=0x7f060035;
         public static final int progressText=0x7f060036;
+        public static final int row_image=0x7f06004e;
+        public static final int row_text=0x7f06004f;
         public static final int showCustom=0x7f060008;
         public static final int showHome=0x7f060005;
         public static final int showTitle=0x7f060007;
@@ -1049,8 +1060,9 @@ containing a value of this type.
         public static final int dialog=0x7f030019;
         public static final int error=0x7f03001a;
         public static final int general_settings=0x7f03001b;
-        public static final int sherlock_spinner_dropdown_item=0x7f03001c;
-        public static final int sherlock_spinner_item=0x7f03001d;
+        public static final int list_item=0x7f03001c;
+        public static final int sherlock_spinner_dropdown_item=0x7f03001d;
+        public static final int sherlock_spinner_item=0x7f03001e;
     }
     public static final class menu {
         public static final int activity_filechooser=0x7f0e0000;

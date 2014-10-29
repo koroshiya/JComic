@@ -2,14 +2,16 @@ package com.japanzai.koroshiya.filechooser.tab;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.SimpleAdapter;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.japanzai.koroshiya.R;
@@ -55,10 +57,17 @@ public class RecentTab extends SherlockFragment {
 	        fc.setItemClickListener(icl);
             
             ArrayList<String> listItems = new ArrayList<String>();
+            
+            String cancel = getString(R.string.cancel_selection);
+            
+            listItems.add(cancel);
+        	
+        	List<HashMap<String,String>> aList;
 	        
             if (!settings.saveRecent()){
             	listItems.add(getString(R.string.recent_function_disabled));
             	listItems.add(getString(R.string.recent_general_settings));
+        		aList = fc.getEmptyHashList(listItems, cancel);
             }else{
             	
             	String line;
@@ -69,15 +78,20 @@ public class RecentTab extends SherlockFragment {
             		}
             	}
             	
-            	if (listItems.size() == 0){
+            	if (listItems.size() == 1){
                 	listItems.add(getString(R.string.recent_no_recent_files));
-                }
+            		aList = fc.getEmptyHashList(listItems, cancel);
+                }else{
+                    String home = getString(R.string.home_directory);
+                    String up = getString(R.string.up_directory);
+            		aList = fc.getHashList(listItems, home, cancel, up);
+            	}
             	
             }
-	
-	        ArrayAdapter<String> itemAdapter = new ArrayAdapter<String>(fc, 
-	                android.R.layout.simple_list_item_1,
-	                listItems);
+
+	        String[] from = {"image", "name"};
+	        int[] to = {R.id.row_image, R.id.row_text};
+	        SimpleAdapter itemAdapter = new SimpleAdapter(fc, aList, R.layout.list_item, from, to);
 	        
 	        fc.reset();
 	        
