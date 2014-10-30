@@ -13,6 +13,7 @@ import com.japanzai.koroshiya.controls.JBitmapDrawable;
 import com.japanzai.koroshiya.interfaces.Cacheable;
 import com.japanzai.koroshiya.interfaces.StepThread;
 import com.japanzai.koroshiya.reader.MainActivity;
+import com.japanzai.koroshiya.reader.Reader;
 import com.japanzai.koroshiya.reader.ToastThread;
 import com.japanzai.koroshiya.settings.SettingsManager;
 
@@ -36,9 +37,9 @@ public abstract class Steppable implements Cacheable{
 	private StepThread secondary = null; //Thread for caching the previous image
 	private ParseCurrentImageThread pcit = null;
 	
-	protected final MainActivity parent;
+	protected final Reader parent;
 	
-	public Steppable(MainActivity parent, String path){
+	public Steppable(Reader parent, String path){
 		this.parent = parent;
 		this.path = path;
 		images = new ArrayList<JImage>();
@@ -562,7 +563,7 @@ public abstract class Steppable implements Cacheable{
     /**
      * @return Returns the MainActivity object responsible for this object's creation
      * */
-    public MainActivity getParent(){
+    public Reader getParent(){
     	return this.parent;
     }
     

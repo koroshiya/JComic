@@ -61,7 +61,7 @@ public class JBitmapDrawable extends BitmapDrawable {
 
 	public void closeBitmap(){
 		if (getBitmap() != null){
-			getBitmap().recycle();
+			//getBitmap().recycle(); //TODO: 
 		}
 	}
 	

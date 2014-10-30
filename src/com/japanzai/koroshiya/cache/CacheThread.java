@@ -1,13 +1,15 @@
 package com.japanzai.koroshiya.cache;
 
-import android.graphics.Point;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import android.graphics.Point;
+
 import com.japanzai.koroshiya.controls.JBitmapDrawable;
 import com.japanzai.koroshiya.interfaces.StepThread;
 import com.japanzai.koroshiya.io_utils.ImageParser;
+import com.japanzai.koroshiya.reader.Reader;
 
 /**
  * Purpose: Class to subclass for any Threads used to step through
@@ -16,12 +18,14 @@ import com.japanzai.koroshiya.io_utils.ImageParser;
 public abstract class CacheThread extends Thread implements StepThread {
 	
 	private final Steppable entry;
-	private final boolean direction; //Direction of thread. 
+	private final boolean direction; //Direction of thread.
+	private final Reader parent;
 	//Used by subclasses to determine which direction to cache
 	
-	public CacheThread(Steppable entry, boolean forward){
+	public CacheThread(Steppable entry, boolean forward, Reader parent){
 		this.entry = entry;
 		this.direction = forward;
+		this.parent = parent;
 	}
 	
 	@Override
@@ -35,11 +39,11 @@ public abstract class CacheThread extends Thread implements StepThread {
 			Point p = ImageParser.getImageSize(is);
 			is = new FileInputStream(path);
 			
-			JBitmapDrawable temp = ImageParser.parseImageFromDisk(is, p.x, p.y, path);
+			JBitmapDrawable temp = ImageParser.parseImageFromDisk(is, p.x, p.y, path, parent);
 			if (temp == null){
 				entry.clear();
 				is = new FileInputStream(path);
-				temp = ImageParser.parseImageFromDisk(is, p.x, p.y, path);
+				temp = ImageParser.parseImageFromDisk(is, p.x, p.y, path, parent);
 			}
 			
 			return temp;

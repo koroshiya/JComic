@@ -1,3 +1,13 @@
+-Version 1.10.0
+
+Removed remaining (now-defunct) ad definition
+Removed back to file chooser option
+Removed ability to extract archives from filechooser
+Removed alternate main layout
+Fixed bug pertaining to order of file names
+
+Overhauled backend of UI so that it now uses separate activities rather than a view flipper. This should (theoretically) improve performance, since images are properly discarded with the activity rather than relying on GC with each, there are fewer views present on the activity, etc.
+
 -Version 1.09.11
 
 Re-implemented ability to click on "re-enable in General Settings" as link.

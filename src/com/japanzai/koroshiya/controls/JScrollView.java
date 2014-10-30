@@ -1,10 +1,5 @@
 package com.japanzai.koroshiya.controls;
 
-import com.japanzai.koroshiya.R;
-import com.japanzai.koroshiya.reader.MainActivity;
-import com.japanzai.koroshiya.reader.ToastThread;
-import com.japanzai.koroshiya.settings.SettingsManager;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
@@ -14,6 +9,12 @@ import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.Toast;
+
+import com.japanzai.koroshiya.R;
+import com.japanzai.koroshiya.reader.MainActivity;
+import com.japanzai.koroshiya.reader.Reader;
+import com.japanzai.koroshiya.reader.ToastThread;
+import com.japanzai.koroshiya.settings.SettingsManager;
 
 /**
  * Purpose: Turns a ScrollView into a scrollable ImageView.
@@ -56,6 +57,10 @@ public class JScrollView extends TwoDScrollView {
 		currentx = x;
 		currenty = y;
 	}
+	
+	private Reader getReader(){
+		return (Reader) view.getContext();
+	}
 
 	public void up(double x2, double y2) {
 		
@@ -63,14 +68,14 @@ public class JScrollView extends TwoDScrollView {
 			if (pageStartx == getRight() || pageStartx == view.getWidth() - getRight() || getRight() >= view.getWidth()){
 				if ((Math.abs(startx - x2) > Math.abs(starty - y2))) {
 					if (startx > x2){
-						MainActivity.mainActivity.getCache().next();
+						getReader().getCache().next();
 					}else if (pageStartx == getLeft()){ //In case getLeft and getRight are the same (ie. no horizontal scroll)
-						MainActivity.mainActivity.getCache().previous();
+						getReader().getCache().previous();
 					}
 				}
 			}else if (pageStartx == getLeft()){
 				if ((Math.abs(startx - x2) > Math.abs(starty - y2)) && startx < x2) {
-					MainActivity.mainActivity.getCache().previous();
+					getReader().getCache().previous();
 				}
 			}else{
 				scroll(x2, y2);
@@ -205,8 +210,8 @@ public class JScrollView extends TwoDScrollView {
 		
 		@Override
 	     public void onLongPress(MotionEvent e) {          
-			if (MainActivity.mainActivity.getSettings().isContextMenuEnabled()){
-				MainActivity.mainActivity.showContextMenu();
+			if (getReader().getSettings().isContextMenuEnabled()){
+				getReader().showContextMenu();
 			}
 	    }
 		

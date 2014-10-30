@@ -56,8 +56,7 @@ public class FileChooserTab extends SherlockFragment {
 	}
 	
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup group,
-			Bundle saved) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup group, Bundle saved) {
 		return inflater.inflate(R.layout.general_settings, group, false);
 	}
 	
@@ -69,12 +68,6 @@ public class FileChooserTab extends SherlockFragment {
         instantiate();
 
     }
-	
-    /*@Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getSupportMenuInflater().inflate(R.menu.activity_main, menu);
-        return true;
-    }*/
     
     public void instantiate(){
     	            	

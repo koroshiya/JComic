@@ -54,7 +54,6 @@ public class SettingsManager {
 	private static final boolean defaultCacheOnStart = true;
 	private static final boolean defaultKeepZoomOnPageChange = false;
 	private static final boolean defaultContextMenuEnabled = true;
-	private static final boolean defaultBackToFileChooser = false;
 	private static final boolean defaultRarPassword = false;
 	private static final int defaultZoomIndex = 0;
 	private static final int defaultOrientationIndex = 0;
@@ -76,7 +75,6 @@ public class SettingsManager {
 	private static boolean cacheOnStart;
 	private static boolean keepZoomOnPageChange;
 	private static boolean contextMenuEnabled;
-	private static boolean backToFileChooser;
 	private static boolean rarPassword;
 	private static int zoomIndex = -1;
 	private static int orientationIndex = -1;
@@ -130,7 +128,6 @@ public class SettingsManager {
 		cacheOnStart = preferences.getBoolean("cacheOnStart", defaultCacheOnStart);
 		keepZoomOnPageChange = preferences.getBoolean("keepZoomOnPageChange", defaultKeepZoomOnPageChange);
 		contextMenuEnabled = preferences.getBoolean("contextMenuEnabled", defaultContextMenuEnabled);
-		backToFileChooser = preferences.getBoolean("backToFileChooser", defaultBackToFileChooser);
 		rarPassword = preferences.getBoolean("rarPassword", defaultRarPassword);
 		zoomIndex = preferences.getInt("zoomIndex", defaultZoomIndex);
 		orientationIndex = preferences.getInt("orientationIndex", defaultOrientationIndex);
@@ -207,7 +204,6 @@ public class SettingsManager {
 		setCacheOnStart(defaultCacheOnStart);
 		setKeepZoomOnPageChange(defaultKeepZoomOnPageChange);
 		setContextMenuEnabled(defaultContextMenuEnabled);
-		setBackToFileChooserEnabled(defaultBackToFileChooser);
 		setRarPasswordEnabled(defaultRarPassword);
 		setZoomIndex(defaultZoomIndex);
 		setOrientationIndex(defaultOrientationIndex);
@@ -398,15 +394,6 @@ public class SettingsManager {
 	public void setContextMenuEnabled(boolean enabled){
 		contextMenuEnabled = enabled;
 		updateBool("contextMenuEnabled", enabled);
-	}
-
-	public boolean isBackToFileChooser(){
-		return backToFileChooser;
-	}
-
-	public void setBackToFileChooserEnabled(boolean enabled){
-		backToFileChooser = enabled;
-		updateBool("backToFileChooser", enabled);
 	}
 	
 	public boolean isRarPasswordEnabled(){

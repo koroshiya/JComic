@@ -1,11 +1,5 @@
 package com.japanzai.koroshiya.settings;
 
-import com.japanzai.koroshiya.R;
-import com.japanzai.koroshiya.reader.MainActivity;
-import com.japanzai.koroshiya.settings.controls.CheckSetting;
-import com.japanzai.koroshiya.settings.controls.SpinnerSetting;
-import com.japanzai.koroshiya.settings.listener.ResetListener;
-
 import android.content.res.Resources.NotFoundException;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -14,6 +8,12 @@ import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.LinearLayout;
+
+import com.japanzai.koroshiya.R;
+import com.japanzai.koroshiya.reader.MainActivity;
+import com.japanzai.koroshiya.settings.controls.CheckSetting;
+import com.japanzai.koroshiya.settings.controls.SpinnerSetting;
+import com.japanzai.koroshiya.settings.listener.ResetListener;
 
 /**
  * Encompasses basic user settings.
@@ -29,7 +29,6 @@ public class GeneralSettings extends SettingTab {
 	private CheckSetting backlightOn;
 	private CheckSetting keepZoom;
 	private CheckSetting contextMenu;
-	private CheckSetting backToFileChooser;
 	private SpinnerSetting defaultZoom;
 	private SpinnerSetting orientation;
 	private SpinnerSetting doubleTap;
@@ -110,14 +109,6 @@ public class GeneralSettings extends SettingTab {
 		}
 		
 		try{
-			backToFileChooser = new CheckSetting(getString(R.string.setting_back_to_file_chooser), settings.isBackToFileChooser(), true, this.parent);
-			lLayout.addView(backToFileChooser);
-		}catch (NotFoundException nfe){
-			nfe.printStackTrace();
-			backToFileChooser = null;
-		}
-		
-		try{
 			defaultZoom = new SpinnerSetting(this.parent, R.string.setting_zoom, R.array.general_setting_default_zoom, settings.getZoom());
 			lLayout.addView(defaultZoom);
 		}catch (NotFoundException nfe){
@@ -165,7 +156,6 @@ public class GeneralSettings extends SettingTab {
 		if (backlightOn != null){settings.setBacklightAlwaysOn(backlightOn.getState() == 1);}
 		if (keepZoom != null){settings.setKeepZoomOnPageChange(keepZoom.getState() == 1);}
 		if (contextMenu != null){settings.setContextMenuEnabled(contextMenu.getState() == 1);}
-		if (backToFileChooser != null){settings.setBackToFileChooserEnabled(backToFileChooser.getState() == 1);}
 		if (defaultZoom != null){settings.setZoomIndex(defaultZoom.getState());}
 		if (orientation != null){settings.setOrientationIndex(orientation.getState());}
 		if (doubleTap != null){settings.setDoubleTapIndex(doubleTap.getState());}
@@ -180,7 +170,6 @@ public class GeneralSettings extends SettingTab {
 		if (backlightOn != null){backlightOn.setState(settings.isBacklightAlwaysOn() ? 1 : 0);}
 		if (keepZoom != null){keepZoom.setState(settings.keepZoomOnPageChange() ? 1 : 0);}
 		if (contextMenu != null){contextMenu.setState(settings.isContextMenuEnabled() ? 1 : 0);}
-		if (backToFileChooser != null){backToFileChooser.setState(settings.isBackToFileChooser() ? 1 : 0);}
 		if (defaultZoom != null){defaultZoom.setState(settings.getZoom());}
 		if (orientation != null){orientation.setState(settings.getOrientation());}
 		if (doubleTap != null){doubleTap.setState(settings.getDoubleTapIndex());}

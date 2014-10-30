@@ -10,6 +10,7 @@ import com.japanzai.koroshiya.cache.Steppable;
 import com.japanzai.koroshiya.filechooser.FileChooser;
 import com.japanzai.koroshiya.interfaces.archive.ReadableArchive;
 import com.japanzai.koroshiya.reader.MainActivity;
+import com.japanzai.koroshiya.reader.Reader;
 import com.japanzai.koroshiya.settings.SettingsManager;
 
 /**
@@ -22,7 +23,7 @@ public abstract class SteppableArchive extends Steppable implements ReadableArch
 	protected final boolean progressive;
 	protected SetTextThread thread = null;
 	
-	public SteppableArchive(MainActivity parent, String path){
+	public SteppableArchive(Reader parent, String path){
 		
 		super(parent, path);
 		File tmp = parent.getCacheDir();

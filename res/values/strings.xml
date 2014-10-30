@@ -159,15 +159,6 @@
         <item>Scan</item>
         <item>Set as Favorite</item>
     </string-array>
-    <string-array name="array_context_archive_rw">
-        <item>Read</item>
-        <item>Delete</item>
-        <item>Properties</item>
-        <item>Scan</item>
-        <item>Set as Favorite</item>
-        <item>Extract here</item>
-        <item>Extract and delete</item>
-    </string-array>
     <string-array name="array_context_file_r">
         <item>Read</item>
         <item>Properties</item>

@@ -1,6 +1,7 @@
 package com.japanzai.koroshiya.controls;
 
 import com.japanzai.koroshiya.reader.MainActivity;
+import com.japanzai.koroshiya.reader.Reader;
 import com.japanzai.koroshiya.settings.SettingsManager;
 
 import android.content.Context;
@@ -56,12 +57,16 @@ public class JImageView extends ImageView {
 		
 	}
 	
+	private Reader getReader(){
+		return (Reader) getContext();
+	}
+	
 	@Override
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 		
 		if (getDrawable() != null){
 			if (currentZoom == SettingsManager.AUTO_SIZE){
-				double ratio = (double)MainActivity.getScreenDimensions().x / (double)originalWidth;
+				double ratio = (double)getReader().getWidth() / (double)originalWidth;
 				if (ratio >= 1){
 					setMeasuredDimension(originalWidth, originalHeight);
 				}else{
@@ -69,11 +74,11 @@ public class JImageView extends ImageView {
 							(int)Math.floor(((double)originalHeight) * ratio));
 				}
 			}else if (currentZoom == SettingsManager.SCALE_HEIGHT_SIZE){
-				double ratio = (double)MainActivity.getScreenDimensions().y / (double)originalHeight;
+				double ratio = (double)getReader().getHeight() / (double)originalHeight;
 				setMeasuredDimension((int)Math.floor(((double)originalWidth) * ratio), 
 						(int)Math.floor(((double)originalHeight) * ratio));
 			}else if (currentZoom == SettingsManager.SCALE_WIDTH_SIZE){
-				double ratio = (double)MainActivity.getScreenDimensions().x / (double)originalWidth;
+				double ratio = (double)getReader().getWidth() / (double)originalWidth;
 				setMeasuredDimension((int)Math.floor(((double)originalWidth) * ratio), 
 						(int)Math.floor(((double)originalHeight) * ratio));
 			}else{

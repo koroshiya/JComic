@@ -21,6 +21,7 @@ import com.japanzai.koroshiya.filechooser.FileChooser;
 import com.japanzai.koroshiya.interfaces.archive.ReadableArchive;
 import com.japanzai.koroshiya.io_utils.ArchiveParser;
 import com.japanzai.koroshiya.io_utils.ImageParser;
+import com.japanzai.koroshiya.reader.Reader;
 
 /**
  * Provides methods pertaining to .tar and .ar archives.
@@ -29,9 +30,11 @@ public class ArWrapper implements ReadableArchive{
 	
 	private final File archive;
 	protected SetTextThread thread = null;
+	private Reader parent;
 	
-	public ArWrapper(File archive){
+	public ArWrapper(File archive, Reader parent){
 		this.archive = archive;
+		this.parent = parent;
 	}
 	
 	@Override
@@ -136,7 +139,7 @@ public class ArWrapper implements ReadableArchive{
 						s = new ByteArrayInputStream(ArchiveParser.parseEntry(zip, entry));
 						size = ImageParser.getImageSize(s);
 						s = new ByteArrayInputStream(ArchiveParser.parseEntry(zip, entry));
-						bp = ImageParser.parseImageFromDisk(s, size.x, size.y, entry.getName());
+						bp = ImageParser.parseImageFromDisk(s, size.x, size.y, entry.getName(), parent);
 						bitmaps.add(bp);
 					}
 				}

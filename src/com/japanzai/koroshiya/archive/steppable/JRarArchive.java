@@ -19,6 +19,7 @@ import com.japanzai.koroshiya.interfaces.StepThread;
 import com.japanzai.koroshiya.io_utils.ArchiveParser;
 import com.japanzai.koroshiya.io_utils.ImageParser;
 import com.japanzai.koroshiya.reader.MainActivity;
+import com.japanzai.koroshiya.reader.Reader;
 
 import de.innosystec.unrar.Archive;
 import de.innosystec.unrar.exception.RarException;
@@ -32,7 +33,7 @@ public class JRarArchive extends SteppableArchive{
 
 	private final Archive rar;
 	
-	public JRarArchive(String path, MainActivity parent) throws IOException, RarException {
+	public JRarArchive(String path, Reader parent) throws IOException, RarException {
 		
 		super(parent, path);
 		
@@ -87,11 +88,11 @@ public class JRarArchive extends SteppableArchive{
 			p = ImageParser.getImageSize(is);
 			is = new FileInputStream(f);
 			
-			temp = ImageParser.parseImageFromDisk(is, p.x, p.y, entry.getFileNameString());
+			temp = ImageParser.parseImageFromDisk(is, p.x, p.y, entry.getFileNameString(), parent);
 			if (temp == null){
 				super.clear();
 				is = new FileInputStream(f);
-				temp = ImageParser.parseImageFromDisk(is, p.x, p.y, entry.getFileNameString());
+				temp = ImageParser.parseImageFromDisk(is, p.x, p.y, entry.getFileNameString(), parent);
 			}
 		}else{
 			
@@ -101,11 +102,11 @@ public class JRarArchive extends SteppableArchive{
 				p = ImageParser.getImageSize(is);
 				is = rar.getInputStream(entry);
 				
-				temp = ImageParser.parseImageFromDisk(is, p.x, p.y, entry.getFileNameString());
+				temp = ImageParser.parseImageFromDisk(is, p.x, p.y, entry.getFileNameString(), parent);
 				if (temp == null){
 					super.clear();
 					is = rar.getInputStream(entry);
-					temp = ImageParser.parseImageFromDisk(is, p.x, p.y, entry.getFileNameString());
+					temp = ImageParser.parseImageFromDisk(is, p.x, p.y, entry.getFileNameString(), parent);
 				}
 			} catch (IOException e) {
 				e.printStackTrace();

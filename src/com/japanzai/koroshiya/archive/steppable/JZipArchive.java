@@ -1,7 +1,5 @@
 package com.japanzai.koroshiya.archive.steppable;
 
-import android.graphics.Point;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,6 +10,8 @@ import java.util.zip.ZipException;
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipFile;
 
+import android.graphics.Point;
+
 import com.japanzai.koroshiya.R;
 import com.japanzai.koroshiya.archive.steppable.thread.zip.IndexZipThread;
 import com.japanzai.koroshiya.archive.steppable.thread.zip.NextZipThread;
@@ -21,7 +21,7 @@ import com.japanzai.koroshiya.filechooser.FileChooser;
 import com.japanzai.koroshiya.interfaces.StepThread;
 import com.japanzai.koroshiya.io_utils.ArchiveParser;
 import com.japanzai.koroshiya.io_utils.ImageParser;
-import com.japanzai.koroshiya.reader.MainActivity;
+import com.japanzai.koroshiya.reader.Reader;
 
 /**
  * Purpose: Represents a standard Zip archive.
@@ -32,7 +32,7 @@ public class JZipArchive extends SteppableArchive{
 	
 	private final ZipFile zip;
 
-	public JZipArchive(String path, MainActivity parent) throws IOException, ZipException {
+	public JZipArchive(String path, Reader parent) throws IOException, ZipException {
 		
 		super(parent, path);
 		
@@ -80,10 +80,10 @@ public class JZipArchive extends SteppableArchive{
 					return null;
 				}
 			}
-			JBitmapDrawable temp = ImageParser.parseImageFromDisk(f);
+			JBitmapDrawable temp = ImageParser.parseImageFromDisk(f, parent);
 			if (temp == null){
 				super.clear();
-				temp = ImageParser.parseImageFromDisk(f);
+				temp = ImageParser.parseImageFromDisk(f, parent);
 			}
 			return temp;
 		}else{
@@ -93,11 +93,11 @@ public class JZipArchive extends SteppableArchive{
 				Point p = ImageParser.getImageSize(is);
 				is = zip.getInputStream(entry);
 				
-				JBitmapDrawable temp = ImageParser.parseImageFromDisk(is, p.x, p.y, entry.getName());
+				JBitmapDrawable temp = ImageParser.parseImageFromDisk(is, p.x, p.y, entry.getName(), parent);
 				if (temp == null){
 					super.clear();
 					is = zip.getInputStream(entry);
-					temp = ImageParser.parseImageFromDisk(is, p.x, p.y, entry.getName());
+					temp = ImageParser.parseImageFromDisk(is, p.x, p.y, entry.getName(), parent);
 				}
 				is.close();
 				is = null;

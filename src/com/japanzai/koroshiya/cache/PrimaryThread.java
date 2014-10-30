@@ -1,5 +1,7 @@
 package com.japanzai.koroshiya.cache;
 
+import com.japanzai.koroshiya.reader.Reader;
+
 /**
  * Purpose: Thread for parsing the previous or next entry in a directory.
  * As a primary thread, the value returned is to be used in the near future,
@@ -7,8 +9,8 @@ package com.japanzai.koroshiya.cache;
  * */
 public class PrimaryThread extends CacheThread{
 		
-	public PrimaryThread(Steppable steppable, boolean forward) {
-	     super(steppable, forward);
+	public PrimaryThread(Steppable steppable, boolean forward, Reader r) {
+	     super(steppable, forward, r);
 	}
 
 	@Override

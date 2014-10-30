@@ -1,7 +1,6 @@
 package com.japanzai.koroshiya.reader;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-
+import android.app.Activity;
 import android.widget.Toast;
 
 /**
@@ -11,16 +10,16 @@ import android.widget.Toast;
 public class ToastThread extends Thread{
 	
 	private final String message;
-	private final SherlockFragmentActivity parent;
+	private final Activity parent;
 	private final int duration;
 	
-	public ToastThread(String message, SherlockFragmentActivity parent, int duration){
+	public ToastThread(String message, Activity parent, int duration){
 		this.message = message;
 		this.parent = parent;
 		this.duration = duration;
 	}
 	
-	public ToastThread(int messageID, SherlockFragmentActivity parent, int duration){
+	public ToastThread(int messageID, Activity parent, int duration){
 		this.message = parent.getString(messageID);
 		this.parent = parent;
 		this.duration = duration;

@@ -19,7 +19,7 @@ import com.japanzai.koroshiya.archive.steppable.JZipArchive;
 import com.japanzai.koroshiya.controls.JBitmapDrawable;
 import com.japanzai.koroshiya.filechooser.FileChooser;
 import com.japanzai.koroshiya.interfaces.archive.ReadableArchive;
-import com.japanzai.koroshiya.reader.MainActivity;
+import com.japanzai.koroshiya.reader.Reader;
 
 import de.innosystec.unrar.exception.RarException;
 
@@ -73,24 +73,24 @@ public class ArchiveParser {
      * @throws IOException if the archive couldn't be read
      * @throws RarException if a RAR archive couldn't be read
      * */
-    public static ReadableArchive parseArchive(File f) throws IOException, RarException, ZipException{
+    public static ReadableArchive parseArchive(File f, Reader r) throws IOException, RarException, ZipException{
     	
     	String s = f.getName().toLowerCase(Locale.getDefault());
     	String fPath = f.getAbsolutePath();
     	
     	if (s.endsWith(".zip") || s.endsWith(".cbz")){
-    		return new JZipArchive(fPath, MainActivity.mainActivity);
+    		return new JZipArchive(fPath, r);
     	}else if (s.endsWith(".rar") || s.endsWith(".cbr")){ //hybrid disk mode
-    		JRarArchive arch = new JRarArchive(fPath, MainActivity.mainActivity);
+    		JRarArchive arch = new JRarArchive(fPath, r);
     		if (arch.getArchive().isPasswordProtected()){
     			throw new RarException(new Exception("RAR is password protected"));
     		}else{
     			return arch;
     		}
     	}else if (s.endsWith(".ar")){
-    		return new JArArchive(f);
+    		return new JArArchive(f, r);
     	}else if (s.endsWith(".tar")){
-    		return new JTarArchive(f);
+    		return new JTarArchive(f, r);
     	}else {
         	return null; //TODO: implement .tar.gz and other formats
     	}    	

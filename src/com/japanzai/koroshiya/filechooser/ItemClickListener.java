@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
@@ -99,7 +100,7 @@ public class ItemClickListener implements OnItemClickListener, ModalReturn {
 		if (file.isDirectory()){
 			id = writeable ? R.array.array_context_dir_rw : R.array.array_context_dir_r;
 		}else if (ArchiveParser.isSupportedArchive(file)){
-			id = writeable ? R.array.array_context_archive_rw : R.array.array_context_file_r;
+			id = R.array.array_context_file_r;
 		}else{
 			id = writeable ? R.array.array_context_file_rw : R.array.array_context_file_r;
 		}
@@ -119,7 +120,6 @@ public class ItemClickListener implements OnItemClickListener, ModalReturn {
 		String location = name.startsWith("/") ? name : parent.getHome() + File.separator + name;
 		File file = new File(location);
 		String[] options = parent.getResources().getStringArray(R.array.array_context_dir_rw);
-		String[] altOptions = parent.getResources().getStringArray(R.array.array_context_archive_rw);
 		
 		if (command.equals(options[0])){ //Open
 			
@@ -152,14 +152,6 @@ public class ItemClickListener implements OnItemClickListener, ModalReturn {
 		}else if (command.equals(options[7])){ //Zip and delete
 
 			zip(file, true);
-			
-		}else if (command.equals(altOptions[5])){ //Extract archive
-			
-			extract(file, false);
-			
-		}else if (command.equals(altOptions[6])){ //Extract archive and delete
-
-			extract(file, true);
 			
 		}else if (command.equals(getString(R.string.file_remove_favorite))){
 			
@@ -315,19 +307,12 @@ public class ItemClickListener implements OnItemClickListener, ModalReturn {
 		
 		if (file.isDirectory()){
 			contents = new ArrayList<String>();
-			for (File f : file.listFiles()){
+	    	File[] files = file.listFiles();
+	    	Arrays.sort(files);
+	    	for (File f : files){
 				if (ImageParser.isSupportedImage(f) || ArchiveParser.isSupportedArchive(f)){
 					contents.add(f.getName());
 				}
-			}
-		}else if (ArchiveParser.isSupportedArchive(file)){
-			try {
-				ReadableArchive archive = ArchiveParser.parseArchive(file);
-				contents = archive.peekAtContents();
-			} catch (IOException ex) {
-				ex.printStackTrace();
-			} catch (Exception ex) {
-				ex.printStackTrace();
 			}
 		}else {
 			contents = new ArrayList<String>();
@@ -351,72 +336,6 @@ public class ItemClickListener implements OnItemClickListener, ModalReturn {
 		if (runningThread == null || !runningThread.isAlive()){
 			runningThread = new ZipThread(dir, delete);
 			runningThread.start();
-		}
-		
-	}
-	
-	private void extract(File f, boolean delete){
-		
-		if (runningThread == null || !runningThread.isAlive()){
-			runningThread = new ExtractThread(f, delete);
-			runningThread.start();
-		}
-		
-	}
-	
-	private class ExtractThread extends Thread{
-		
-		private final File f;
-		private final boolean delete;
-		
-		public ExtractThread(File f, boolean delete){
-			this.f = f;
-			this.delete = delete;
-		}
-		
-		@Override
-		public void run(){
-
-			parent.showNext();
-			boolean success = false;
-			String message;
-			
-			if (ArchiveParser.isSupportedArchive(f)){
-				ReadableArchive arch = null;
-				try {
-					arch = ArchiveParser.parseArchive(f);
-				} catch (IOException e) {
-					e.printStackTrace();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-				File outputDir = new File(f.getAbsolutePath().substring(0, f.getAbsolutePath().lastIndexOf('.')));
-				if (outputDir.exists() && outputDir.isFile()){
-					message = getString(R.string.zip_directory_creation_failed);
-				}else{
-					if (!outputDir.exists()){
-						outputDir.mkdirs();
-					}
-					if (ArchiveParser.extractArchiveToDisk(arch, outputDir, parent)){
-						message = getString(R.string.zip_successfully_extracted);
-						success = true;
-					}else{
-						message = getString(R.string.zip_extract_failed);
-					}
-				}
-			}else{
-				message = getString(R.string.zip_no_supported_archive);
-			}
-
-			parent.runOnUiThread(new MessageThread(message, parent));
-			
-			if (success && delete){
-				deleteFile(f);
-			}
-			
-			parent.showPrevious();
-			parent.runOnUiThread(new RefreshThread());
-			
 		}
 		
 	}
@@ -445,8 +364,10 @@ public class ItemClickListener implements OnItemClickListener, ModalReturn {
 
 			parent.showNext();
 			ArrayList<File> imagesToZip = new ArrayList<File>();
-			
-			for (File file : dir.listFiles()){
+
+	    	File[] files = dir.listFiles();
+	    	Arrays.sort(files);
+	    	for (File file : files){
 				if (ImageParser.isSupportedImage(file)){
 					imagesToZip.add(file);
 				}
@@ -588,7 +509,9 @@ public class ItemClickListener implements OnItemClickListener, ModalReturn {
 				}
 			}
 			int i = 0;
-			for (File f : file.getParentFile().listFiles()){
+	    	File[] files = file.getParentFile().listFiles();
+	    	Arrays.sort(files);
+	    	for (File f : files){
 				if (f.equals(file)){
 					break;
 				}

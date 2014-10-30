@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.Fragment;
@@ -31,6 +32,7 @@ import com.japanzai.koroshiya.interfaces.ModalReturn;
 import com.japanzai.koroshiya.io_utils.ArchiveParser;
 import com.japanzai.koroshiya.io_utils.ImageParser;
 import com.japanzai.koroshiya.reader.MainActivity;
+import com.japanzai.koroshiya.reader.Reader;
 import com.japanzai.koroshiya.reader.ToastThread;
 import com.japanzai.koroshiya.settings.SettingsManager;
 import com.japanzai.koroshiya.settings.SettingsView;
@@ -338,8 +340,14 @@ public class FileChooser extends SherlockFragmentActivity {
      * */
     public void returnValue(File value, int index){
     	
-    	parent.setTempFile(value, index);
-    	this.finish();
+    	Log.d("FileChooser", "return value of " + value.getAbsolutePath());
+		
+		Intent intent = new Intent(this, Reader.class);
+		Bundle b = new Bundle();
+		b.putString("file", value.getAbsolutePath());
+		b.putInt("index", index < 0 ? 0 : index);
+		intent.putExtras(b);
+		startActivity(intent);
     	
     }
 		

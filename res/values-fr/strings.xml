@@ -159,15 +159,6 @@
         <item>Scanner</item>
         <item>Choisir comme favoris</item>
     </string-array>
-    <string-array name="array_context_archive_rw">
-        <item>Lecture</item>
-        <item>Supprimer</item>
-        <item>Propriétés</item>
-        <item>Scanner</item>
-        <item>Choisir comme favoris</item>
-        <item>Extraire ici</item>
-        <item>Extraire ici et supprimer l\'archive</item>
-    </string-array>
     <string-array name="array_context_file_r">
         <item>Lecture</item>
         <item>Propriétés</item>

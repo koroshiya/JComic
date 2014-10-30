@@ -1,7 +1,6 @@
 package com.japanzai.koroshiya.controls;
 
-import com.japanzai.koroshiya.reader.MainActivity;
-
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
@@ -66,7 +65,7 @@ public class JImageSwitcher extends ImageSwitcher{
 	 * */
 	public void clear(){
 		ClearThread ct = new ClearThread(this);
-		((MainActivity)getContext()).runOnUiThread(ct);
+		((Activity)getContext()).runOnUiThread(ct);
 	}
 		
 }

@@ -15,8 +15,10 @@ import org.apache.commons.compress.utils.IOUtils;
 
 import com.japanzai.koroshiya.controls.JBitmapDrawable;
 import com.japanzai.koroshiya.reader.MainActivity;
+import com.japanzai.koroshiya.reader.Reader;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.graphics.BitmapFactory;
 import android.graphics.Point;
 
@@ -74,7 +76,7 @@ public class ImageParser {
 	 * @return Return a JBitmapDrawable object to be displayed.
 	 * */
 	@SuppressLint("NewApi")
-	public static JBitmapDrawable parseImageFromDisk(InputStream is, int inWidth, int inHeight, String name){
+	public static JBitmapDrawable parseImageFromDisk(InputStream is, int inWidth, int inHeight, String name, Reader r){
 		
 		BufferedInputStream bis = new BufferedInputStream(is);
 		
@@ -83,17 +85,18 @@ public class ImageParser {
 		BitmapFactory.Options opts = new BitmapFactory.Options();
 		//opts.inJustDecodeBounds = true;
 		opts.inDither = false;
-		opts.inPurgeable = true;
-		opts.inInputShareable = true;
+		if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.LOLLIPOP){
+			opts.inPurgeable = true;
+			opts.inInputShareable = true;
+		}
 		opts.inTempStorage = new byte[32 * 1024];
 		JBitmapDrawable b;
-		MainActivity main = MainActivity.mainActivity;
 		
 		try{
 			
-			int resize = main.getSettings().getDynamicResizing();
+			int resize = r.getSettings().getDynamicResizing();
 			if (resize != 0){
-				int width = inWidth / main.getWidth();
+				int width = inWidth / r.getWidth();
 				//int height = inHeight / MainActivity.mainActivity.getHeight();
 				if (!(resize == 2 && width < 1)){
 					opts.inSampleSize = width;
@@ -114,22 +117,23 @@ public class ImageParser {
 		
 	}
 
-	public static JBitmapDrawable parseImageFromDisk(File image){
+	public static JBitmapDrawable parseImageFromDisk(File image, Reader r){
 		
 		BitmapFactory.Options opts = new BitmapFactory.Options();
 		//opts.inJustDecodeBounds = true;
 		opts.inDither = false;
-		opts.inPurgeable = true;
-		opts.inInputShareable = true;
+		if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.LOLLIPOP){
+			opts.inPurgeable = true;
+			opts.inInputShareable = true;
+		}
 		opts.inTempStorage = new byte[32 * 1024];
 		JBitmapDrawable b;
-		MainActivity main = MainActivity.mainActivity;
 		
 		try{
-			int resize = main.getSettings().getDynamicResizing();
+			int resize = r.getSettings().getDynamicResizing();
 			if (resize != 0){
 				Point p = getImageSize(new FileInputStream(image));
-				int width = p.x / main.getWidth();
+				int width = p.x / r.getWidth();
 				//int height = inHeight / MainActivity.mainActivity.getHeight();
 				if (!(resize == 2 && width < 1)){
 					opts.inSampleSize = width;
@@ -160,8 +164,10 @@ public class ImageParser {
 		BitmapFactory.Options opts = new BitmapFactory.Options();
 		opts.inJustDecodeBounds = true;
 		opts.inDither = false;
-		opts.inPurgeable = true;
-		opts.inInputShareable = true;
+		if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.LOLLIPOP){
+			opts.inPurgeable = true;
+			opts.inInputShareable = true;
+		}
 		opts.inTempStorage = new byte[32 * 1024];
 		
 		BitmapFactory.decodeStream(bis, null, opts);
