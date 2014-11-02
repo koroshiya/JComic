@@ -23,7 +23,6 @@ import android.widget.Toast;
 import com.actionbarsherlock.app.ActionBar;
 import com.japanzai.koroshiya.R;
 import com.japanzai.koroshiya.interfaces.ModalReturn;
-import com.japanzai.koroshiya.interfaces.archive.ReadableArchive;
 import com.japanzai.koroshiya.io_utils.ArchiveParser;
 import com.japanzai.koroshiya.io_utils.ImageParser;
 import com.japanzai.koroshiya.reader.MainActivity;

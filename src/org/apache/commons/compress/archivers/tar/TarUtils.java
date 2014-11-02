@@ -121,18 +121,12 @@ public class TarUtils {
             }
         }
 
-        // Must have trailing NUL or space
-        byte trailer;
-        trailer = buffer[end-1];
-        if (trailer == 0 || trailer == ' '){
-            end--;
-        } else {
-            throw new IllegalArgumentException(
-                    exceptionMessage(buffer, offset, length, end-1, trailer));
-        }
-        // May have additional NULs or spaces
-        trailer = buffer[end - 1];
-        while (start < end - 1 && (trailer == 0 || trailer == ' ')) {
+        // Trim all trailing NULs and spaces.
+        // The ustar and POSIX tar specs require a trailing NUL or
+        // space but some implementations use the extra digit for big
+        // sizes/uids/gids ...
+        byte trailer = buffer[end - 1];
+        while (start < end && (trailer == 0 || trailer == ' ')) {
             end--;
             trailer = buffer[end - 1];
         }
@@ -197,7 +191,7 @@ public class TarUtils {
         if (negative) {
             // 2's complement
             val--;
-            val ^= ((long) Math.pow(2, (length - 1) * 8) - 1);
+            val ^= (long) Math.pow(2, (length - 1) * 8) - 1;
         }
         return negative ? -val : val;
     }
@@ -563,8 +557,8 @@ public class TarUtils {
     public static long computeCheckSum(final byte[] buf) {
         long sum = 0;
 
-        for (int i = 0; i < buf.length; ++i) {
-            sum += BYTE_MASK & buf[i];
+        for (byte element : buf) {
+            sum += BYTE_MASK & element;
         }
 
         return sum;

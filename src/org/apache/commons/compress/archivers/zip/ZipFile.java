@@ -17,6 +17,8 @@
  */
 package org.apache.commons.compress.archivers.zip;
 
+import java.io.BufferedInputStream;
+import java.io.Closeable;
 import java.io.EOFException;
 import java.io.File;
 import java.io.IOException;
@@ -27,13 +29,11 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.zip.Inflater;
 import java.util.zip.InflaterInputStream;
-import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 
 import org.apache.commons.compress.utils.IOUtils;
@@ -75,7 +75,7 @@ import static org.apache.commons.compress.archivers.zip.ZipConstants.ZIP64_MAGIC
  * </ul>
  *
  */
-public class ZipFile {
+public class ZipFile implements Closeable {
     private static final int HASH_SIZE = 509;
     static final int NIBLET_MASK = 0x0f;
     static final int BYTE_SHIFT = 8;
@@ -219,12 +219,8 @@ public class ZipFile {
             success = true;
         } finally {
             if (!success) {
-                try {
-                    closed = true;
-                    archive.close();
-                } catch (IOException e2) { // NOPMD
-                    // swallow, throw the original exception instead
-                }
+                closed = true;
+                IOUtils.closeQuietly(archive);
             }
         }
     }
@@ -257,13 +253,7 @@ public class ZipFile {
      * @param zipfile file to close, can be null
      */
     public static void closeQuietly(ZipFile zipfile) {
-        if (zipfile != null) {
-            try {
-                zipfile.close();
-            } catch (IOException e) { // NOPMD
-                //ignore, that's why the method is called "quietly"
-            }
-        }
+        IOUtils.closeQuietly(zipfile);
     }
 
     /**
@@ -316,7 +306,7 @@ public class ZipFile {
      * the archive's central directory.
      *
      * @param name name of the entry.
-     * @return the Iterable<ZipArchiveEntry> corresponding to the
+     * @return the Iterable&lt;ZipArchiveEntry&gt; corresponding to the
      * given name
      * @since 1.6
      */
@@ -331,7 +321,7 @@ public class ZipFile {
      * appear within the archive.
      *
      * @param name name of the entry.
-     * @return the Iterable<ZipArchiveEntry> corresponding to the
+     * @return the Iterable&lt;ZipArchiveEntry&gt; corresponding to the
      * given name
      * @since 1.6
      */
@@ -374,10 +364,15 @@ public class ZipFile {
         long start = offsetEntry.dataOffset;
         BoundedInputStream bis =
             new BoundedInputStream(start, ze.getCompressedSize());
-        switch (ze.getMethod()) {
-            case ZipEntry.STORED:
+        switch (ZipMethod.getMethodByCode(ze.getMethod())) {
+            case STORED:
                 return bis;
-            case ZipEntry.DEFLATED:
+            case UNSHRINKING:
+                return new UnshrinkingInputStream(bis);
+            case IMPLODING:
+                return new ExplodingInputStream(ze.getGeneralPurposeBit().getSlidingDictionarySize(),
+                        ze.getGeneralPurposeBit().getNumberOfShannonFanoTrees(), new BufferedInputStream(bis));
+            case DEFLATED:
                 bis.addDummy();
                 final Inflater inflater = new Inflater(true);
                 return new InflaterInputStream(bis, inflater) {
@@ -465,7 +460,7 @@ public class ZipFile {
         /* relative offset of local header */ + WORD;
 
     private static final long CFH_SIG =
-        ZipLong.getValue(ZipArchiveOutputStream.CFH_SIG);
+        ZipLong.getValue(ZipLong.CFH_SIG.getBytes());
 
     /**
      * Reads the central directory of the given archive and populates
@@ -745,7 +740,7 @@ public class ZipFile {
         if (searchedForZip64EOCD) {
             archive.seek(archive.getFilePointer() - ZIP64_EOCDL_LENGTH);
             archive.readFully(WORD_BUF);
-            found = Arrays.equals(ZipArchiveOutputStream.ZIP64_EOCD_LOC_SIG,
+            found = Arrays.equals(ZipLong.getBytes(0X07064B50L),
                                   WORD_BUF);
         }
         if (!found) {
@@ -775,7 +770,7 @@ public class ZipFile {
         archive.readFully(DWORD_BUF);
         archive.seek(ZipEightByteInteger.getLongValue(DWORD_BUF));
         archive.readFully(WORD_BUF);
-        if (!Arrays.equals(WORD_BUF, ZipArchiveOutputStream.ZIP64_EOCD_SIG)) {
+        if (!Arrays.equals(WORD_BUF, ZipLong.getBytes(0X06064B50L))) {
             throw new ZipException("archive's ZIP64 end of central "
                                    + "directory locator is corrupt.");
         }
@@ -806,7 +801,7 @@ public class ZipFile {
     private void positionAtEndOfCentralDirectoryRecord()
         throws IOException {
         boolean found = tryToLocateSignature(MIN_EOCD_SIZE, MAX_EOCD_SIZE,
-                                             ZipArchiveOutputStream.EOCD_SIG);
+        		ZipLong.getBytes(0X06054B50L));
         if (!found) {
             throw new ZipException("archive is not a ZIP archive");
         }
@@ -892,10 +887,10 @@ public class ZipFile {
     private void resolveLocalFileHeaderData(Map<ZipArchiveEntry, NameAndComment>
                                             entriesWithoutUTF8Flag)
         throws IOException {
-        for (Iterator<ZipArchiveEntry> it = entries.iterator(); it.hasNext(); ) {
+        for (ZipArchiveEntry zipArchiveEntry : entries) {
             // entries is filled in populateFromCentralDirectory and
             // never modified
-            Entry ze = (Entry) it.next();
+            Entry ze = (Entry) zipArchiveEntry;
             OffsetEntry offsetEntry = ze.getOffsetEntry();
             long offset = offsetEntry.headerOffset;
             archive.seek(offset + LFH_OFFSET_FOR_FILENAME_LENGTH);
@@ -941,7 +936,7 @@ public class ZipFile {
     private boolean startsWithLocalFileHeader() throws IOException {
         archive.seek(0);
         archive.readFully(WORD_BUF);
-        return Arrays.equals(WORD_BUF, ZipArchiveOutputStream.LFH_SIG);
+        return Arrays.equals(WORD_BUF, ZipLong.LFH_SIG.getBytes());
     }
 
     /**

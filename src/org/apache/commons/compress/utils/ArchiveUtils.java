@@ -34,16 +34,18 @@ public class ArchiveUtils {
     /**
      * Generates a string containing the name, isDirectory setting and size of an entry.
      * <p>
-     * For example:<br/>
-     * <tt>-    2000 main.c</tt><br/>
-     * <tt>d     100 testfiles</tt><br/>
+     * For example:
+     * <pre>
+     * -    2000 main.c
+     * d     100 testfiles
+     * </pre>
      * 
      * @return the representation of the entry
      */
     public static String toString(ArchiveEntry entry){
         StringBuilder sb = new StringBuilder();
         sb.append(entry.isDirectory()? 'd' : '-');// c.f. "ls -l" output
-        String size = Long.toString((entry.getSize()));
+        String size = Long.toString(entry.getSize());
         sb.append(' ');
         // Pad output to 7 places, leading spaces
         for(int i=7; i > size.length(); i--){

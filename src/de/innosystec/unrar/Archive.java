@@ -507,6 +507,9 @@ public class Archive implements Closeable {
 			} else {
 				throw new RarException(e);
 			}
+		} catch (OutOfMemoryError e) {
+			unpack.cleanUp();
+			throw new IOException(e.getLocalizedMessage());
 		}
 	}
 

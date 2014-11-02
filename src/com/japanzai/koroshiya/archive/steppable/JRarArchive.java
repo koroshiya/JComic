@@ -18,7 +18,6 @@ import com.japanzai.koroshiya.filechooser.FileChooser;
 import com.japanzai.koroshiya.interfaces.StepThread;
 import com.japanzai.koroshiya.io_utils.ArchiveParser;
 import com.japanzai.koroshiya.io_utils.ImageParser;
-import com.japanzai.koroshiya.reader.MainActivity;
 import com.japanzai.koroshiya.reader.Reader;
 
 import de.innosystec.unrar.Archive;

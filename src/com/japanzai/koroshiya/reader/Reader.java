@@ -2,7 +2,6 @@ package com.japanzai.koroshiya.reader;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.zip.ZipException;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -20,22 +19,14 @@ import android.widget.Button;
 import android.widget.NumberPicker;
 import android.widget.Toast;
 
-import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.japanzai.koroshiya.R;
-import com.japanzai.koroshiya.archive.steppable.SteppableArchive;
-import com.japanzai.koroshiya.cache.FileCache;
 import com.japanzai.koroshiya.cache.Steppable;
 import com.japanzai.koroshiya.controls.JBitmapDrawable;
 import com.japanzai.koroshiya.controls.JImageSwitcher;
 import com.japanzai.koroshiya.dialog.ConfirmDialog;
 import com.japanzai.koroshiya.interfaces.ModalReturn;
-import com.japanzai.koroshiya.interfaces.archive.ReadableArchive;
-import com.japanzai.koroshiya.io_utils.ArchiveParser;
-import com.japanzai.koroshiya.io_utils.ImageParser;
 import com.japanzai.koroshiya.settings.SettingsManager;
-
-import de.innosystec.unrar.exception.RarException;
 
 /**
  * Purpose: Used to display information about this application

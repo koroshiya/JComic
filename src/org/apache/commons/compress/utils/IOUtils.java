@@ -19,15 +19,23 @@
 package org.apache.commons.compress.utils;
 
 import java.io.ByteArrayOutputStream;
+import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
 /**
  * Utility functions
- * @Immutable
+ * @Immutable (has mutable data but it is write-only)
  */
 public final class IOUtils {
+
+    private static final int COPY_BUF_SIZE = 8024;
+    private static final int SKIP_BUF_SIZE = 4096;
+    
+    // This buffer does not need to be synchronised because it is write only; the contents are ignored
+    // Does not affect Immutability
+    private static final byte[] SKIP_BUF = new byte[SKIP_BUF_SIZE];
 
     /** Private constructor to prevent instantiation of this utility class. */
     private IOUtils(){
@@ -45,7 +53,7 @@ public final class IOUtils {
      *             if an error occurs
      */
     public static long copy(final InputStream input, final OutputStream output) throws IOException {
-        return copy(input, output, 8024);
+        return copy(input, output, COPY_BUF_SIZE);
     }
 
     /**
@@ -75,6 +83,10 @@ public final class IOUtils {
      * Skips the given number of bytes by repeatedly invoking skip on
      * the given input stream if necessary.
      *
+     * <p>In a case where the stream's skip() method returns 0 before
+     * the requested number of bytes has been skip this implementation
+     * will fall back to using the read() method.</p>
+     *
      * <p>This method will only skip less than the requested number of
      * bytes if the end of the input stream has been reached.</p>
      *
@@ -92,7 +104,16 @@ public final class IOUtils {
             }
             numToSkip -= skipped;
         }
-        return (available - numToSkip);
+            
+        while (numToSkip > 0) {
+            int read = readFully(input, SKIP_BUF, 0,
+                                 (int) Math.min(numToSkip, SKIP_BUF_SIZE));
+            if (read < 1) {
+                break;
+            }
+            numToSkip -= read;
+        }
+        return available - numToSkip;
     }
 
     /**
@@ -165,5 +186,19 @@ public final class IOUtils {
         final ByteArrayOutputStream output = new ByteArrayOutputStream();
         copy(input, output);
         return output.toByteArray();
+    }
+
+    /**
+     * Closes the given Closeable and swallows any IOException that may occur.
+     * @param c Closeable to close, can be null
+     * @since 1.7
+     */
+    public static void closeQuietly(Closeable c) {
+        if (c != null) {
+            try {
+                c.close();
+            } catch (IOException ignored) { // NOPMD
+            }
+        }
     }
 }

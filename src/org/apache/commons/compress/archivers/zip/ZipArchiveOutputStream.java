@@ -17,6 +17,15 @@
  */
 package org.apache.commons.compress.archivers.zip;
 
+import static org.apache.commons.compress.archivers.zip.ZipConstants.DATA_DESCRIPTOR_MIN_VERSION;
+import static org.apache.commons.compress.archivers.zip.ZipConstants.DWORD;
+import static org.apache.commons.compress.archivers.zip.ZipConstants.INITIAL_VERSION;
+import static org.apache.commons.compress.archivers.zip.ZipConstants.SHORT;
+import static org.apache.commons.compress.archivers.zip.ZipConstants.WORD;
+import static org.apache.commons.compress.archivers.zip.ZipConstants.ZIP64_MAGIC;
+import static org.apache.commons.compress.archivers.zip.ZipConstants.ZIP64_MAGIC_SHORT;
+import static org.apache.commons.compress.archivers.zip.ZipConstants.ZIP64_MIN_VERSION;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -33,15 +42,7 @@ import java.util.zip.ZipException;
 
 import org.apache.commons.compress.archivers.ArchiveEntry;
 import org.apache.commons.compress.archivers.ArchiveOutputStream;
-
-import static org.apache.commons.compress.archivers.zip.ZipConstants.DATA_DESCRIPTOR_MIN_VERSION;
-import static org.apache.commons.compress.archivers.zip.ZipConstants.DWORD;
-import static org.apache.commons.compress.archivers.zip.ZipConstants.INITIAL_VERSION;
-import static org.apache.commons.compress.archivers.zip.ZipConstants.SHORT;
-import static org.apache.commons.compress.archivers.zip.ZipConstants.WORD;
-import static org.apache.commons.compress.archivers.zip.ZipConstants.ZIP64_MAGIC;
-import static org.apache.commons.compress.archivers.zip.ZipConstants.ZIP64_MAGIC_SHORT;
-import static org.apache.commons.compress.archivers.zip.ZipConstants.ZIP64_MIN_VERSION;
+import org.apache.commons.compress.utils.IOUtils;
 
 /**
  * Reimplementation of {@link java.util.zip.ZipOutputStream
@@ -269,14 +270,8 @@ public class ZipArchiveOutputStream extends ArchiveOutputStream {
             _raf = new RandomAccessFile(file, "rw");
             _raf.setLength(0);
         } catch (IOException e) {
-            if (_raf != null) {
-                try {
-                    _raf.close();
-                } catch (IOException inner) { // NOPMD
-                    // ignore
-                }
-                _raf = null;
-            }
+            IOUtils.closeQuietly(_raf);
+            _raf = null;
             o = new FileOutputStream(file);
         }
         out = o;
@@ -741,7 +736,10 @@ public class ZipArchiveOutputStream extends ArchiveOutputStream {
     @Override
     public boolean canWriteEntryData(ArchiveEntry ae) {
         if (ae instanceof ZipArchiveEntry) {
-            return ZipUtil.canHandleEntryData((ZipArchiveEntry) ae);
+            ZipArchiveEntry zae = (ZipArchiveEntry) ae;
+            return zae.getMethod() != ZipMethod.IMPLODING.getCode()
+                && zae.getMethod() != ZipMethod.UNSHRINKING.getCode()
+                && ZipUtil.canHandleEntryData(zae);
         }
         return false;
     }
@@ -755,6 +753,9 @@ public class ZipArchiveOutputStream extends ArchiveOutputStream {
      */
     @Override
     public void write(byte[] b, int offset, int length) throws IOException {
+        if (entry == null) {
+            throw new IllegalStateException("No current entry");
+        }
         ZipUtil.checkRequestedFeatures(entry.entry);
         entry.hasWritten = true;
         if (entry.entry.getMethod() == DEFLATED) {

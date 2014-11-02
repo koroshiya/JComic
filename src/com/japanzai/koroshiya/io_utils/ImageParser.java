@@ -13,14 +13,12 @@ import java.util.zip.GZIPOutputStream;
 
 import org.apache.commons.compress.utils.IOUtils;
 
-import com.japanzai.koroshiya.controls.JBitmapDrawable;
-import com.japanzai.koroshiya.reader.MainActivity;
-import com.japanzai.koroshiya.reader.Reader;
-
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.graphics.BitmapFactory;
 import android.graphics.Point;
+
+import com.japanzai.koroshiya.controls.JBitmapDrawable;
+import com.japanzai.koroshiya.reader.Reader;
 
 /**
  * Purpose: Used to check if a file is a supported image and/or parse it

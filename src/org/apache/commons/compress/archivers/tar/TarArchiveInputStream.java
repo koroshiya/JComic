@@ -180,26 +180,53 @@ public class TarArchiveInputStream extends ArchiveInputStream {
         return (int) (entrySize - entryOffset);
     }
 
+    
     /**
-     * Skip bytes in the input buffer. This skips bytes in the
-     * current entry's data, not the entire archive, and will
-     * stop at the end of the current entry's data if the number
-     * to skip extends beyond that point.
-     *
-     * @param numToSkip The number of bytes to skip.
-     * @return the number actually skipped
-     * @throws IOException on error
+     * Skips over and discards <code>n</code> bytes of data from this input
+     * stream. The <code>skip</code> method may, for a variety of reasons, end
+     * up skipping over some smaller number of bytes, possibly <code>0</code>.
+     * This may result from any of a number of conditions; reaching end of file
+     * or end of entry before <code>n</code> bytes have been skipped; are only
+     * two possibilities. The actual number of bytes skipped is returned. If
+     * <code>n</code> is negative, no bytes are skipped.
+     * 
+     * 
+     * @param n
+     *            the number of bytes to be skipped.
+     * @return the actual number of bytes skipped.
+     * @exception IOException
+     *                if some other I/O error occurs.
      */
     @Override
-    public long skip(long numToSkip) throws IOException {
+    public long skip(final long n) throws IOException {
+        if (n <= 0) {
+            return 0;
+        }
 
-        long available = (entrySize - entryOffset);
-        numToSkip = Math.min(numToSkip, available);
-
-        long skipped = IOUtils.skip(is, numToSkip); 
+        final long available = entrySize - entryOffset;
+        final long skipped = is.skip(Math.min(n, available)); 
         count(skipped);
         entryOffset += skipped;
         return skipped;
+    }
+
+    /**
+     * Since we do not support marking just yet, we return false.
+     *
+     * @return False.
+     */
+    @Override
+    public boolean markSupported() {
+        return false;
+    }
+
+    /**
+     * Since we do not support marking just yet, we do nothing.
+     *
+     * @param markLimit The limit to mark.
+     */
+    @Override
+    public void mark(int markLimit) {
     }
 
     /**
@@ -229,7 +256,7 @@ public class TarArchiveInputStream extends ArchiveInputStream {
 
         if (currEntry != null) {
             /* Skip will only go to the end of the current entry */
-            skip(Long.MAX_VALUE);
+            IOUtils.skip(this, Long.MAX_VALUE);
 
             /* skip to the end of the last record */
             skipRecordPadding();
@@ -385,7 +412,7 @@ public class TarArchiveInputStream extends ArchiveInputStream {
 
         byte[] record = new byte[recordSize];
 
-        int readNow = is.read(record);
+        int readNow = IOUtils.readFully(is, record);
         count(readNow);
         if (readNow != recordSize) {
             return null;
@@ -417,18 +444,19 @@ public class TarArchiveInputStream extends ArchiveInputStream {
                         if (ch == '='){ // end of keyword
                             String keyword = coll.toString(CharsetNames.UTF_8);
                             // Get rest of entry
-                            byte[] rest = new byte[len - read];
-                            int got = i.read(rest);
-                            if (got != len - read){
+                            final int restLen = len - read;
+                            byte[] rest = new byte[restLen];
+                            int got = IOUtils.readFully(i, rest);
+                            if (got != restLen) {
                                 throw new IOException("Failed to read "
                                                       + "Paxheader. Expected "
-                                                      + (len - read)
+                                                      + restLen
                                                       + " bytes, read "
                                                       + got);
                             }
                             // Drop trailing NL
                             String value = new String(rest, 0,
-                                                      len - read - 1, CharsetNames.UTF_8);
+                                                      restLen - 1, CharsetNames.UTF_8);
                             headers.put(keyword, value);
                             break;
                         }
@@ -573,14 +601,21 @@ public class TarArchiveInputStream extends ArchiveInputStream {
             return -1;
         }
 
+        if (currEntry == null) {
+            throw new IllegalStateException("No current tar entry");
+        }
+
         numToRead = Math.min(numToRead, available());
         
         totalRead = is.read(buf, offset, numToRead);
-        count(totalRead);
         
         if (totalRead == -1) {
+            if (numToRead > 0) {
+                throw new IOException("Truncated TAR archive");
+            }
             hasHitEOF = true;
         } else {
+            count(totalRead);
             entryOffset += totalRead;
         }
 

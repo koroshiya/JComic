@@ -100,6 +100,11 @@ public class ArchiveStreamFactory {
      * @since 1.1
      */
     public static final String ZIP = "zip";
+    /**
+     * Constant used to identify the 7z archive format.
+     * @since 1.8
+     */
+    public static final String SEVEN_Z = "7z";
 
     /**
      * Entry encoding, null for the default.
@@ -118,9 +123,9 @@ public class ArchiveStreamFactory {
     }
 
     /**
-     * Sets the encoding to use for arj, zip, dump, cpio and tar
-     * files.  Use null for the default.
-     *
+     * Sets the encoding to use for arj, zip, dump, cpio and tar files. Use null for the default.
+     * 
+     * @param entryEncoding the entry encoding, null uses the default.
      * @since 1.5
      */
     public void setEntryEncoding(String entryEncoding) {
@@ -134,6 +139,8 @@ public class ArchiveStreamFactory {
      * @param in the input stream
      * @return the archive input stream
      * @throws ArchiveException if the archiver name is not known
+     * @throws StreamingNotSupportedException if the format cannot be
+     * read from a stream
      * @throws IllegalArgumentException if the archiver name or stream is null
      */
     public ArchiveInputStream createArchiveInputStream(
@@ -177,6 +184,8 @@ public class ArchiveStreamFactory {
      * @param in the input stream
      * @return the archive input stream
      * @throws ArchiveException if the archiver name is not known
+     * @throws StreamingNotSupportedException if the format cannot be
+     * read from a stream
      * @throws IllegalArgumentException if the stream is null or does not support mark
      */
     public ArchiveInputStream createArchiveInputStream(final InputStream in)
@@ -237,13 +246,7 @@ public class ArchiveStreamFactory {
                     // autodetection, simply not a TAR
                     // ignored
                 } finally {
-                    if (tais != null) {
-                        try {
-                            tais.close();
-                        } catch (IOException ignored) { // NOPMD
-                            // ignored
-                        }
-                    }
+                    IOUtils.closeQuietly(tais);
                 }
             }
         } catch (IOException e) {

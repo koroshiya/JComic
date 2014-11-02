@@ -26,7 +26,7 @@ import org.apache.commons.compress.archivers.ArchiveEntry;
 /**
  * Represents an archive entry in the "ar" format.
  * 
- * Each AR archive starts with "!<arch>" followed by a LF. After these 8 bytes
+ * Each AR archive starts with "!&lt;arch&gt;" followed by a LF. After these 8 bytes
  * the archive entries are listed. The format of an entry header is as it follows:
  * 
  * <pre>
@@ -158,7 +158,7 @@ public class ArArchiveEntry implements ArchiveEntry {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((name == null) ? 0 : name.hashCode());
+        result = prime * result + (name == null ? 0 : name.hashCode());
         return result;
     }
 
