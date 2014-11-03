@@ -1,3 +1,12 @@
+-Version 1.11.0
+
+Moved up, cancel & home to a "shelf" above the file chooser listview
+Added refresh to the shelf
+Waiting for an uncached page now invokes the Progress screen
+Updated Apache Commons Compress to v1.9 (I think it was v1.5 before)
+Removed several unused classes related to archiving
+Altered Rar to throw an exception if a memory error is encountered during file extraction
+
 -Version 1.10.0
 
 Removed remaining (now-defunct) ad definition
