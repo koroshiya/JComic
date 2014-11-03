@@ -98,7 +98,7 @@ public class ItemClickListener implements OnItemClickListener, ModalReturn {
 		if (file.isDirectory()){
 			id = writeable ? R.array.array_context_dir_rw : R.array.array_context_dir_r;
 		}else if (ArchiveParser.isSupportedArchive(file)){
-			id = R.array.array_context_file_r;
+			id = writeable ? R.array.array_context_file_rw : R.array.array_context_file_r;
 		}else{
 			id = writeable ? R.array.array_context_file_rw : R.array.array_context_file_r;
 		}

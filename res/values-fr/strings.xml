@@ -11,6 +11,10 @@
     <string name="loading_next">Chargement de l’image suivante – Veuillez patienter</string>
     <string name="loading_progress">Chargement – Veuillez patienter jusqu’à la fin</string>
     <string name="cant_go_up">Vous ne pouvez pas aller plus loin</string>
+    <string name="cancel_selection">Annuler</string>
+    <string name="up_directory">Remonter</string>
+    <string name="home_directory">Accueil</string>
+    <string name="refresh">Rafraîchir</string>
     <string name="no_images">Aucune image supportée trouvé</string>
     <string name="unsupported_file">Fichier non supporté:</string>
     <string name="end_of_chapter">Fin du chapitre</string>

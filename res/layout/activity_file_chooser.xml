@@ -14,31 +14,53 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal" >
 
-            <ImageButton
+            <TextView
                 android:id="@+id/btn_cancel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:maxHeight="24dp"
-                android:maxWidth="24dp"
-                android:src="@drawable/cancel" />
+                android:drawableTop="@drawable/cancel"
+                android:gravity="center_horizontal"
+                android:minWidth="55dp"
+                android:text="@string/cancel_selection"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:clickable="true"
+                android:textColor="#FFFFFF" />
 
-            <ImageButton
+            <TextView
                 android:id="@+id/btn_up"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/up" />
+                android:drawableTop="@drawable/up"
+                android:gravity="center_horizontal"
+                android:minWidth="55dp"
+                android:text="@string/up_directory"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:clickable="true"
+                android:textColor="#FFFFFF" />
 
-            <ImageButton
+            <TextView
                 android:id="@+id/btn_home"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/home" />
+                android:drawableTop="@drawable/home"
+                android:gravity="center_horizontal"
+                android:minWidth="55dp"
+                android:text="@string/home_directory"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:clickable="true"
+                android:textColor="#FFFFFF" />
 
-            <ImageButton
+            <TextView
                 android:id="@+id/btn_refresh"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/refresh" />
+                android:drawableTop="@drawable/refresh"
+                android:gravity="center_horizontal"
+                android:minWidth="55dp"
+                android:text="@string/refresh"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:clickable="true"
+                android:textColor="#FFFFFF" />
 
         </LinearLayout>
 

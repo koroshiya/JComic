@@ -14,11 +14,12 @@ import android.util.Log;
 import android.view.ContextMenu;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
+import android.view.animation.AlphaAnimation;
 import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
 
@@ -133,28 +134,45 @@ public class FileChooser extends SherlockFragmentActivity {
     	registerForContextMenu(v);
         lv.addView(v, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
         this.setContentView(vf, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+        
+        final AlphaAnimation fadeIn = new AlphaAnimation(0.5f , 1.0f ) ; 
+        fadeIn.setDuration(300);
+        fadeIn.setFillAfter(true);
+        
+        final AlphaAnimation fadeOut = new AlphaAnimation(1.0f , 0.5f);
+        fadeOut.setDuration(300);
+        fadeOut.setFillAfter(true);
 
-        ((ImageButton)findViewById(R.id.btn_cancel)).setOnClickListener(new View.OnClickListener() {
-			@Override
+        final TextView cancel = ((TextView)findViewById(R.id.btn_cancel));
+        final TextView home = ((TextView)findViewById(R.id.btn_home));
+        final TextView up = ((TextView)findViewById(R.id.btn_up));
+        final TextView refresh = ((TextView)findViewById(R.id.btn_refresh));
+
+        cancel.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
+				cancel.startAnimation(fadeOut);
+				cancel.startAnimation(fadeIn);
 				finish();
 			}
 		});
-        ((ImageButton)findViewById(R.id.btn_home)).setOnClickListener(new View.OnClickListener() {
-			@Override
+        home.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
+				home.startAnimation(fadeOut);
+				home.startAnimation(fadeIn);
 				if (icl != null) icl.processItemAfter(Environment.getExternalStorageDirectory().getAbsolutePath(), false);
 			}
 		});
-        ((ImageButton)findViewById(R.id.btn_up)).setOnClickListener(new View.OnClickListener() {
-			@Override
+        up.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
+				up.startAnimation(fadeOut);
+				up.startAnimation(fadeIn);
 				if (icl != null) icl.processItemAfter(getHome().equals("/") ? "/" : getHomeAsFile().getParent(), false);
 			}
 		});
-        ((ImageButton)findViewById(R.id.btn_refresh)).setOnClickListener(new View.OnClickListener() {
-			@Override
+        refresh.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
+				refresh.startAnimation(fadeOut);
+				refresh.startAnimation(fadeIn);
 				refreshTab();
 			}
 		});

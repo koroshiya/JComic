@@ -11,6 +11,10 @@
     <string name="loading_next">Loading next image - Please wait</string>
     <string name="loading_progress">Loading - Please wait until processing is complete</string>
     <string name="cant_go_up">Can\'t go up any further</string>
+    <string name="cancel_selection">Cancel</string>
+    <string name="up_directory">Up</string>
+    <string name="home_directory">Home</string>
+    <string name="refresh">Refresh</string>
     <string name="no_images">No supported images found</string>
     <string name="unsupported_file">Unsupported file: </string>
     <string name="end_of_chapter">End of chapter</string>
