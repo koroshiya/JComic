@@ -32,6 +32,21 @@ public class Progress extends SherlockActivity implements ModalReturn{
 	private Reader reader;
 	private ReadableArchive temp;
 	
+	public static boolean isVisible = false;
+	public static Progress self;
+	
+	@Override
+	public void onPause(){
+		super.onPause();
+		isVisible = false;
+	}
+	
+	@Override
+	public void onResume(){
+		super.onResume();
+		isVisible = true;
+	}
+	
 	private class ProgressThread extends Thread{
 		
 		@Override
@@ -83,19 +98,24 @@ public class Progress extends SherlockActivity implements ModalReturn{
     public void onCreate(Bundle savedInstanceState){
     	
         super.onCreate(savedInstanceState);
+        self = this;
         SettingsManager.setFullScreen(this);
         setContentView(R.layout.progress);
         this.getSupportActionBar().hide();
 
         Bundle b = getIntent().getExtras();
-        this.f = new File(b.getString("file"));
-        this.index = b.getInt("index", 0);
-        reader = Reader.reader;
+        int i = b.getInt("index", 0);
         
-        Log.d("Progress", "Reading file "+f.getAbsolutePath());
-        
-        ProgressThread thread = new ProgressThread();
-        thread.start();
+	    if (i >= 0){
+	        this.index = i;
+	        this.f = new File(b.getString("file"));
+	        reader = Reader.reader;
+	        
+	        Log.d("Progress", "Reading file "+f.getAbsolutePath());
+	        
+	        ProgressThread thread = new ProgressThread();
+	        thread.start();
+        }
         
     }
     
@@ -191,6 +211,10 @@ public class Progress extends SherlockActivity implements ModalReturn{
      * */
     public void finish(){
     	reader.clearTempFile();
+    	super.finish();
+    }
+    
+    public void oldFinish(){
     	super.finish();
     }
     

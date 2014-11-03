@@ -4,6 +4,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -13,6 +16,7 @@ import com.japanzai.koroshiya.controls.JBitmapDrawable;
 import com.japanzai.koroshiya.interfaces.Cacheable;
 import com.japanzai.koroshiya.interfaces.StepThread;
 import com.japanzai.koroshiya.reader.MainActivity;
+import com.japanzai.koroshiya.reader.Progress;
 import com.japanzai.koroshiya.reader.Reader;
 import com.japanzai.koroshiya.reader.ToastThread;
 import com.japanzai.koroshiya.settings.SettingsManager;
@@ -191,6 +195,10 @@ public abstract class Steppable implements Cacheable{
 	    		cache(parent.getSettings().getCacheModeIndex() != 2);
 			} catch (IOException e) {
 				e.printStackTrace();
+			} finally {
+				if (Progress.isVisible && Progress.self != null){
+					Progress.self.oldFinish();
+				}
 			}
 		}
 		
@@ -407,11 +415,34 @@ public abstract class Steppable implements Cacheable{
 	 * Creates a thread to display a loading message while an image is being parsed
 	 * */
 	private void loading(){
-		parent.runOnUiThread(new ToastThread(R.string.caching, parent, Toast.LENGTH_SHORT));
+		showProgressUi(parent);
+		//parent.runOnUiThread(new ToastThread(R.string.caching, parent, Toast.LENGTH_SHORT));
 	}
 	
-	private void caching(){
-		parent.runOnUiThread(new ToastThread(R.string.loading_next, parent, Toast.LENGTH_SHORT));
+	private void caching(){ //TODO: run Progress on UI thread instead
+		showProgressUi(parent);
+		//parent.runOnUiThread(new ToastThread(R.string.loading_next, parent, Toast.LENGTH_SHORT));
+	}
+	
+	private class ProgressThread extends Thread{
+		
+		private Activity cont;
+		
+		private ProgressThread(Activity cont){
+			this.cont = cont;
+		}
+		
+		public void run(){
+			Intent intent = new Intent(cont, Progress.class);
+			Bundle ba = new Bundle();
+			ba.putInt("index", -1);
+			intent.putExtras(ba);
+			cont.startActivity(intent);
+		}
+	}
+	
+	private void showProgressUi(Activity cont){
+		cont.runOnUiThread(new ProgressThread(cont));
 	}
 	
 	/**
