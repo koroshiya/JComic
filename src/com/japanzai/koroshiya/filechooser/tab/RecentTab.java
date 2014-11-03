@@ -57,17 +57,13 @@ public class RecentTab extends SherlockFragment {
 	        fc.setItemClickListener(icl);
             
             ArrayList<String> listItems = new ArrayList<String>();
-            
-            String cancel = getString(R.string.cancel_selection);
-            
-            listItems.add(cancel);
         	
         	List<HashMap<String,String>> aList;
 	        
             if (!settings.saveRecent()){
             	listItems.add(getString(R.string.recent_function_disabled));
             	listItems.add(getString(R.string.recent_general_settings));
-        		aList = fc.getEmptyHashList(listItems, cancel);
+        		aList = fc.getEmptyHashList(listItems);
             }else{
             	
             	String line;
@@ -80,11 +76,9 @@ public class RecentTab extends SherlockFragment {
             	
             	if (listItems.size() == 1){
                 	listItems.add(getString(R.string.recent_no_recent_files));
-            		aList = fc.getEmptyHashList(listItems, cancel);
+            		aList = fc.getEmptyHashList(listItems);
                 }else{
-                    String home = getString(R.string.home_directory);
-                    String up = getString(R.string.up_directory);
-            		aList = fc.getHashList(listItems, home, cancel, up);
+            		aList = fc.getHashList(listItems);
             	}
             	
             }

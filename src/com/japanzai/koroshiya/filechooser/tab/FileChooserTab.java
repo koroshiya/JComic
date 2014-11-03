@@ -75,14 +75,6 @@ public class FileChooserTab extends SherlockFragment {
 
             ArrayList<String> listItems = new ArrayList<String>();
             
-            String cancel = getString(R.string.cancel_selection);
-            String home = getString(R.string.home_directory);
-            String up = getString(R.string.up_directory);
-
-            listItems.add(cancel);
-            listItems.add(home);
-            listItems.add(up);
-            
             ArrayList<String> tempList = new ArrayList<String>();
 	        for (File s : fc.getHomeAsFile().listFiles()){
 	        	if (fc.isSupportedFile(s) && !s.isHidden()){tempList.add(s.getName());}
@@ -95,7 +87,7 @@ public class FileChooserTab extends SherlockFragment {
 
 	        String[] from = {"image", "name"};
 	        int[] to = {R.id.row_image, R.id.row_text};
-	        SimpleAdapter itemAdapter = new SimpleAdapter(fc, fc.getHashList(listItems, home, cancel, up), R.layout.list_item, from, to);
+	        SimpleAdapter itemAdapter = new SimpleAdapter(fc, fc.getHashList(listItems), R.layout.list_item, from, to);
 	        
 	        fc.reset();
 	        

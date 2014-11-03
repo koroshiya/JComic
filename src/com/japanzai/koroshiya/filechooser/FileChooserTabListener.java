@@ -2,9 +2,12 @@ package com.japanzai.koroshiya.filechooser;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.view.View;
+import android.widget.ImageButton;
 
 import com.actionbarsherlock.app.ActionBar.Tab;
 import com.actionbarsherlock.app.ActionBar.TabListener;
+import com.japanzai.koroshiya.R;
 import com.japanzai.koroshiya.filechooser.tab.FavoriteTab;
 import com.japanzai.koroshiya.filechooser.tab.FileChooserTab;
 import com.japanzai.koroshiya.filechooser.tab.RecentTab;
@@ -27,13 +30,20 @@ public class FileChooserTabListener implements TabListener {
 	public void onTabSelected(Tab tab, FragmentTransaction ft) {
 		
 		Fragment frag;
+		boolean visible = false;
 		
 		if (tab.getPosition() == 0){
 			frag = new RecentTab(parent);
 		}else if (tab.getPosition() == 1) {
 			frag = new FileChooserTab(parent);
+			visible = true;
 		}else {
 			frag = new FavoriteTab(parent);
+		}
+		
+		int[] affectedButtons = {R.id.btn_home, R.id.btn_up, R.id.btn_refresh};
+		for (int id : affectedButtons){
+			((ImageButton)parent.findViewById(id)).setVisibility(visible ? View.VISIBLE : View.GONE);
 		}
 		
 		parent.setFrag(frag);

@@ -12,7 +12,6 @@ import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
 import org.apache.commons.compress.utils.IOUtils;
 
 import android.content.Intent;
-import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -172,9 +171,7 @@ public class ItemClickListener implements OnItemClickListener, ModalReturn {
 			MainActivity.mainActivity.getSettings().clearRecent();
 			parent.refreshTab();
 			
-		}/*else if (command.equals("Enter password")){
-			//TODO: prompt for password
-		}*/
+		}
 		
 	}
 	
@@ -467,18 +464,7 @@ public class ItemClickListener implements OnItemClickListener, ModalReturn {
 		
 		try{
 			
-			if (name.equals(parent.getString(R.string.up_directory))){
-				if (!parent.getHome().equals("/")){
-					location = parent.getHomeAsFile().getParent();
-				}else {
-					location = "/";
-				}
-			}else if (name.equals(parent.getString(R.string.cancel_selection))){
-				parent.finish();
-				return;
-			}else if (name.equals(parent.getString(R.string.home_directory))){
-				location = Environment.getExternalStorageDirectory().getAbsolutePath();
-			}else if (name.equals(parent.getString(R.string.recent_general_settings))){
+			if (name.equals(parent.getString(R.string.recent_general_settings))){
 				Log.d("ItemClickListener", "Going to SettingsView");
 				Intent i = new Intent(parent, SettingsView.class);
 				parent.startActivity(i);
@@ -494,6 +480,12 @@ public class ItemClickListener implements OnItemClickListener, ModalReturn {
 			ex.printStackTrace();
 			return;
 		}
+		
+		processItemAfter(location, forceReturn);
+		
+	}
+	
+	public void processItemAfter(String location, boolean forceReturn){
 		
 		File file = new File(location);
 		

@@ -55,12 +55,6 @@ public class FavoriteTab extends SherlockFragment {
 	        fc.setItemClickListener(icl);
 	        
 	        ArrayList<String> listItems = new ArrayList<String>();
-            
-            String cancel = getString(R.string.cancel_selection);
-            String home = getString(R.string.home_directory);
-            String up = getString(R.string.up_directory);
-            
-            listItems.add(cancel);
 
         	for (String favorite : settings.getFavorite()){
         		if ((new File(favorite)).exists()){
@@ -72,7 +66,7 @@ public class FavoriteTab extends SherlockFragment {
 
 	        String[] from = {"image", "name"};
 	        int[] to = {R.id.row_image, R.id.row_text};
-	        SimpleAdapter itemAdapter = new SimpleAdapter(fc, fc.getHashList(listItems, home, cancel, up), R.layout.list_item, from, to);
+	        SimpleAdapter itemAdapter = new SimpleAdapter(fc, fc.getHashList(listItems), R.layout.list_item, from, to);
 	        
 	        fc.reset();
 	        

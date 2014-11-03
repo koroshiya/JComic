@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -102,21 +103,8 @@ public class FileChooser extends SherlockFragmentActivity {
     
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        
-    	int id = item.getItemId();
     	
-    	if (id == R.id.menu_cancel){
-    		icl.process(R.string.cancel_selection);
-            return true;
-    	}else if(id == R.id.menu_up){
-    		icl.process(R.string.up_directory);
-            return true;
-    	}else if(id == R.id.menu_home){
-    		icl.process(R.string.home_directory);
-            return true;
-    	}else{
-    		return super.onOptionsItemSelected(item);
-    	}
+    	return super.onOptionsItemSelected(item);
     	
     }
         
@@ -145,6 +133,31 @@ public class FileChooser extends SherlockFragmentActivity {
     	registerForContextMenu(v);
         lv.addView(v, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
         this.setContentView(vf, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+
+        ((ImageButton)findViewById(R.id.btn_cancel)).setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				finish();
+			}
+		});
+        ((ImageButton)findViewById(R.id.btn_home)).setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if (icl != null) icl.processItemAfter(Environment.getExternalStorageDirectory().getAbsolutePath(), false);
+			}
+		});
+        ((ImageButton)findViewById(R.id.btn_up)).setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if (icl != null) icl.processItemAfter(getHome().equals("/") ? "/" : getHomeAsFile().getParent(), false);
+			}
+		});
+        ((ImageButton)findViewById(R.id.btn_refresh)).setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				refreshTab();
+			}
+		});
         
     }
     
@@ -224,10 +237,7 @@ public class FileChooser extends SherlockFragmentActivity {
 		
 		if (name.equals(getString(R.string.recent_function_disabled)) ||
 				name.equals(getString(R.string.recent_general_settings)) ||
-				name.equals(getString(R.string.recent_no_recent_files)) ||
-				name.equals(getString(R.string.up_directory)) ||
-				name.equals(getString(R.string.cancel_selection)) ||
-				name.equals(getString(R.string.home_directory)))
+				name.equals(getString(R.string.recent_no_recent_files)))
 		{
 			Log.d("FileChooser", "Failed to instantiate context menu");
 			return;
@@ -438,7 +448,7 @@ public class FileChooser extends SherlockFragmentActivity {
 		}
 	}
 	
-	public List<HashMap<String, String>> getHashList(ArrayList<String> listItems, String home, String cancel, String up){
+	public List<HashMap<String, String>> getHashList(ArrayList<String> listItems){
         
         List<HashMap<String,String>> aList = new ArrayList<HashMap<String,String>>();
 
@@ -455,12 +465,6 @@ public class FileChooser extends SherlockFragmentActivity {
             	img = R.drawable.rar;
             }else if (ArchiveParser.isSupportedMiscArchive(s)){
             	img = R.drawable.archive;
-            }else if (s.equals(cancel)){
-            	img = R.drawable.cancel;
-            }else if (s.equals(home)){
-            	img = R.drawable.home;
-            }else if (s.equals(up)){
-            	img = R.drawable.up;
             }else{
             	img = R.drawable.folder;
             }
@@ -471,14 +475,14 @@ public class FileChooser extends SherlockFragmentActivity {
         return aList;
 	}
 	
-	public List<HashMap<String, String>> getEmptyHashList(ArrayList<String> listItems, String cancel){
+	public List<HashMap<String, String>> getEmptyHashList(ArrayList<String> listItems){
         
         List<HashMap<String,String>> aList = new ArrayList<HashMap<String,String>>();
 
         for (String s : listItems){
             HashMap<String, String> hm = new HashMap<String,String>();
             hm.put("name", s);
-            hm.put("image", Integer.toString(s.equals(cancel) ? R.drawable.cancel : R.drawable.transparent));
+            hm.put("image", Integer.toString(R.drawable.transparent));
             aList.add(hm);
         }
         
