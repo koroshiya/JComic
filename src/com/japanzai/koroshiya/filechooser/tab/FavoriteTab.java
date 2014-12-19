@@ -54,7 +54,7 @@ public class FavoriteTab extends SherlockFragment {
 	        ItemClickListener icl = new ItemClickListener(fc);
 	        fc.setItemClickListener(icl);
 	        
-	        ArrayList<String> listItems = new ArrayList<String>();
+	        ArrayList<String> listItems = new ArrayList<>();
 
         	for (String favorite : settings.getFavorite()){
         		if ((new File(favorite)).exists()){

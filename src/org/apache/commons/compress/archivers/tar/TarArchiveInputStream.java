@@ -342,7 +342,7 @@ public class TarArchiveInputStream extends ArchiveInputStream {
     protected byte[] getLongNameData() throws IOException {
         // read in the name
         ByteArrayOutputStream longName = new ByteArrayOutputStream();
-        int length = 0;
+        int length;
         while ((length = read(SMALL_BUF)) >= 0) {
             longName.write(SMALL_BUF, 0, length);
         }
@@ -428,7 +428,7 @@ public class TarArchiveInputStream extends ArchiveInputStream {
     }
 
     Map<String, String> parsePaxHeaders(InputStream i) throws IOException {
-        Map<String, String> headers = new HashMap<String, String>();
+        Map<String, String> headers = new HashMap<>();
         // Format is "length keyword=value\n";
         while(true){ // get length
             int ch;
@@ -486,29 +486,40 @@ public class TarArchiveInputStream extends ArchiveInputStream {
          * uid,uname
          * SCHILY.devminor, SCHILY.devmajor: don't have setters/getters for those
          */
+        String val;
         for (Entry<String, String> ent : headers.entrySet()){
-            String key = ent.getKey();
-            String val = ent.getValue();
-            if ("path".equals(key)){
-                currEntry.setName(val);
-            } else if ("linkpath".equals(key)){
-                currEntry.setLinkName(val);
-            } else if ("gid".equals(key)){
-                currEntry.setGroupId(Integer.parseInt(val));
-            } else if ("gname".equals(key)){
-                currEntry.setGroupName(val);
-            } else if ("uid".equals(key)){
-                currEntry.setUserId(Integer.parseInt(val));
-            } else if ("uname".equals(key)){
-                currEntry.setUserName(val);
-            } else if ("size".equals(key)){
-                currEntry.setSize(Long.parseLong(val));
-            } else if ("mtime".equals(key)){
-                currEntry.setModTime((long) (Double.parseDouble(val) * 1000));
-            } else if ("SCHILY.devminor".equals(key)){
-                currEntry.setDevMinor(Integer.parseInt(val));
-            } else if ("SCHILY.devmajor".equals(key)){
-                currEntry.setDevMajor(Integer.parseInt(val));
+            val = ent.getValue();
+            switch (ent.getKey()){
+                case "path":
+                    currEntry.setName(val);
+                    break;
+                case "linkpath":
+                    currEntry.setLinkName(val);
+                    break;
+                case "gid":
+                    currEntry.setGroupId(Integer.parseInt(val));
+                    break;
+                case "gname":
+                    currEntry.setGroupName(val);
+                    break;
+                case "uid":
+                    currEntry.setUserId(Integer.parseInt(val));
+                    break;
+                case "uname":
+                    currEntry.setUserName(val);
+                    break;
+                case "size":
+                    currEntry.setSize(Long.parseLong(val));
+                    break;
+                case "mtime":
+                    currEntry.setModTime((long) (Double.parseDouble(val) * 1000));
+                    break;
+                case "SCHILY.devminor":
+                    currEntry.setDevMinor(Integer.parseInt(val));
+                    break;
+                case "SCHILY.devmajor":
+                    currEntry.setDevMajor(Integer.parseInt(val));
+                    break;
             }
         }
     }
@@ -595,7 +606,7 @@ public class TarArchiveInputStream extends ArchiveInputStream {
      */
     @Override
     public int read(byte[] buf, int offset, int numToRead) throws IOException {
-    	int totalRead = 0;
+    	int totalRead;
 
         if (hasHitEOF || entryOffset >= entrySize) {
             return -1;
@@ -680,41 +691,14 @@ public class TarArchiveInputStream extends ArchiveInputStream {
      * @return true, if this stream is a tar archive stream, false otherwise
      */
     public static boolean matches(byte[] signature, int length) {
-        if (length < TarConstants.VERSION_OFFSET+TarConstants.VERSIONLEN) {
-            return false;
-        }
-
-        if (ArchiveUtils.matchAsciiBuffer(TarConstants.MAGIC_POSIX,
-                signature, TarConstants.MAGIC_OFFSET, TarConstants.MAGICLEN)
-            &&
-            ArchiveUtils.matchAsciiBuffer(TarConstants.VERSION_POSIX,
-                signature, TarConstants.VERSION_OFFSET, TarConstants.VERSIONLEN)
-                ){
-            return true;
-        }
-        if (ArchiveUtils.matchAsciiBuffer(TarConstants.MAGIC_GNU,
-                signature, TarConstants.MAGIC_OFFSET, TarConstants.MAGICLEN)
-            &&
-            (
-             ArchiveUtils.matchAsciiBuffer(TarConstants.VERSION_GNU_SPACE,
-                signature, TarConstants.VERSION_OFFSET, TarConstants.VERSIONLEN)
-            ||
-            ArchiveUtils.matchAsciiBuffer(TarConstants.VERSION_GNU_ZERO,
-                signature, TarConstants.VERSION_OFFSET, TarConstants.VERSIONLEN)
-            )
-                ){
-            return true;
-        }
-        // COMPRESS-107 - recognise Ant tar files
-        if (ArchiveUtils.matchAsciiBuffer(TarConstants.MAGIC_ANT,
-                signature, TarConstants.MAGIC_OFFSET, TarConstants.MAGICLEN)
-            &&
-            ArchiveUtils.matchAsciiBuffer(TarConstants.VERSION_ANT,
-                signature, TarConstants.VERSION_OFFSET, TarConstants.VERSIONLEN)
-                ){
-            return true;
-        }
-        return false;
+        return (!(length < TarConstants.VERSION_OFFSET+TarConstants.VERSIONLEN)) &&
+                (ArchiveUtils.matchAsciiBuffer(TarConstants.MAGIC_POSIX, signature, TarConstants.MAGIC_OFFSET, TarConstants.MAGICLEN) &&
+                ArchiveUtils.matchAsciiBuffer(TarConstants.VERSION_POSIX, signature, TarConstants.VERSION_OFFSET, TarConstants.VERSIONLEN)) ||
+                (ArchiveUtils.matchAsciiBuffer(TarConstants.MAGIC_GNU, signature, TarConstants.MAGIC_OFFSET, TarConstants.MAGICLEN) &&
+                (ArchiveUtils.matchAsciiBuffer(TarConstants.VERSION_GNU_SPACE, signature, TarConstants.VERSION_OFFSET, TarConstants.VERSIONLEN) ||
+                ArchiveUtils.matchAsciiBuffer(TarConstants.VERSION_GNU_ZERO, signature, TarConstants.VERSION_OFFSET, TarConstants.VERSIONLEN))) ||
+                (ArchiveUtils.matchAsciiBuffer(TarConstants.MAGIC_ANT, signature, TarConstants.MAGIC_OFFSET, TarConstants.MAGICLEN) &&
+                ArchiveUtils.matchAsciiBuffer(TarConstants.VERSION_ANT, signature, TarConstants.VERSION_OFFSET, TarConstants.VERSIONLEN));
     }
 
 }

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+    <PreferenceCategory android:title="User Settings">
+        <Preference android:title="Loop Mode" android:summary="Boolean preference for enabling or disabling Loop Mode" android:key="loopMode"/>
+        <Preference android:title="Save Session" android:summary="Boolean preference for whether or not to save previously read comic" android:key="saveSession"/>
+        <Preference android:title="Save Recent" android:summary="Boolean preference for whether or not to save recently read comics" android:key="saveRecent"/>
+        <Preference android:title="Keep Backlight On" android:summary="If true, the device/'s backlight will not timeout while reading" android:key="keepBacklightOn"/>
+        <Preference android:title="Zoom Index" android:summary="Integer representing the index of a pre-defined zoom ratio" android:key="zoomIndex"/>
+        <Preference android:title="Orientation Index" android:summary="Integer representing the index of a pre-defined orientation" android:key="orientationIndex"/>
+        <Preference android:title="Cache Safety" android:summary="" android:key="cacheSafety"/>
+        <Preference android:title="Cache On Startup" android:summary="" android:key="cacheOnStart"/>
+        <Preference android:title="Ram Mode Index" android:summary="" android:key="ramModeIndex"/>
+        <Preference android:title="Double Tap Index" android:summary="" android:key="doubleTapIndex"/>
+        <Preference android:title="Keep Zoom On Page Change" android:summary="" android:key="keepZoomOnPageChange"/>
+        <Preference android:title="Archive Mode Index" android:summary="Integer representing the index of a pre-defined archive extraction mode" android:key="archiveModeIndex"/>
+        <Preference android:title="Cache Mode Index" android:summary="Integer representing the index of a pre-defined caching procedure" android:key="cacheModeIndex"/>
+        <Preference android:title="Extract Mode Index" android:summary="Integer representing the index of a pre-defined archive extraction procedure" android:key="extractModeIndex"/>
+        <Preference android:title="Cache Level" android:summary="Integer representing how aggressively to cache" android:key="cacheLevel"/>
+        <Preference android:title="Recursion Level" android:summary="Integer representing how many levels to recurse when looking for files" android:key="recursionLevel"/>
+        <Preference android:title="Dynamic Resizing" android:summary="Integer representing index of option regarding whether to resize images upon allocation" android:key="dynamicResizing"/>
+        <Preference android:title="Home Directory" android:summary="User home directory or other saved directory for defaulting to" android:key="homeDir"/>
+        <Preference android:title="Last Read" android:summary="String location of File last read" android:key="lastRead"/>
+        <Preference android:title="Last Read Index" android:summary="Index of page on which the last File read left off" android:key="lastReadIndex"/>
+    </PreferenceCategory>
+    <PreferenceCategory>
+        <Preference android:title="recent1" android:summary="" android:key="recent1"/>
+        <Preference android:title="recent2" android:summary="" android:key="recent2"/>
+        <Preference android:title="recent3" android:summary="" android:key="recent3"/>
+        <Preference android:title="recent4" android:summary="" android:key="recent4"/>
+        <Preference android:title="recent5" android:summary="" android:key="recent5"/>
+        <Preference android:title="recent6" android:summary="" android:key="recent6"/>
+        <Preference android:title="recent7" android:summary="" android:key="recent7"/>
+        <Preference android:title="recent8" android:summary="" android:key="recent8"/>
+        <Preference android:title="recent9" android:summary="" android:key="recent9"/>
+        <Preference android:title="recent10" android:summary="" android:key="recent10"/>
+    </PreferenceCategory>
+    <PreferenceCategory>
+        <Preference android:title="recentPage1" android:summary="" android:key="recentPage1"/>
+        <Preference android:title="recentPage2" android:summary="" android:key="recentPage2"/>
+        <Preference android:title="recentPage3" android:summary="" android:key="recentPage3"/>
+        <Preference android:title="recentPage4" android:summary="" android:key="recentPage4"/>
+        <Preference android:title="recentPage5" android:summary="" android:key="recentPage5"/>
+        <Preference android:title="recentPage6" android:summary="" android:key="recentPage6"/>
+        <Preference android:title="recentPage7" android:summary="" android:key="recentPage7"/>
+        <Preference android:title="recentPage8" android:summary="" android:key="recentPage8"/>
+        <Preference android:title="recentPage9" android:summary="" android:key="recentPage9"/>
+        <Preference android:title="recentPage10" android:summary="" android:key="recentPage10"/>
+    </PreferenceCategory>
+    <PreferenceCategory>
+        <Preference android:title="favorite1" android:summary="" android:key="favorite1"/>
+        <Preference android:title="favorite2" android:summary="" android:key="favorite2"/>
+        <Preference android:title="favorite3" android:summary="" android:key="favorite3"/>
+        <Preference android:title="favorite4" android:summary="" android:key="favorite4"/>
+        <Preference android:title="favorite5" android:summary="" android:key="favorite5"/>
+        <Preference android:title="favorite6" android:summary="" android:key="favorite6"/>
+        <Preference android:title="favorite7" android:summary="" android:key="favorite7"/>
+        <Preference android:title="favorite8" android:summary="" android:key="favorite8"/>
+        <Preference android:title="favorite9" android:summary="" android:key="favorite9"/>
+        <Preference android:title="favorite10" android:summary="" android:key="favorite10"/>
+    </PreferenceCategory>
+</PreferenceScreen><!-- From: file:/home/mitch/Seafile/Dropbox/dev/Android/JComic/res/xml/preferences.xml -->

@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.text.method.LinkMovementMethod;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
@@ -61,7 +60,7 @@ public class Credits extends SherlockFragmentActivity{
 		
 		 //https://play.google.com/store/apps/details?id=com.japanzai.koroshiya
 
-		((Button)findViewById(R.id.btnSendError)).setOnClickListener(
+		findViewById(R.id.btnSendError).setOnClickListener(
 			new OnClickListener(){
 				@Override
 				public void onClick(View v) {
@@ -73,7 +72,7 @@ public class Credits extends SherlockFragmentActivity{
 		
 		final SherlockFragmentActivity act = this;
 		
-		((Button)findViewById(R.id.btnError)).setOnClickListener(
+		findViewById(R.id.btnError).setOnClickListener(
 			new OnClickListener(){
 				@Override
 				public void onClick(View v) {

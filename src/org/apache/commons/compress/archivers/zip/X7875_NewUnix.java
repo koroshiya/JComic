@@ -279,7 +279,7 @@ public class X7875_NewUnix implements ZipExtraField, Cloneable, Serializable {
      */
     static byte[] trimLeadingZeroesForceMinLength(byte[] array) {
         if (array == null) {
-            return array;
+            return null;
         }
 
         int pos = 0;

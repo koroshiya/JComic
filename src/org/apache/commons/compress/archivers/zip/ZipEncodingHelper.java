@@ -68,8 +68,7 @@ public abstract class ZipEncodingHelper {
     private static final Map<String, SimpleEncodingHolder> simpleEncodings;
 
     static {
-        Map<String, SimpleEncodingHolder> se =
-            new HashMap<String, SimpleEncodingHolder>();
+        Map<String, SimpleEncodingHolder> se = new HashMap<>();
 
         char[] cp437_high_chars =
             new char[] { 0x00c7, 0x00fc, 0x00e9, 0x00e2, 0x00e4, 0x00e0,

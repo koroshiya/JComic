@@ -73,9 +73,9 @@ public class FileChooserTab extends SherlockFragment {
     	            	
         if (fc.getHomeAsFile().list() != null){
 
-            ArrayList<String> listItems = new ArrayList<String>();
+            ArrayList<String> listItems = new ArrayList<>();
             
-            ArrayList<String> tempList = new ArrayList<String>();
+            ArrayList<String> tempList = new ArrayList<>();
 	        for (File s : fc.getHomeAsFile().listFiles()){
 	        	if (fc.isSupportedFile(s) && !s.isHidden()){tempList.add(s.getName());}
 	        }

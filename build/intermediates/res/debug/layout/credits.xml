@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"        
+        >
+    
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_margin="10dp"
+            android:orientation="vertical" >
+        
+    <TextView
+        android:id="@+id/txtApplication"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="AppName"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <TextView
+        android:id="@+id/txtVersion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Version"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+        android:id="@+id/txtAuthor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Author:"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+        android:id="@+id/txtContributions"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:autoLink="web"
+        android:text="Contrib"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+        android:id="@+id/txtRating"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:maxEms="30"
+        android:text="Rating"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
+
+        <Button
+            android:id="@+id/btnSendError"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:text="@string/rating_button" />
+
+        <Button
+            android:id="@+id/btnError"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:text="@string/error_button" />
+
+    </LinearLayout>
+
+</LinearLayout>
+    
+    </ScrollView>
+<!-- From: file:/home/mitch/Seafile/Dropbox/dev/Android/JComic/res/layout/credits.xml -->

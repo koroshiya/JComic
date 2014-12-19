@@ -183,7 +183,6 @@ public class X5455_ExtendedTimestamp implements ZipExtraField, Cloneable, Serial
         if (bit2_createTimePresent && createTime != null) {
             data[0] |= CREATE_TIME_BIT;
             System.arraycopy(createTime.getBytes(), 0, data, pos, 4);
-            pos += 4;
         }
         return data;
     }
@@ -212,9 +211,7 @@ public class X5455_ExtendedTimestamp implements ZipExtraField, Cloneable, Serial
      * @param length the number of bytes in the array from offset
      * @throws java.util.zip.ZipException on error
      */
-    public void parseFromLocalFileData(
-            byte[] data, int offset, int length
-    ) throws ZipException {
+    public void parseFromLocalFileData(byte[] data, int offset, int length) throws ZipException {
         reset();
         final int len = offset + length;
         setFlags(data[offset++]);
@@ -231,7 +228,6 @@ public class X5455_ExtendedTimestamp implements ZipExtraField, Cloneable, Serial
         }
         if (bit2_createTimePresent && offset + 4 <= len) {
             createTime = new ZipLong(data, offset);
-            offset += 4;
         }
     }
 

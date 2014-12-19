@@ -55,15 +55,6 @@ public class RarNode extends Pointer{
 	}
 
     public String toString() {
-        StringBuilder buffer = new StringBuilder();
-        buffer.append("State[");
-        buffer.append("\n  pos=");
-        buffer.append(pos);
-        buffer.append("\n  size=");
-        buffer.append(size);
-        buffer.append("\n  next=");
-        buffer.append(getNext());
-        buffer.append("\n]");
-        return buffer.toString();
+        return "State[\n  pos="+pos+"\n  size="+size+"\n  next="+getNext()+"\n]";
     }
 }

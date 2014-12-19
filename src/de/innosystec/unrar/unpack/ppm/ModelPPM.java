@@ -176,15 +176,12 @@ public class ModelPPM
 
 	}
 
-	private void clearMask()
-	{
+	private void clearMask(){
 		escCount = 1;
 		Arrays.fill(charMask, 0);
 	}
 
-	public boolean decodeInit(Unpack unpackRead, int escChar/* ref */)
-			throws IOException, RarException
-	{
+	public boolean decodeInit(Unpack unpackRead, int escChar/* ref */) throws IOException, RarException{
 
 		int MaxOrder = unpackRead.getChar() & 0xff;
 		boolean reset = ((MaxOrder & 0x20) != 0);
@@ -646,44 +643,34 @@ public class ModelPPM
 		int address = fs.getSuccessor();
 		maxContext.setAddress(address);
 		minContext.setAddress(address);
-		//TODO-----debug
-//		int pos = minContext.getFreqData().getStats();
-//		State a = new State(getHeap());
-//		a.setAddress(pos);
-//		pos+=State.size;
-//		a.setAddress(pos);
-		//--dbg end
-		return;
 	}
 
     // Debug
     public String toString() {
-        StringBuilder buffer = new StringBuilder();
-        buffer.append("ModelPPM[");
-        buffer.append("\n  numMasked=");
-        buffer.append(numMasked);
-        buffer.append("\n  initEsc=");
-        buffer.append(initEsc);
-        buffer.append("\n  orderFall=");
-        buffer.append(orderFall);
-        buffer.append("\n  maxOrder=");
-        buffer.append(maxOrder);
-        buffer.append("\n  runLength=");
-        buffer.append(runLength);
-        buffer.append("\n  initRL=");
-        buffer.append(initRL);
-        buffer.append("\n  escCount=");
-        buffer.append(escCount);
-        buffer.append("\n  prevSuccess=");
-        buffer.append(prevSuccess);
-        buffer.append("\n  foundState=");
-        buffer.append(foundState);
-        buffer.append("\n  coder=");
-        buffer.append(coder);
-        buffer.append("\n  subAlloc=");
-        buffer.append(subAlloc);
-        buffer.append("\n]");
-        return buffer.toString();
+        return "ModelPPM[" +
+                "\n  numMasked="+
+                numMasked+
+                "\n  initEsc="+
+                initEsc+
+                "\n  orderFall="+
+                orderFall+
+                "\n  maxOrder="+
+                maxOrder+
+                "\n  runLength="+
+                runLength+
+                "\n  initRL="+
+                initRL+
+                "\n  escCount="+
+                escCount+
+                "\n  prevSuccess="+
+                prevSuccess+
+                "\n  foundState="+
+                foundState+
+                "\n  coder="+
+                coder+
+                "\n  subAlloc="+
+                subAlloc+
+                "\n]";
     }
 
     // Debug

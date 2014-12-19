@@ -48,8 +48,7 @@ public class AdvancedSettings extends SettingTab {
 	
 	private void instantiate(){
 
-		LinearLayout lLayout = new LinearLayout(this.parent);
-		lLayout = (LinearLayout) this.parent.findViewById(R.id.tabGeneralSettings);
+		LinearLayout lLayout = (LinearLayout) this.parent.findViewById(R.id.tabGeneralSettings);
 		lLayout.removeAllViews();
 		
 		try{

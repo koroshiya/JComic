@@ -62,11 +62,8 @@ public class TarUtils {
                 final int length = buffer.length;
                 StringBuilder result = new StringBuilder(length);
 
-                for (int i = 0; i < length; ++i) {
-                    byte b = buffer[i];
-                    if (b == 0) { // Trailing null
-                        break;
-                    }
+                for (byte b : buffer) {
+                    if (b == 0) break;
                     result.append((char) (b & 0xFF)); // Allow for sign-extension
                 }
 
@@ -243,8 +240,7 @@ public class TarUtils {
         String string = new String(buffer, offset, length);
 
         string=string.replaceAll("\0", "{NUL}"); // Replace NULs to allow string to be printed
-        final String s = "Invalid byte "+currentByte+" at offset "+(current-offset)+" in '"+string+"' len="+length;
-        return s;
+        return "Invalid byte "+currentByte+" at offset "+(current-offset)+" in '"+string+"' len="+length;
     }
 
     /**

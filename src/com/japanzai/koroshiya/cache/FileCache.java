@@ -91,8 +91,6 @@ public class FileCache extends Steppable {
 		return new IndexThread(this, index, parent);
 	}
 	
-	public void close(){
-		return;
-	}
+	public void close(){}
 	
 }

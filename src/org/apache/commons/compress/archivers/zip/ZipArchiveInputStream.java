@@ -272,7 +272,6 @@ public class ZipArchiveInputStream extends ArchiveInputStream {
         off += SHORT;
 
         int extraLen = ZipShort.getValue(LFH_BUF, off);
-        off += SHORT;
 
         byte[] fileName = new byte[fileNameLen];
         readFully(fileName);
@@ -564,14 +563,7 @@ public class ZipArchiveInputStream extends ArchiveInputStream {
      * @return true, if this stream is a zip archive stream, false otherwise
      */
     public static boolean matches(byte[] signature, int length) {
-        if (length < LFH_SIG.length) {
-            return false;
-        }
-
-        return checksig(signature, LFH_SIG) // normal file
-            || checksig(signature, EOCD_SIG) // empty zip
-            || checksig(signature, DD_SIG) // split zip
-            || checksig(signature, ZipLong.SINGLE_SEGMENT_SPLIT_MARKER.getBytes());
+        return length>=LFH_SIG.length && (checksig(signature, LFH_SIG) || checksig(signature, EOCD_SIG) || checksig(signature, DD_SIG) || checksig(signature, ZipLong.SINGLE_SEGMENT_SPLIT_MARKER.getBytes()));
     }
 
     /**

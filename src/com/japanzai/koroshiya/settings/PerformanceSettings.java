@@ -52,8 +52,7 @@ public class PerformanceSettings extends SettingTab {
 	
 	private void instantiate(){
 		
-		LinearLayout lLayout = new LinearLayout(this.parent);
-		lLayout = (LinearLayout) this.parent.findViewById(R.id.tabGeneralSettings);
+		LinearLayout lLayout = (LinearLayout) this.parent.findViewById(R.id.tabGeneralSettings);
 		lLayout.removeAllViews();
 		
 		try{
@@ -101,6 +100,7 @@ public class PerformanceSettings extends SettingTab {
 	public void save(){
 
 		//settings.setExtractModeEnabled(extractMode.getState() == 1);
+        if (cacheOnStartup != null) settings.setCacheOnStart(cacheOnStartup.getState() == 1);
 		if (archiveMode != null){settings.setArchiveModeIndex(archiveMode.getState());}
 		if (cacheMode != null){settings.setCacheModeIndex(cacheMode.getState());}
 		if (cacheLevel != null){settings.setCacheLevel(cacheLevel.getState());}
@@ -111,6 +111,7 @@ public class PerformanceSettings extends SettingTab {
 	public void load(){
 
 		//extractMode.setState(settings.getExtractModeEnabled() ? 1 : 0);
+        if (cacheOnStartup != null) cacheOnStartup.setState(settings.isCacheOnStart() ? 1 : 0);
 		if (archiveMode != null){archiveMode.setState(settings.getArchiveModeIndex());}
 		if (cacheMode != null){cacheMode.setState(settings.getCacheModeIndex());}
 		if (cacheLevel != null){cacheLevel.setState(settings.getCacheLevel());}

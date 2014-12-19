@@ -46,7 +46,7 @@ public abstract class Steppable implements Cacheable{
 	public Steppable(Reader parent, String path){
 		this.parent = parent;
 		this.path = path;
-		images = new ArrayList<JImage>();
+		images = new ArrayList<>();
 	}
 	
 	/**
@@ -259,17 +259,10 @@ public abstract class Steppable implements Cacheable{
 		primary = null;
 		secondary = null;
 		pcit = null;
-		killBitmap(cachePrimary, true);
-		killBitmap(cacheSecondary, true);
+        cachePrimary = null;
+        cacheSecondary = null;
 		parent.setImage(null);
 		System.gc();
-	}
-	
-	private void killBitmap(JBitmapDrawable bitmap, boolean force){
-		if (bitmap != null){
-			//bitmap.closeBitmap();
-			bitmap = null;
-		}
 	}
 	
 	public abstract void close();
@@ -496,21 +489,11 @@ public abstract class Steppable implements Cacheable{
 	}
 	
 	private boolean isThreadAlive(StepThread thread){
-		
-		if (thread != null && ((Thread)thread).isAlive()){
-			return true;
-		}
-		return false;
-		
+		 return thread != null && ((Thread)thread).isAlive();
 	}
 	
 	private boolean bitmapExists(JBitmapDrawable bitmap){
-		
-		if (bitmap != null && bitmap.getBitmap() != null){
-			return true;
-		}
-		return false;
-		
+		return bitmap != null && bitmap.getBitmap() != null;
 	}
 	
 	/**
@@ -552,8 +535,6 @@ public abstract class Steppable implements Cacheable{
 	
 	/**
 	 * Purpose: Generates a thread to replace the used-up thread preceding it.
-	 * @param primary Boolean indicating whether the thread to be retrieved will
-	 * 			be a primary thread or not.
 	 * @return Returns a Thread for caching an image in a Steppable object at 
 	 * 			the specified index.
 	 * */
@@ -579,7 +560,7 @@ public abstract class Steppable implements Cacheable{
     
 	/**
      * Purpose: Caches the JBitmapDrawable for the previous index
-     * @param next The JBitmapDrawable object to be cached
+     * @param previous The JBitmapDrawable object to be cached
      * */
 	public synchronized void setCacheSecondary(JBitmapDrawable previous){
 		Log.w("cacheSecondary", "setCacheSecondary");

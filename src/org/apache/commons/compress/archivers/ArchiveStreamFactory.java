@@ -216,7 +216,7 @@ public class ArchiveStreamFactory {
             // Dump needs a bigger buffer to check the signature;
             final byte[] dumpsig = new byte[32];
             in.mark(dumpsig.length);
-            signatureLength = IOUtils.readFully(in, dumpsig);
+            IOUtils.readFully(in, dumpsig);
             in.reset();
 
             // Tar needs an even bigger buffer to check the signature; read the first block

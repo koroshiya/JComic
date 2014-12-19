@@ -50,11 +50,8 @@ public class ReadOnlyAccessInputStream extends InputStream {
 	public int read() throws IOException {
         if (curPos == endPos) {
             return -1;
-        }
-        else {
-        	int b = 0;
-        	b = file.read();
-//file.     
+        }else {
+        	int b = file.read();
             curPos++;
             return b;
         }
@@ -64,12 +61,10 @@ public class ReadOnlyAccessInputStream extends InputStream {
 	public int read(byte[] b, int off, int len) throws IOException {
         if (len == 0) {
             return 0;
-        }
-        if (curPos == endPos) {
+        }else if (curPos == endPos) {
             return -1;
         }
-        int bytesRead = 0;
-        bytesRead = file.read(b, off, (int)Math.min(len, endPos - curPos));
+        int bytesRead = file.read(b, off, (int)Math.min(len, endPos - curPos));
         curPos += bytesRead;
         return bytesRead;
 	}

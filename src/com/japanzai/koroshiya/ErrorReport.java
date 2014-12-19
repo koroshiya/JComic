@@ -21,8 +21,6 @@ import com.japanzai.koroshiya.settings.SettingsManager;
  * When implementing your own, make sure to change the email variable to your own email.
  * */
 public class ErrorReport extends SherlockFragmentActivity implements OnClickListener{
-	
-	private String email = "koro.jcomic@gmail.com";
 
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -58,24 +56,26 @@ public class ErrorReport extends SherlockFragmentActivity implements OnClickList
 	}
 	
 	private void sendErrorLog() {
+
+        String email = "koro.jcomic@gmail.com";
 		
 		Intent i = new Intent(Intent.ACTION_SEND);
 		i.setType("message/rfc822");
 		i.putExtra(Intent.EXTRA_EMAIL, new String[] { email });
 		i.putExtra(Intent.EXTRA_SUBJECT, "Crash report");
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder buffer = new StringBuilder();
 		try{	
 			PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
 			String version = pInfo.versionName;
-			buffer.append("App version: " + version);
+			buffer.append("App version: ").append(version);
 		} catch (NameNotFoundException e) {
 			e.printStackTrace();
 		}finally{
 			buffer.append("\n");
 		}
-		buffer.append("Android version: " + Build.VERSION.RELEASE);
+		buffer.append("Android version: ").append(Build.VERSION.RELEASE);
 		buffer.append("\n");
-		buffer.append("Device: " + getDeviceName());
+		buffer.append("Device: ").append(getDeviceName());
 		buffer.append("\n");
 		
 		i.putExtra(Intent.EXTRA_TEXT, buffer.toString());

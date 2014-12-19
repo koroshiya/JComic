@@ -34,19 +34,7 @@ public class MarkHeader extends BaseBlock {
 		super(bb);
 	}
 	public boolean isValid(){
-		if(!(getHeadCRC() == 0x6152)){
-			return false;
-		}
-		if(!(getHeaderType() == UnrarHeadertype.MarkHeader)){
-			return false;
-		}
-		if(!(getFlags() == 0x1a21)){
-			return false;
-		}
-		if(!(getHeaderSize() == BaseBlockSize)){
-			return false;
-		}
-		return true;
+        return getHeadCRC() == 0x6152 && getHeaderType() == UnrarHeadertype.MarkHeader && getFlags() == 0x1a21 && getHeaderSize() == BaseBlockSize;
 	}
 	
 	public boolean isSignature() {

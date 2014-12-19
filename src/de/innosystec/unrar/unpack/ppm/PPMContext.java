@@ -144,17 +144,13 @@ public class PPMContext extends Pointer
         return tempPPMContext.init(mem);
     }
 
-	public int createChild(ModelPPM model, State pStats/* ptr */,
-			StateRef firstState /* ref */)
-	{
+	public int createChild(ModelPPM model, State pStats/* ptr */, StateRef firstState /* ref */){
 		PPMContext pc = getTempPPMContext(model.getSubAlloc().getHeap());
-		pc.setAddress(model.getSubAlloc().allocContext()); 
-		if (pc != null) { 
-			pc.setNumStats(1);
-			pc.setOneState(firstState);
-			pc.setSuffix(this);
-			pStats.setSuccessor(pc);
-		}
+		pc.setAddress(model.getSubAlloc().allocContext());
+        pc.setNumStats(1);
+        pc.setOneState(firstState);
+        pc.setSuffix(this);
+        pStats.setSuccessor(pc);
 		return pc.getAddress();
 	}
 
@@ -456,22 +452,20 @@ public class PPMContext extends Pointer
 	}
 
     public String toString() {
-        StringBuilder buffer = new StringBuilder();
-        buffer.append("PPMContext[");
-        buffer.append("\n  pos=");
-        buffer.append(pos);
-        buffer.append("\n  size=");
-        buffer.append(size);
-        buffer.append("\n  numStats=");
-        buffer.append(getNumStats());
-        buffer.append("\n  Suffix=");
-        buffer.append(getSuffix());
-        buffer.append("\n  freqData=");
-        buffer.append(freqData);
-        buffer.append("\n  oneState=");
-        buffer.append(oneState);
-        buffer.append("\n]");
-        return buffer.toString();
+        return "PPMContext["+
+        "\n  pos="+
+        pos+
+        "\n  size="+
+        size+
+        "\n  numStats="+
+        getNumStats()+
+        "\n  Suffix="+
+        getSuffix()+
+        "\n  freqData="+
+        freqData+
+        "\n  oneState="+
+        oneState+
+        "\n]";
     }
 
 }

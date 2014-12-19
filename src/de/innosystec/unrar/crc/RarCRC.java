@@ -106,8 +106,7 @@ public class RarCRC {
 			startCrc = (crcTab[pos]^temp);
 			System.out.println("--"+Integer.toHexString(startCrc));*/
 			
-			startCrc=(crcTab[((int)((int)startCrc ^
-                    (int)data[offset+i]))&0xff]^(startCrc>>>8));
+			startCrc=(crcTab[((startCrc ^ (int)data[offset+i]))&0xff]^(startCrc>>>8));
 			
 			//System.out.println(Integer.toHexString(startCrc));
 			
@@ -120,8 +119,8 @@ public class RarCRC {
 	public static short checkOldCrc(short startCrc, byte[] data, int count) {
         int n = Math.min(data.length, count);
 		for (int i = 0; i < n; i++) {
-			startCrc = (short) ((short) (startCrc + (short) (data[i]&0x00ff)) & -1);
-			startCrc = (short) (((startCrc << 1) | (startCrc >>> 15)) & -1);
+			startCrc = ((short) (startCrc + (short) (data[i]&0x00ff)));
+			startCrc = (short) (((startCrc << 1) | (startCrc >>> 15)));
 		}
 		return (startCrc);
 	}

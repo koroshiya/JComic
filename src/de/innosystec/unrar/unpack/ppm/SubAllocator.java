@@ -26,7 +26,7 @@ import java.util.Arrays;
  * @version $LastChangedRevision$
  */
 public class SubAllocator {
-    public static final int N1 = 4, N2 = 4, N3 = 4, N4 = (128 + 3 - 1 * N1 - 2
+    public static final int N1 = 4, N2 = 4, N3 = 4, N4 = (128 + 3 - N1 - 2
 	    * N2 - 3 * N3) / 4;
 
     public static final int N_INDEXES = N1 + N2 + N3 + N4;
@@ -126,7 +126,7 @@ public class SubAllocator {
 
     public int GetAllocatedMemory() {
 	return subAllocatorSize;
-    };
+    }
 
     public boolean startSubAllocator(int SASize) {
 	int t = SASize << 20;
@@ -404,24 +404,8 @@ public class SubAllocator {
 
     // Debug
     public String toString() {
-	StringBuilder buffer = new StringBuilder();
-	buffer.append("SubAllocator[");
-	buffer.append("\n  subAllocatorSize=");
-	buffer.append(subAllocatorSize);
-	buffer.append("\n  glueCount=");
-	buffer.append(glueCount);
-	buffer.append("\n  heapStart=");
-	buffer.append(heapStart);
-	buffer.append("\n  loUnit=");
-	buffer.append(loUnit);
-	buffer.append("\n  hiUnit=");
-	buffer.append(hiUnit);
-	buffer.append("\n  pText=");
-	buffer.append(pText);
-	buffer.append("\n  unitsStart=");
-	buffer.append(unitsStart);
-	buffer.append("\n]");
-	return buffer.toString();
+	return "SubAllocator[\n  subAllocatorSize="+subAllocatorSize+"\n  glueCount="+glueCount+"\n  heapStart="+
+	        heapStart+"\n  loUnit="+loUnit+"\n  hiUnit="+hiUnit+"\n  pText="+pText+"\n  unitsStart="+unitsStart+"\n]";
     }
 
 }

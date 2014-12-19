@@ -78,15 +78,6 @@ public class StateRef {
 	}
 
     public String toString() {
-        StringBuilder buffer = new StringBuilder();
-        buffer.append("State[");
-        buffer.append("\n  symbol=");
-        buffer.append(getSymbol());
-        buffer.append("\n  freq=");
-        buffer.append(getFreq());
-        buffer.append("\n  successor=");
-        buffer.append(getSuccessor());
-        buffer.append("\n]");
-        return buffer.toString();
+        return "State[\n  symbol="+getSymbol()+"\n  freq="+getFreq()+"\n  successor="+getSuccessor()+"\n]";
     }
 }

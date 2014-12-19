@@ -88,14 +88,12 @@ public class ZipFile implements Closeable {
      * List of entries in the order they appear inside the central
      * directory.
      */
-    private final List<ZipArchiveEntry> entries =
-        new LinkedList<ZipArchiveEntry>();
+    private final List<ZipArchiveEntry> entries = new LinkedList<>();
 
     /**
      * Maps String to list of ZipArchiveEntrys, name -> actual entries.
      */
-    private final Map<String, LinkedList<ZipArchiveEntry>> nameMap =
-        new HashMap<String, LinkedList<ZipArchiveEntry>>(HASH_SIZE);
+    private final Map<String, LinkedList<ZipArchiveEntry>> nameMap = new HashMap<>(HASH_SIZE);
 
     private static final class OffsetEntry {
         private long headerOffset = -1;
@@ -279,7 +277,7 @@ public class ZipFile implements Closeable {
      * @since 1.1
      */
     public Enumeration<ZipArchiveEntry> getEntriesInPhysicalOrder() {
-        ZipArchiveEntry[] allEntries = entries.toArray(new ZipArchiveEntry[0]);
+        ZipArchiveEntry[] allEntries = entries.toArray(new ZipArchiveEntry[entries.size()]);
         Arrays.sort(allEntries, OFFSET_COMPARATOR);
         return Collections.enumeration(Arrays.asList(allEntries));
     }
@@ -475,8 +473,7 @@ public class ZipFile implements Closeable {
      */
     private Map<ZipArchiveEntry, NameAndComment> populateFromCentralDirectory()
         throws IOException {
-        HashMap<ZipArchiveEntry, NameAndComment> noUTF8Flag =
-            new HashMap<ZipArchiveEntry, NameAndComment>();
+        HashMap<ZipArchiveEntry, NameAndComment> noUTF8Flag = new HashMap<>();
 
         positionAtCentralDirectory();
 
@@ -921,8 +918,7 @@ public class ZipFile implements Closeable {
 
             String name = ze.getName();
             LinkedList<ZipArchiveEntry> entriesOfThatName = nameMap.get(name);
-            if (entriesOfThatName == null) {
-                entriesOfThatName = new LinkedList<ZipArchiveEntry>();
+            if (entriesOfThatName == null) { entriesOfThatName = new LinkedList<>();
                 nameMap.put(name, entriesOfThatName);
             }
             entriesOfThatName.addLast(ze);
@@ -987,7 +983,7 @@ public class ZipFile implements Closeable {
             if (len > remaining) {
                 len = (int) remaining;
             }
-            int ret = -1;
+            int ret;
             synchronized (archive) {
                 archive.seek(loc);
                 ret = archive.read(b, off, len);

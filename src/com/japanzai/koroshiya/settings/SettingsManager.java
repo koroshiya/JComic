@@ -88,8 +88,8 @@ public class SettingsManager {
 	private static File homeDir = null;
 	private static File lastRead = null;
 	private static int lastReadIndex = -1;
-	private static ArrayList<Recent> recent = new ArrayList<Recent>();
-	private static ArrayList<String> favorite = new ArrayList<String>();
+	private static ArrayList<Recent> recent = new ArrayList<>();
+	private static ArrayList<String> favorite = new ArrayList<>();
 	private final SharedPreferences preferences;
 	
 	public final static int RECURSION_ALL = 3;
@@ -528,10 +528,13 @@ public class SettingsManager {
 	}
 	
 	public void removeRecent(String toRemove){
-		
-		recent.remove(toRemove);
+        for (Recent r : recent){
+            if (r.getPath().equals(toRemove)){
+                recent.remove(r);
+                break;
+            }
+        }
 		saveRecentList();
-		
 	}
 	
 	private void saveRecentList(){
@@ -679,27 +682,25 @@ public class SettingsManager {
 	private void updateString(String key, String value){
 		Editor edit = preferences.edit();
 		edit.putString(key, value);
-	    edit.commit();
+	    edit.apply();
 	}
 	
 	private void updateInt(String key, int value){
 		Editor edit = preferences.edit();
 		edit.putInt(key, value);
-	    edit.commit();
+	    edit.apply();
 	}
 	
 	private void updateBool(String key, boolean value){
 		Editor edit = preferences.edit();
 		edit.putBoolean(key, value);
-	    edit.commit();
+	    edit.apply();
 	}
 	
 	public static void setFullScreen(Activity act){
 		try{
 			act.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-		}catch (Exception e){
-			e.printStackTrace();
-		}catch (Error ex){
+		}catch (Exception | Error ex){
 			ex.printStackTrace();
 		}
 	}

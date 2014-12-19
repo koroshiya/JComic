@@ -34,8 +34,7 @@ public class FileNameUtil {
      * Map from common filename suffixes to the suffixes that identify compressed
      * versions of those file types. For example: from ".tar" to ".tgz".
      */
-    private final Map<String, String> compressSuffix =
-        new HashMap<String, String>();
+    private final Map<String, String> compressSuffix = new HashMap<>();
 
     /**
      * Map from common filename suffixes of compressed files to the
@@ -88,8 +87,7 @@ public class FileNameUtil {
      *
      * @param defaultExtension the format's default extension like ".gz"
      */
-    public FileNameUtil(Map<String, String> uncompressSuffix,
-                        String defaultExtension) {
+    public FileNameUtil(Map<String, String> uncompressSuffix, String defaultExtension) {
         this.uncompressSuffix = Collections.unmodifiableMap(uncompressSuffix);
         int lc = Integer.MIN_VALUE, sc = Integer.MAX_VALUE;
         int lu = Integer.MIN_VALUE, su = Integer.MAX_VALUE;

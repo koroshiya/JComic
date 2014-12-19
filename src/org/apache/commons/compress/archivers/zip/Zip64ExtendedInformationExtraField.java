@@ -137,13 +137,11 @@ public class Zip64ExtendedInformationExtraField implements ZipExtraField {
         }
         if (diskStart != null) {
             System.arraycopy(diskStart.getBytes(), 0, data, off, WORD);
-            off += WORD;
         }
         return data;
     }
 
-    public void parseFromLocalFileData(byte[] buffer, int offset, int length)
-        throws ZipException {
+    public void parseFromLocalFileData(byte[] buffer, int offset, int length)throws ZipException {
         if (length == 0) {
             // no local file data at all, may happen if an archive
             // only holds a ZIP64 extended information extra field
@@ -166,8 +164,6 @@ public class Zip64ExtendedInformationExtraField implements ZipExtraField {
         }
         if (remaining >= WORD) {
             diskStart = new ZipLong(buffer, offset);
-            offset += WORD;
-            remaining -= WORD;
         }
     }
 
@@ -241,7 +237,6 @@ public class Zip64ExtendedInformationExtraField implements ZipExtraField {
             }
             if (hasDiskStart) {
                 diskStart = new ZipLong(rawCentralDirectoryData, offset);
-                offset += WORD;
             }
         }
     }

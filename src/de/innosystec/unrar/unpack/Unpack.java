@@ -47,16 +47,16 @@ public final class Unpack extends Unpack20 {
     private RarVM rarVM = new RarVM();
 
     /* Filters code, one entry per filter */
-    private List<UnpackFilter> filters = new ArrayList<UnpackFilter>();
+    private List<UnpackFilter> filters = new ArrayList<>();
 
     /* Filters stack, several entrances of same filter are possible */
-    private List<UnpackFilter> prgStack = new ArrayList<UnpackFilter>();
+    private List<UnpackFilter> prgStack = new ArrayList<>();
 
     /*
      * lengths of preceding blocks, one length per filter. Used to reduce size
      * required to write block length if lengths are repeating
      */
-    private List<Integer> oldFilterLengths = new ArrayList<Integer>();
+    private List<Integer> oldFilterLengths = new ArrayList<>();
 
     private int lastFilter;
 
@@ -315,9 +315,7 @@ public final class Unpack extends Unpack20 {
 	    if (Number < 263) {
 		int DistNum = Number - 259;
 		int Distance = oldDist[DistNum];
-		for (int I = DistNum; I > 0; I--) {
-		    oldDist[I] = oldDist[I - 1];
-		}
+        System.arraycopy(oldDist, 0, oldDist, 1, DistNum); //TODO: check if correct
 		oldDist[0] = Distance;
 
 		int LengthNumber = decodeNumber(RD);
@@ -339,7 +337,6 @@ public final class Unpack extends Unpack20 {
 		insertOldDist(Distance);
 		insertLastMatch(2, Distance);
 		copyString(2, Distance);
-		continue;
 	    }
 	}
 	UnpWriteBuf();
@@ -616,18 +613,18 @@ public final class Unpack extends Unpack20 {
     }
 
     private boolean readEndOfBlock() throws IOException, RarException {
-	int BitField = getbits();
-	boolean NewTable, NewFile = false;
-	if ((BitField & 0x8000) != 0) {
-	    NewTable = true;
-	    addbits(1);
-	} else {
-	    NewFile = true;
-	    NewTable = (BitField & 0x4000) != 0 ? true : false;
-	    addbits(2);
-	}
-	tablesRead = !NewTable;
-	return !(NewFile || NewTable && !readTables());
+        int BitField = getbits();
+        boolean NewTable, NewFile = false;
+        if ((BitField & 0x8000) != 0) {
+            NewTable = true;
+            addbits(1);
+        } else {
+            NewFile = true;
+            NewTable = (BitField & 0x4000) != 0;
+            addbits(2);
+        }
+        tablesRead = !NewTable;
+        return !(NewFile || NewTable && !readTables());
     }
 
     private boolean readTables() throws IOException, RarException {
@@ -640,7 +637,7 @@ public final class Unpack extends Unpack20 {
 	    }
 	}
 	faddbits((8 - inBit) & 7);
-	long bitField = fgetbits() & 0xffFFffFF;
+	long bitField = fgetbits();
 	if ((bitField & 0x8000) != 0) {
 	    unpBlockType = BlockTypes.BLOCK_PPM;
 	    return (ppm.decodeInit(this, ppmEscChar));
@@ -726,10 +723,7 @@ public final class Unpack extends Unpack20 {
 	makeDecodeTables(table, Compress.NC + Compress.DC + Compress.LDC, RD,
 		Compress.RC);
 
-	// memcpy(unpOldTable,table,sizeof(unpOldTable));
-	for (int i = 0; i < unpOldTable.length; i++) {
-	    unpOldTable[i] = table[i];
-	}
+    System.arraycopy(table, 0, unpOldTable, 0, table.length);
 	return (true);
 
     }
@@ -745,12 +739,12 @@ public final class Unpack extends Unpack20 {
 	    Length = getbits();
 	    addbits(16);
 	}
-	List<Byte> vmCode = new ArrayList<Byte>();
+	List<Byte> vmCode = new ArrayList<>();
 	for (int I = 0; I < Length; I++) {
 	    if (inAddr >= readTop - 1 && !unpReadBuf() && I < Length - 1) {
 		return (false);
 	    }
-	    vmCode.add(Byte.valueOf((byte) (getbits() >> 8)));
+	    vmCode.add((byte) (getbits() >> 8));
 	    addbits(8);
 	}
 	return (addVMCode(FirstByte, vmCode, Length));
@@ -758,7 +752,7 @@ public final class Unpack extends Unpack20 {
 
     private boolean readVMCodePPM() throws IOException, RarException {
 	int FirstByte = ppm.decodeChar();
-	if ((int) FirstByte == -1) {
+	if (FirstByte == -1) {
 	    return (false);
 	}
 	int Length = (FirstByte & 7) + 1;
@@ -779,13 +773,13 @@ public final class Unpack extends Unpack20 {
 	    }
 	    Length = B1 * 256 + B2;
 	}
-	List<Byte> vmCode = new ArrayList<Byte>();
+	List<Byte> vmCode = new ArrayList<>();
 	for (int I = 0; I < Length; I++) {
 	    int Ch = ppm.decodeChar();
 	    if (Ch == -1) {
-		return (false);
+		    return (false);
 	    }
-	    vmCode.add(Byte.valueOf((byte) Ch));// VMCode[I]=Ch;
+	    vmCode.add((byte) Ch);// VMCode[I]=Ch;
 	}
 	return (addVMCode(FirstByte, vmCode, Length));
     }
@@ -938,7 +932,7 @@ public final class Unpack extends Unpack20 {
 	rarVM.setLowEndianValue(globalData, 0x2c, StackFilter.getExecCount());
 	// memset(&GlobalData[0x30],0,16);
 	for (int i = 0; i < 16; i++) {
-	    globalData.set(0x30 + i, Byte.valueOf((byte) (0)));
+	    globalData.set(0x30 + i, ((byte) (0)));
 	}
 	if ((firstByte & 8) != 0) // put data block passed as parameter if any
 	{
@@ -961,8 +955,7 @@ public final class Unpack extends Unpack20 {
 		if (Inp.Overflow(3)) {
 		    return (false);
 		}
-		globalData.set(offset + I, Byte
-			.valueOf((byte) (Inp.fgetbits() >>> 8)));
+		globalData.set(offset + I, ((byte) (Inp.fgetbits() >>> 8)));
 		Inp.faddbits(8);
 	    }
 	}
@@ -1031,11 +1024,7 @@ public final class Unpack extends Unpack20 {
     }
 
     public void cleanUp() {
-	if (ppm != null) {
-	    SubAllocator allocator = ppm.getSubAlloc();
-	    if (allocator != null) {
-		allocator.stopSubAllocator();
-	    }
-	}
+        SubAllocator allocator = ppm.getSubAlloc();
+        if (allocator != null) allocator.stopSubAllocator();
     }
 }

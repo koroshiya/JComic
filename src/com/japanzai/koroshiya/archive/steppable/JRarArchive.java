@@ -39,7 +39,7 @@ public class JRarArchive extends SteppableArchive{
 		setPrimary(new NextRarThread(this, true));
 		//setSecondary(new PreviousRarThread(this, true));
 
-		FileHeader header = null;
+		FileHeader header;
 		rar = new Archive(new File(path));
 		List<FileHeader> heads = rar.getFileHeaders();
 		
@@ -56,22 +56,20 @@ public class JRarArchive extends SteppableArchive{
 			setIndex(0);
 			setMin(0);
 		}else {
-			IOException ioe = new IOException();
-			throw ioe;
+			throw new IOException();
 		}
 		
 	}
 	
 	@Override
-	public JBitmapDrawable parseImage(int fIndex) throws IOException{
+	public JBitmapDrawable parseImage(int i) throws IOException{
 
-		int i = (Integer)fIndex;
 		FileHeader entry = (FileHeader)getEntry(i);
 		String name = entry.getFileNameString();
 		name = name.substring(name.lastIndexOf('\\') + 1);
 		File f = new File(tempDir + "/" + name);
 		InputStream is = null;
-		Point p = null;
+		Point p;
 		JBitmapDrawable temp = null;
 		
 		if (!this.tempDir.exists()){
@@ -80,7 +78,7 @@ public class JRarArchive extends SteppableArchive{
 		
 		if (this.progressive){
 			if (!f.exists()){
-				extractFileToDisk(fIndex, tempDir, null);
+				extractFileToDisk(i, tempDir, null);
 			}
 
 			is = new FileInputStream(f);
@@ -120,7 +118,6 @@ public class JRarArchive extends SteppableArchive{
 		
 		if (is != null){
 			is.close();
-			is = null;
 		}
 		return temp;
     	
@@ -173,8 +170,7 @@ public class JRarArchive extends SteppableArchive{
 	@Override
 	public ArrayList<JBitmapDrawable> extractContentsToArrayList() {
 
-		InputStream is = null;
-		ArrayList<JBitmapDrawable> imageList = new ArrayList<JBitmapDrawable>();
+		ArrayList<JBitmapDrawable> imageList = new ArrayList<>();
 		
 		for (int i = 0; i < getMax(); i++){
 			
@@ -183,14 +179,6 @@ public class JRarArchive extends SteppableArchive{
 			} catch (IOException e) {
 				e.printStackTrace();
 				return imageList;
-			} finally {
-				if (is != null){
-					try {
-						is.close();
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-				}
 			}
 			
 		}
@@ -202,14 +190,10 @@ public class JRarArchive extends SteppableArchive{
 	@Override
 	public ArrayList<String> peekAtContents() {
 		
-		ArrayList<String> names = new ArrayList<String>();
-		FileHeader header = null;
+		ArrayList<String> names = new ArrayList<>();
 		
 		for (int i = 0; i < getMax(); i++){
-			
-			header = (FileHeader)getEntry(i);
-			names.add(header.getFileNameString());
-			
+			names.add(((FileHeader)getEntry(i)).getFileNameString());
 		}
 		
 		return names;

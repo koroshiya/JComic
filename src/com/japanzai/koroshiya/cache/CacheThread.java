@@ -29,11 +29,10 @@ public abstract class CacheThread extends Thread implements StepThread {
 	}
 	
 	@Override
-	public JBitmapDrawable parseImage(int fIndex){
+	public JBitmapDrawable parseImage(int i){
     	
 		try{
-		
-			int i = fIndex;
+
 			String path = (String)entry.getImages().get(i).getImage();			
 			InputStream is = new FileInputStream(path);
 			Point p = ImageParser.getImageSize(is);

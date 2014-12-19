@@ -24,14 +24,14 @@ package de.innosystec.unrar.unpack.vm;
  * @version $LastChangedRevision$
  */
 public enum VMStandardFilters {
-	VMSF_NONE ((int)0),
-	VMSF_E8 ((int)1),
-	VMSF_E8E9 ((int)2),
-	VMSF_ITANIUM( (int)3), 
-	VMSF_RGB ((int)4), 
-	VMSF_AUDIO ((int)5), 
-	VMSF_DELTA ((int)6),
-	VMSF_UPCASE ((int)7);
+	VMSF_NONE (0),
+	VMSF_E8 (1),
+	VMSF_E8E9 (2),
+	VMSF_ITANIUM(3),
+	VMSF_RGB (4),
+	VMSF_AUDIO (5),
+	VMSF_DELTA (6),
+	VMSF_UPCASE (7);
 	
 	private int filter;
 	

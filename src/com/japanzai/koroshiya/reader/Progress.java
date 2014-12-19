@@ -69,10 +69,10 @@ public class Progress extends SherlockActivity implements ModalReturn{
 	    		
 	        	File[] list = parentDir.listFiles();
 	        	Arrays.sort(list);
-	    		
-	    		for (int i = 0; i < list.length; i++){
-	    			parseFile(list[i]);
-	    			if (list[i].getName().equals(f.getName())){
+
+                for (File file : list){
+	    			parseFile(file);
+	    			if (file.getName().equals(f.getName())){
 	    				reader.setCacheIndex(index == -1 ? 0 : index);
 	    			}
 	    		}

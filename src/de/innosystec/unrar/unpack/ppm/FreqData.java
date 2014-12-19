@@ -70,18 +70,7 @@ public class FreqData extends Pointer{
 	}
 
     public String toString() {
-        StringBuilder buffer = new StringBuilder();
-        buffer.append("FreqData[");
-        buffer.append("\n  pos=");
-        buffer.append(pos);
-        buffer.append("\n  size=");
-        buffer.append(size);
-        buffer.append("\n  summFreq=");
-        buffer.append(getSummFreq());
-        buffer.append("\n  stats=");
-        buffer.append(getStats());
-        buffer.append("\n]");
-        return buffer.toString();
+        return "FreqData[\n  pos="+pos+"\n  size="+size+"\n  summFreq="+getSummFreq()+"\n  stats="+getStats()+"\n]";
     }
 	
 }

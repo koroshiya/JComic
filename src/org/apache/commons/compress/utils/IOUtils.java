@@ -70,9 +70,9 @@ public final class IOUtils {
      */
     public static long copy(final InputStream input, final OutputStream output, int buffersize) throws IOException {
         final byte[] buffer = new byte[buffersize];
-        int n = 0;
+        int n;
         long count=0;
-        while (-1 != (n = input.read(buffer))) {
+        while ((n = input.read(buffer)) != -1) {
             output.write(buffer, 0, n);
             count += n;
         }
@@ -153,7 +153,7 @@ public final class IOUtils {
         if (len < 0 || offset < 0 || len + offset > b.length) {
             throw new IndexOutOfBoundsException();
         }
-        int count = 0, x = 0;
+        int count = 0, x;
         while (count != len) {
             x = input.read(b, offset + count, len - count);
             if (x == -1) {

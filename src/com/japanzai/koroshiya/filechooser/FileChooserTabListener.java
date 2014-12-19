@@ -3,7 +3,6 @@ package com.japanzai.koroshiya.filechooser;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
-import android.widget.TextView;
 
 import com.actionbarsherlock.app.ActionBar.Tab;
 import com.actionbarsherlock.app.ActionBar.TabListener;
@@ -43,7 +42,7 @@ public class FileChooserTabListener implements TabListener {
 		
 		int[] affectedButtons = {R.id.btn_home, R.id.btn_up, R.id.btn_refresh};
 		for (int id : affectedButtons){
-			((TextView)parent.findViewById(id)).setVisibility(visible ? View.VISIBLE : View.GONE);
+			parent.findViewById(id).setVisibility(visible ? View.VISIBLE : View.GONE);
 		}
 		
 		parent.setFrag(frag);

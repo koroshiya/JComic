@@ -78,8 +78,8 @@ public class AnalyzeHeapDump {
         }
         finally {
             try {
-				cin.close();
-				jin.close();
+				if (cin != null) cin.close();
+                if (jin != null) jin.close();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

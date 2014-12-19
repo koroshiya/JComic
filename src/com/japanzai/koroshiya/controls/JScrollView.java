@@ -262,21 +262,19 @@ public class JScrollView extends TwoDScrollView {
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec){
 		
 		super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-		
-		if (view != null){
 			
-			int viewWidth = view.getMeasuredWidth();
-			int viewHeight = view.getMeasuredHeight();
-			int scrollWidth = this.getMeasuredWidth();
-			int scrollHeight = this.getMeasuredHeight();
-			FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(viewWidth,viewHeight);
+        int viewWidth = view.getMeasuredWidth();
+        int viewHeight = view.getMeasuredHeight();
+        int scrollWidth = this.getMeasuredWidth();
+        int scrollHeight = this.getMeasuredHeight();
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(viewWidth,viewHeight);
+
+        params.leftMargin = (scrollWidth > viewWidth) ? (scrollWidth - viewWidth) / 2 : 0;
+        params.topMargin = (scrollHeight > viewHeight) ? (scrollHeight - viewHeight) / 2 : 0;
+
+        view.setLayoutParams(params);
 			
-			params.leftMargin = (scrollWidth > viewWidth) ? (scrollWidth - viewWidth) / 2 : 0;
-			params.topMargin = (scrollHeight > viewHeight) ? (scrollHeight - viewHeight) / 2 : 0;
-			
-			view.setLayoutParams(params);
-			
-		}
+
 	}
 	
 }

@@ -1,14 +1,8 @@
 <resources>
 
     <string name="app_name">JComic</string>
-    <string name="menu_settings">Réglages</string>
     <string name="author">Auteur:</string>
-    <string name="art">Icônes par:</string>
-    <string name="translations">Translation : anglais vers français:</string>
     <string name="contributions">Contributions de tierces parties:</string>
-    <string name="loading">Chargement - Veuillez patienter</string>
-    <string name="caching">Chargement - Réessayer dans une seconde</string>
-    <string name="loading_next">Chargement de l’image suivante – Veuillez patienter</string>
     <string name="loading_progress">Chargement – Veuillez patienter jusqu’à la fin</string>
     <string name="cant_go_up">Vous ne pouvez pas aller plus loin</string>
     <string name="cancel_selection">Annuler</string>
@@ -99,10 +93,6 @@
     <string name="setting_context_menu_head">Commandes</string>
     <string name="setting_back_to_file_chooser">Retourner à la liste de fichiers à la fin du comic </string>
     <string name="setting_context_menu_heading">Choisir une page</string>
-    <string name="setting_rar_password">Enable password-protected rar archives</string>
-    <string name="setting_rar_password_enter">Enter password</string>
-    <string name="error_report_line_1">Erreur log détectée</string>
-    <string name="error_report_line_2">Avertir le développeur ?</string>
     <string name="error_report_para_1">Si vous avez remarqué un problème mais n\'avait pas pu la signaler à ce moment-là (ou voulez donner un complément d\'information à son sujet), vous pouvez me contacter par mail directement en cliquant sur le lien ci-dessous.</string>
     <string name="error_report_para_2">Je lirai tous les rapports d\'erreur d\'erreur que je recevrai, je vous prie donc de détailler autant que possible. Par exemple, si vous avez eu un problème lors de la lecture d\'une image/archive, m\'envoyer des infos sur la taille de l\'image, son format (.jpg, .png…) ou directement l\'image en question m\'aiderait considérablement.</string>
     <string name="error_report_para_3">JComic m\'enverra automatiquement le modèle de l\'Android que vous utilisez, ainsi que la version de JComic que vous utilisez. Vous pouvez effacer ces informations si vous le souhaitez mais elles me sont très utiles, en particulier pour le débuggage de l\'application.</string>
@@ -122,11 +112,7 @@
         <item>Auto</item>
         <item>Portrait</item>
         <item>Paysage</item>
-    </string-array>   
-    <string-array name="performance_setting_ram_mode">
-        <item>Mode RAM</item>
-        <item>Mode Disque</item>
-    </string-array>    
+    </string-array>
     <string-array name="performance_setting_archive_mode">
         <item>Défaut</item>
         <item>Index</item>

@@ -19,7 +19,6 @@ public class MainActivity extends SherlockFragmentActivity {
 
 	public static MainActivity mainActivity;
 	private SettingsManager settings;
-	private MainClickListener scl;
 	
 	public File tempDir;
 	
@@ -59,12 +58,10 @@ public class MainActivity extends SherlockFragmentActivity {
 		settings.keepBacklightOn(getWindow());
 
 		setContentView(R.layout.activity_main);
-		
-		scl = new MainClickListener(this);
 
 		int[] ids = {R.id.btnInitiate, R.id.btnSettings, R.id.btnHelp, R.id.btnCredits, R.id.btnResumeReading, R.id.btnErrorReporting};
 		for (int id : ids){
-			((ImageButton) findViewById(id)).setOnClickListener(scl);
+			findViewById(id).setOnClickListener(new MainClickListener(this));
 		}
 
 	}

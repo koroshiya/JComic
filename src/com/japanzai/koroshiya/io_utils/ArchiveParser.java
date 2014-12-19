@@ -141,7 +141,7 @@ public class ArchiveParser {
 		
 		FileOutputStream fos;
 		BufferedOutputStream writtenFile;
-	    int l = 0;
+	    int l;
 			
 		try {
 							
@@ -176,7 +176,7 @@ public class ArchiveParser {
 			byte[] content = new byte[(int) entry.getSize()];
 			
 			do {
-				stream.read(content, 0, content.length - 0);
+				stream.read(content, 0, content.length);
 			}while (stream.getBytesRead() == entry.getSize());
 			
 			stream.close();

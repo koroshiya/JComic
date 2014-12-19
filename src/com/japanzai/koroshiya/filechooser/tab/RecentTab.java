@@ -56,7 +56,7 @@ public class RecentTab extends SherlockFragment {
 	        ItemClickListener icl = new ItemClickListener(fc);
 	        fc.setItemClickListener(icl);
             
-            ArrayList<String> listItems = new ArrayList<String>();
+            ArrayList<String> listItems = new ArrayList<>();
         	
         	List<HashMap<String,String>> aList;
 	        

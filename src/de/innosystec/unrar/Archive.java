@@ -67,7 +67,7 @@ public class Archive implements Closeable {
 
 	private final ComprDataIO dataIO;
 
-	private final List<BaseBlock> headers = new ArrayList<BaseBlock>();
+	private final List<BaseBlock> headers = new ArrayList<>();
 
 	private MarkHeader markHead = null;
 
@@ -148,7 +148,7 @@ public class Archive implements Closeable {
 	 * @return returns all file headers of the archive
 	 */
 	public List<FileHeader> getFileHeaders() {
-		List<FileHeader> list = new ArrayList<FileHeader>();
+		List<FileHeader> list = new ArrayList<>();
 		for (BaseBlock block : headers) {
 			if (block.getHeaderType().equals(UnrarHeadertype.FileHeader)) {
 				list.add((FileHeader) block);
@@ -194,13 +194,13 @@ public class Archive implements Closeable {
 		newMhd = null;
 		headers.clear();
 		currentHeaderIndex = 0;
-		int toRead = 0;
+		int toRead;
 
 		long fileLength = this.file.length();
 
 		while (true) {
-            int size = 0;
-            long newpos = 0;
+            int size;
+            long newpos;
             byte[] baseBlockBuffer = new byte[BaseBlock.BaseBlockSize];
             byte[] salt = new byte[8];
 
@@ -224,8 +224,6 @@ public class Archive implements Closeable {
 				if (size == 0) {
 					break;
 				}
-				size = 0; // init
-				// saltRead = true;
 			}
 
             // logger.info("\n--------reading header--------");
@@ -465,13 +463,15 @@ public class Archive implements Closeable {
                 new Thread(new Runnable() {
                         public void run() {
                                 try {
-                                        extractFile(hd, out);
+                                    extractFile(hd, out);
                                 } catch (RarException e) {
+                                    e.printStackTrace();
                                 } finally {
-                                        try {
-                                                out.close();
-                                        } catch (IOException e) {
-                                        }
+                                    try {
+                                        out.close();
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
                                 }
                         }
                 }).start();
@@ -552,18 +552,18 @@ public class Archive implements Closeable {
 	public boolean isPasswordProtected(){
 		
 		if (!getMainHeader().isEncrypted()) {
-			for(FileHeader h : this.getFileHeaders()){
-				try {
-					//System.out.println("Extracting " + h.getFileNameString());
-					extractFile(h, new FileOutputStream(System.getProperty("java.io.tmpdir") + "/" + h.getFileNameString()));
-				} catch (Exception e) {
-					//e.printStackTrace();
-					return true;
-				}
-				return false;
-			}
-			return false;
-		}else{return true;}
+            if (this.getFileHeaders().size() > 0){
+                FileHeader h = this.getFileHeaders().get(0);
+                try {
+                    extractFile(h, new FileOutputStream(System.getProperty("java.io.tmpdir") + "/" + h.getFileNameString()));
+                } catch (Exception e) {
+                    return true;
+                }
+            }
+		}else{
+            return true;
+        }
+        return false;
 	}
 	
 }

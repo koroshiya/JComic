@@ -1,14 +1,8 @@
 <resources>
 
     <string name="app_name">JComic</string>
-    <string name="menu_settings">Settings</string>
     <string name="author">Author:</string>
-    <string name="art">Icons made by:</string>
-    <string name="translations">English > French translations:</string>
     <string name="contributions">Third-party contributions:</string>
-    <string name="loading">Loading - Please wait</string>
-    <string name="caching">Loading - Try again in one second</string>
-    <string name="loading_next">Loading next image - Please wait</string>
     <string name="loading_progress">Loading - Please wait until processing is complete</string>
     <string name="cant_go_up">Can\'t go up any further</string>
     <string name="cancel_selection">Cancel</string>
@@ -99,10 +93,6 @@
     <string name="setting_context_menu_head">Commands</string>
     <string name="setting_back_to_file_chooser">Always return from comic to file chooser</string>
     <string name="setting_context_menu_heading">Select Page</string>
-    <string name="setting_rar_password">Enable password-protected rar archives</string>
-    <string name="setting_rar_password_enter">Enter password</string>
-    <string name="error_report_line_1">Error log detected</string>
-    <string name="error_report_line_2">Send to developer?</string>
     <string name="error_report_para_1">If you have encountered an error, but weren\'t able to report the error at the time (or you simply want to add a personal note on the matter), you can send me an email directly by clicking the link below.</string>
     <string name="error_report_para_2">I will read any error reports I receive, so please enter as many details as you can. eg. If you encountered a problem while reading an image/archive, sending me information about the file, such as its size, format, etc. (or the file itself) would help tremendously.</string>
     <string name="error_report_para_3">By default, JComic will include the make and model of your device, the version of Android you are running, and the version of JComic you are using. You are free to remove these details if you don\'t want to include them, but the Android and JComic versions in particular are very useful when debugging.</string>
@@ -122,11 +112,7 @@
         <item>Auto</item>
         <item>Portrait</item>
         <item>Landscape</item>
-    </string-array>   
-    <string-array name="performance_setting_ram_mode">
-        <item>RAM Mode</item>
-        <item>Disk Mode</item>
-    </string-array>    
+    </string-array>
     <string-array name="performance_setting_archive_mode">
         <item>Default</item>
         <item>Index</item>

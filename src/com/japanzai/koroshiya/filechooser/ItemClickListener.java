@@ -263,7 +263,7 @@ public class ItemClickListener implements OnItemClickListener, ModalReturn {
 	 * */
 	private void properties(File file){
 		
-		ArrayList<String> properties = new ArrayList<String>();
+		ArrayList<String> properties = new ArrayList<>();
 		
 		properties.add(getString(R.string.file_name) + file.getName());
 		
@@ -276,11 +276,11 @@ public class ItemClickListener implements OnItemClickListener, ModalReturn {
 				{1d, getString(R.string.file_size_kilobytes)},
 				{0d, getString(R.string.file_size_bytes)}
 		};
-		for (int i = 0; i < valuePairs.length; i++){
-			result = Math.pow(1024, (Double)valuePairs[i][0]);
+        for (Object[] pair : valuePairs){
+			result = Math.pow(1024, (Double)pair[0]);
 			if (size >= result){
 				size /= result;
-				properties.add(getString(R.string.file_size) + f.format(size) + (String)valuePairs[i][1]);
+				properties.add(getString(R.string.file_size) + f.format(size) + pair[1]);
 				break;
 			}
 		}
@@ -299,10 +299,9 @@ public class ItemClickListener implements OnItemClickListener, ModalReturn {
 	 * */
 	private void scan(File file){
 		
-		ArrayList<String> contents = null;
+		ArrayList<String> contents = new ArrayList<>();
 		
 		if (file.isDirectory()){
-			contents = new ArrayList<String>();
 	    	File[] files = file.listFiles();
 	    	Arrays.sort(files);
 	    	for (File f : files){
@@ -311,22 +310,17 @@ public class ItemClickListener implements OnItemClickListener, ModalReturn {
 				}
 			}
 		}else {
-			contents = new ArrayList<String>();
 			contents.add(file.getName());
 		}
-		
-		
-		if (contents != null && contents.size() != 0){
+
+		if (contents.size() > 0){
 			parent.runOnUiThread(new MessageThread(contents, parent));
 		}else{
 			parent.runOnUiThread(new MessageThread(R.string.file_no_supported, parent));
 		}
 		
 	}
-	
-	/**
-	 * @throws IOException 
-	 * */
+
 	private void zip(File dir, boolean delete){
 		
 		if (runningThread == null || !runningThread.isAlive()){
@@ -359,7 +353,7 @@ public class ItemClickListener implements OnItemClickListener, ModalReturn {
 		public void run(){
 
 			parent.showNext();
-			ArrayList<File> imagesToZip = new ArrayList<File>();
+			ArrayList<File> imagesToZip = new ArrayList<>();
 
 	    	File[] files = dir.listFiles();
 	    	Arrays.sort(files);
@@ -491,7 +485,6 @@ public class ItemClickListener implements OnItemClickListener, ModalReturn {
 		
 		if (!file.exists()){
     		parent.runOnUiThread(new ToastThread(R.string.cant_go_up, parent, Toast.LENGTH_SHORT));
-			return;
 		}else if (file.isFile() || forceReturn){
 			for (Recent recent : MainActivity.mainActivity.getSettings().getRecent()){
 				if (recent.getPath().equals(location)){

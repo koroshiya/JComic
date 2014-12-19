@@ -69,7 +69,7 @@ public class ArWrapper implements ReadableArchive{
 				if (ImageParser.isSupportedImage(entry.getName())){
 					byte[] content = new byte[(int) entry.getSize()];
 					
-					do {zip.read(content, 0, content.length - 0);}
+					do {zip.read(content, 0, content.length);}
 					while (zip.getBytesRead() == entry.getSize());
 						
 					ArchiveParser.writeStreamToDisk(pathToExtractTo, new ByteArrayInputStream(content), name);
@@ -88,7 +88,7 @@ public class ArWrapper implements ReadableArchive{
 			return false;
 		}finally{
 			try {
-				zip.close();
+				if (zip != null) zip.close();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -120,15 +120,14 @@ public class ArWrapper implements ReadableArchive{
 	@Override
 	public ArrayList<JBitmapDrawable> extractContentsToArrayList() {
 		
-		ArrayList<JBitmapDrawable> bitmaps = new ArrayList<JBitmapDrawable>();
+		ArrayList<JBitmapDrawable> bitmaps = new ArrayList<>();
 		ArchiveInputStream zip;
 		ArchiveEntry entry;
 		
 		try {			
 			
 			BufferedInputStream bis = new BufferedInputStream(new FileInputStream(archive));
-			ArchiveInputStream arc = new ArchiveStreamFactory().createArchiveInputStream(bis);
-			zip = (ArchiveInputStream) arc;
+			zip = new ArchiveStreamFactory().createArchiveInputStream(bis);
 				
 			try {
 				ByteArrayInputStream s;
@@ -163,21 +162,18 @@ public class ArWrapper implements ReadableArchive{
 		
 		ArchiveInputStream zip;
 		ArchiveEntry entry;
-		ArrayList<String> names = new ArrayList<String>();
+		ArrayList<String> names = new ArrayList<>();
 		
 		try{
 		
 			BufferedInputStream bis = new BufferedInputStream(new FileInputStream(archive));
-			ArchiveInputStream arc = new ArchiveStreamFactory().createArchiveInputStream(bis);
-			zip = (ArchiveInputStream) arc;
+            zip = new ArchiveStreamFactory().createArchiveInputStream(bis);
 			
 			while ((entry = zip.getNextEntry()) != null){
 				names.add(entry.getName());
 			}
 		
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (ArchiveException e) {
+		} catch (IOException | ArchiveException e) {
 			e.printStackTrace();
 		}
 		

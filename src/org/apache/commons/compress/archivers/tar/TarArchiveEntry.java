@@ -344,10 +344,7 @@ public class TarArchiveEntry implements TarConstants, ArchiveEntry {
      */
     @Override
     public boolean equals(Object it) {
-        if (it == null || getClass() != it.getClass()) {
-            return false;
-        }
-        return equals((TarArchiveEntry) it);
+        return !(it == null || getClass() != it.getClass()) && equals((TarArchiveEntry) it);
     }
 
     /**
@@ -378,7 +375,7 @@ public class TarArchiveEntry implements TarConstants, ArchiveEntry {
      * @return This entry's name.
      */
     public String getName() {
-        return name.toString();
+        return name;
     }
 
     /**
@@ -405,7 +402,7 @@ public class TarArchiveEntry implements TarConstants, ArchiveEntry {
      * @return This entry's link name.
      */
     public String getLinkName() {
-        return linkName.toString();
+        return linkName;
     }
 
     /**
@@ -461,7 +458,7 @@ public class TarArchiveEntry implements TarConstants, ArchiveEntry {
      * @return This entry's user name.
      */
     public String getUserName() {
-        return userName.toString();
+        return userName;
     }
 
     /**
@@ -479,7 +476,7 @@ public class TarArchiveEntry implements TarConstants, ArchiveEntry {
      * @return This entry's group name.
      */
     public String getGroupName() {
-        return groupName.toString();
+        return groupName;
     }
 
     /**
@@ -724,19 +721,7 @@ public class TarArchiveEntry implements TarConstants, ArchiveEntry {
      * @return True if this entry is a directory.
      */
     public boolean isDirectory() {
-        if (file != null) {
-            return file.isDirectory();
-        }
-
-        if (linkFlag == LF_DIR) {
-            return true;
-        }
-
-        if (getName().endsWith("/")) {
-            return true;
-        }
-
-        return false;
+        return file != null ? file.isDirectory() : linkFlag == LF_DIR || getName().endsWith("/");
     }
 
     /**
@@ -748,10 +733,7 @@ public class TarArchiveEntry implements TarConstants, ArchiveEntry {
         if (file != null) {
             return file.isFile();
         }
-        if (linkFlag == LF_OLDNORM || linkFlag == LF_NORMAL) {
-            return true;
-        }
-        return !getName().endsWith("/");
+        return ((linkFlag == LF_OLDNORM || linkFlag == LF_NORMAL) || !getName().endsWith("/"));
     }
 
     /**
@@ -1015,11 +997,12 @@ public class TarArchiveEntry implements TarConstants, ArchiveEntry {
      * Strips Windows' drive letter as well as any leading slashes,
      * turns path separators into forward slahes.
      */
-    private static String normalizeFileName(String fileName,
-                                            boolean preserveLeadingSlashes) {
-        String osname = System.getProperty("os.name").toLowerCase(Locale.ENGLISH);
+    private static String normalizeFileName(String fileName, boolean preserveLeadingSlashes) {
+        String osname = System.getProperty("os.name");
 
         if (osname != null) {
+
+            osname = osname.toLowerCase(Locale.ENGLISH);
 
             // Strip off drive letters!
             // REVIEW Would a better check be "(File.separator == '\')"?
@@ -1035,7 +1018,7 @@ public class TarArchiveEntry implements TarConstants, ArchiveEntry {
                         fileName = fileName.substring(2);
                     }
                 }
-            } else if (osname.indexOf("netware") > -1) {
+            } else if (osname.contains("netware")) {
                 int colon = fileName.indexOf(':');
                 if (colon != -1) {
                     fileName = fileName.substring(colon + 1);

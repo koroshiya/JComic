@@ -147,8 +147,7 @@ public class ZipArchiveOutputStream extends ArchiveOutputStream {
     /**
      * List of ZipArchiveEntries written so far.
      */
-    private final List<ZipArchiveEntry> entries =
-        new LinkedList<ZipArchiveEntry>();
+    private final List<ZipArchiveEntry> entries = new LinkedList<>();
 
     /**
      * CRC instance to avoid parsing DEFLATED data twice.
@@ -183,8 +182,7 @@ public class ZipArchiveOutputStream extends ArchiveOutputStream {
     /**
      * Holds the offsets of the LFH starts for each entry.
      */
-    private final Map<ZipArchiveEntry, Long> offsets =
-        new HashMap<ZipArchiveEntry, Long>();
+    private final Map<ZipArchiveEntry, Long> offsets = new HashMap<>();
 
     /**
      * The encoding to use for filenames and the file comment.
@@ -878,7 +876,7 @@ public class ZipArchiveOutputStream extends ArchiveOutputStream {
             addUnicodeExtraFields(ze, encodable, name);
         }
 
-        offsets.put(ze, Long.valueOf(written));
+        offsets.put(ze, (written));
 
         writeOut(LFH_SIG);
         written += WORD;

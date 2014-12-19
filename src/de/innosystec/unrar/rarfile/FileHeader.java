@@ -20,7 +20,6 @@ package de.innosystec.unrar.rarfile;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import de.innosystec.unrar.io.Raw;
@@ -42,8 +41,6 @@ public class FileHeader extends BlockHeader {
     private final HostSystem hostOS;
 
     private final int fileCRC;
-
-    private final int fileTime;
 
     private byte unpVersion;
 
@@ -96,7 +93,7 @@ public class FileHeader extends BlockHeader {
 	fileCRC = Raw.readIntLittleEndian(fileHeader, position);
 	position += 4;
 
-	fileTime = Raw.readIntLittleEndian(fileHeader, position);
+	final int fileTime = Raw.readIntLittleEndian(fileHeader, position);
 	position += 4;
 
 	unpVersion |= fileHeader[13] & 0xff;
@@ -197,41 +194,35 @@ public class FileHeader extends BlockHeader {
 
     }
 
-    private boolean existZH(String str) {  
-        String regEx = "[\\u4e00-\\u9fa5]";  
-        Pattern p = Pattern.compile(regEx);  
-        Matcher m = p.matcher(str);  
-        while (m.find()) {  
-            return true;  
-        }  
-        return false;  
+    private boolean existZH(String str) {
+        return Pattern.compile("[\\u4e00-\\u9fa5]").matcher(str).find();
     }  
     
     @Override
     public void print() {
-	super.print();
-	StringBuilder str = new StringBuilder();
-	str.append("unpSize: " + getUnpSize());
-	str.append("\nHostOS: " + hostOS.name());
-	str.append("\nMDate: " + mTime);
-	str.append("\nFileName: " + getFileNameString());
-	str.append("\nunpMethod: " + Integer.toHexString(getUnpMethod()));
-	str.append("\nunpVersion: " + Integer.toHexString(getUnpVersion()));
-	str.append("\nfullpackedsize: " + getFullPackSize());
-	str.append("\nfullunpackedsize: " + getFullUnpackSize());
-	str.append("\nisEncrypted: " + isEncrypted());
-	str.append("\nisfileHeader: " + isFileHeader());
-	str.append("\nisSolid: " + isSolid());
-	str.append("\nisSplitafter: " + isSplitAfter());
-	str.append("\nisSplitBefore:" + isSplitBefore());
-	str.append("\nunpSize: " + getUnpSize());
-	str.append("\ndataSize: " + getDataSize());
-	str.append("\nisUnicode: " + isUnicode());
-	str.append("\nhasVolumeNumber: " + hasVolumeNumber());
-	str.append("\nhasArchiveDataCRC: " + hasArchiveDataCRC());
-	str.append("\nhasSalt: " + hasSalt());
-	str.append("\nhasEncryptVersions: " + hasEncryptVersion());
-	str.append("\nisSubBlock: " + isSubBlock());
+	    super.print();
+        String str = "unpSize: "+getUnpSize()+
+        "\nHostOS: "+hostOS.name()+
+        "\nMDate: "+mTime+
+        "\nFileName: "+getFileNameString()+
+        "\nunpMethod: "+Integer.toHexString(getUnpMethod())+
+        "\nunpVersion: "+Integer.toHexString(getUnpVersion())+
+        "\nfullpackedsize: "+getFullPackSize()+
+        "\nfullunpackedsize: "+getFullUnpackSize()+
+        "\nisEncrypted: "+isEncrypted()+
+        "\nisfileHeader: "+isFileHeader()+
+        "\nisSolid: "+isSolid()+
+        "\nisSplitafter: "+isSplitAfter()+
+        "\nisSplitBefore:"+isSplitBefore()+
+        "\nunpSize: "+getUnpSize()+
+        "\ndataSize: "+getDataSize()+
+        "\nisUnicode: "+isUnicode()+
+        "\nhasVolumeNumber: "+hasVolumeNumber()+
+        "\nhasArchiveDataCRC: "+hasArchiveDataCRC()+
+        "\nhasSalt: "+hasSalt()+
+        "\nhasEncryptVersions: "+hasEncryptVersion()+
+        "\nisSubBlock: "+isSubBlock();
+        System.out.println(str);
     }
 
     private Date getDateDos(int time) {

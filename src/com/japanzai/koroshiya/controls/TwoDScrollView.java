@@ -246,11 +246,7 @@ public class TwoDScrollView extends FrameLayout {
  @Override
  public boolean dispatchKeyEvent(KeyEvent event) {
    // Let the focused view and/or our descendants get the key first
-   boolean handled = super.dispatchKeyEvent(event);
-   if (handled) {
-     return true;
-   }
-   return executeKeyEvent(event);
+   return super.dispatchKeyEvent(event) || executeKeyEvent(event);
  }
  
  /**
@@ -980,12 +976,8 @@ public class TwoDScrollView extends FrameLayout {
    FocusFinder.getInstance().findNextFocus(this, null, direction) :
    FocusFinder.getInstance().findNextFocusFromRect(this,
    previouslyFocusedRect, direction);
- 
-   if (nextFocus == null) {
-     return false;
-   }
- 
-   return nextFocus.requestFocus(direction, previouslyFocusedRect);
+
+     return nextFocus!=null && nextFocus.requestFocus(direction, previouslyFocusedRect);
  }
  
  @Override

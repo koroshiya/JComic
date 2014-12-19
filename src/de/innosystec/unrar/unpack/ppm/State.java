@@ -101,19 +101,6 @@ public class State extends Pointer {
     }
 
     public String toString() {
-        StringBuilder buffer = new StringBuilder();
-        buffer.append("State[");
-        buffer.append("\n  pos=");
-        buffer.append(pos);
-        buffer.append("\n  size=");
-        buffer.append(size);
-        buffer.append("\n  symbol=");
-        buffer.append(getSymbol());
-        buffer.append("\n  freq=");
-        buffer.append(getFreq());
-        buffer.append("\n  successor=");
-        buffer.append(getSuccessor());
-        buffer.append("\n]");
-        return buffer.toString();
+        return "State[\n  pos="+pos+"\n  size="+size+"\n  symbol="+getSymbol()+"\n  freq="+getFreq()+"\n  successor="+getSuccessor()+"\n]";
     }
 }

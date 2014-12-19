@@ -302,7 +302,7 @@ public class ZipArchiveEntry extends java.util.zip.ZipEntry
      * @param fields an array of extra fields
      */
     public void setExtraFields(ZipExtraField[] fields) {
-        extraFields = new LinkedHashMap<ZipShort, ZipExtraField>();
+        extraFields = new LinkedHashMap<>();
         for (ZipExtraField field : fields) {
             if (field instanceof UnparseableExtraFieldData) {
                 unparseableExtra = (UnparseableExtraFieldData) field;
@@ -337,11 +337,11 @@ public class ZipArchiveEntry extends java.util.zip.ZipEntry
                 : new ZipExtraField[] { unparseableExtra };
         }
         List<ZipExtraField> result =
-            new ArrayList<ZipExtraField>(extraFields.values());
+            new ArrayList<>(extraFields.values());
         if (includeUnparseable && unparseableExtra != null) {
             result.add(unparseableExtra);
         }
-        return result.toArray(new ZipExtraField[0]);
+        return result.toArray(new ZipExtraField[result.size()]);
     }
 
     /**
@@ -357,7 +357,7 @@ public class ZipArchiveEntry extends java.util.zip.ZipEntry
             unparseableExtra = (UnparseableExtraFieldData) ze;
         } else {
             if (extraFields == null) {
-                extraFields = new LinkedHashMap<ZipShort, ZipExtraField>();
+                extraFields = new LinkedHashMap<>();
             }
             extraFields.put(ze.getHeaderId(), ze);
         }
@@ -376,7 +376,7 @@ public class ZipArchiveEntry extends java.util.zip.ZipEntry
             unparseableExtra = (UnparseableExtraFieldData) ze;
         } else {
             LinkedHashMap<ZipShort, ZipExtraField> copy = extraFields;
-            extraFields = new LinkedHashMap<ZipShort, ZipExtraField>();
+            extraFields = new LinkedHashMap<>();
             extraFields.put(ze.getHeaderId(), ze);
             if (copy != null) {
                 copy.remove(ze.getHeaderId());
@@ -522,11 +522,7 @@ public class ZipArchiveEntry extends java.util.zip.ZipEntry
      * @param name the name to use
      */
     protected void setName(String name) {
-        if (name != null && getPlatform() == PLATFORM_FAT
-            && name.indexOf("/") == -1) {
-            name = name.replace('\\', '/');
-        }
-        this.name = name;
+        this.name = (name != null && getPlatform() == PLATFORM_FAT && !name.contains("/")) ? name.replace('\\', '/') : name;
     }
 
     /**

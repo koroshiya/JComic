@@ -127,17 +127,8 @@ public class BaseBlock{
 	/**
 	 * @return is it a sub block
 	 */
-	public boolean isSubBlock()
-	{
-		 if (UnrarHeadertype.SubHeader.equals(headerType)){
-			 return(true);
-		 }
-		 if (UnrarHeadertype.NewSubHeader.equals(headerType) && (flags & LHD_SOLID)!=0)
-		 {
-			 return(true);
-		 }
-		 return(false);
-		
+	public boolean isSubBlock(){
+		 return UnrarHeadertype.SubHeader.equals(headerType) || UnrarHeadertype.NewSubHeader.equals(headerType) && (flags & LHD_SOLID)!=0;
 	}
 
 	public long getPositionInFile() {
@@ -165,11 +156,9 @@ public class BaseBlock{
 	}
 	
 	public void print(){
-		StringBuilder str  =new StringBuilder();
-		str.append("HeaderType: " + getHeaderType());
-		str.append("\nHeadCRC: "+Integer.toHexString(getHeadCRC()));
-		str.append("\nFlags: "+Integer.toHexString(getFlags()));
-		str.append("\nHeaderSize: "+getHeaderSize());
-		str.append("\nPosition in file: "+getPositionInFile());
+        String str = "HeaderType: "+getHeaderType()+"\nHeadCRC: "+Integer.toHexString(getHeadCRC())+
+		            "\nFlags: "+Integer.toHexString(getFlags())+"\nHeaderSize: "+getHeaderSize()+
+		            "\nPosition in file: "+getPositionInFile();
+        System.out.println(str);
 	}
 }

@@ -79,8 +79,8 @@ public class ReadOnlyAccessByteArray implements IReadOnlyAccess{
 		if(count == 0){
 			throw new IllegalArgumentException("cannot read 0 bytes ;-)");
 		}
-		int read = Math.min(count, file.length-(int)positionInFile-1);	
-		System.arraycopy(file, (int)positionInFile, buffer, 0, read );
+		int read = Math.min(count, file.length-positionInFile-1);
+		System.arraycopy(file, positionInFile, buffer, 0, read );
 		positionInFile+=read;
 		return read;
 	}

@@ -1,8 +1,8 @@
 package com.japanzai.koroshiya.filechooser;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -233,7 +233,7 @@ public class FileChooser extends SherlockFragmentActivity {
      * @return This Activity's ListView, displaying the files to choose from
      * */
     public ListView getListView(){
-    	return (ListView) this.v;
+    	return this.v;
     }
     
     @Override
@@ -269,10 +269,8 @@ public class FileChooser extends SherlockFragmentActivity {
 		if (id == -1){
 			return; //Unknown selection
 		}
-		tempCommandList = new ArrayList<String>();
-		for (String s : (getResources().getStringArray(id))){
-			tempCommandList.add(s);
-		}
+		tempCommandList = new ArrayList<>();
+        tempCommandList.addAll(Arrays.asList(getResources().getStringArray(id)));
     	if (tab == bar.getTabAt(0)){
     		tempCommandList.add(getResources().getString(R.string.file_remove_recent));
     		tempCommandList.add(getResources().getString(R.string.file_clear_recent));
@@ -296,8 +294,6 @@ public class FileChooser extends SherlockFragmentActivity {
     	
     	try {
 			icl.process(s.get("name"), command);
-		} catch (IOException e) {
-			e.printStackTrace();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -471,7 +467,7 @@ public class FileChooser extends SherlockFragmentActivity {
         List<HashMap<String,String>> aList = new ArrayList<HashMap<String,String>>();
 
         for (String s : listItems){
-            HashMap<String, String> hm = new HashMap<String,String>();
+            HashMap<String, String> hm = new HashMap<>();
             hm.put("name", s);
             
             int img;
@@ -495,10 +491,10 @@ public class FileChooser extends SherlockFragmentActivity {
 	
 	public List<HashMap<String, String>> getEmptyHashList(ArrayList<String> listItems){
         
-        List<HashMap<String,String>> aList = new ArrayList<HashMap<String,String>>();
+        List<HashMap<String,String>> aList = new ArrayList<>();
 
         for (String s : listItems){
-            HashMap<String, String> hm = new HashMap<String,String>();
+            HashMap<String, String> hm = new HashMap<>();
             hm.put("name", s);
             hm.put("image", Integer.toString(R.drawable.transparent));
             aList.add(hm);

@@ -96,18 +96,8 @@ public class MainHeader extends BaseBlock {
 	
 	public void print(){
 		super.print();
-		StringBuilder str=new StringBuilder();
-		str.append("posav: "+getPosAv());
-		str.append("\nhighposav: "+getHighPosAv());
-		str.append("\nhasencversion: "+hasEncryptVersion()+(hasEncryptVersion()?getEncryptVersion():""));
-		str.append("\nhasarchcmt: "+hasArchCmt());
-		str.append("\nisEncrypted: "+isEncrypted());
-		str.append("\nisMultivolume: "+isMultiVolume());
-		str.append("\nisFirstvolume: "+isFirstVolume());
-		str.append("\nisSolid: "+isSolid());
-		str.append("\nisLocked: "+isLocked());
-		str.append("\nisProtected: "+isProtected());
-		str.append("\nisAV: "+isAV());
+        String str = "posav: \nhighposav: \nhasencversion: \nhasarchcmt: \nisEncrypted: \nisMultivolume: \nisFirstvolume: \nisSolid: \nisLocked: \nisProtected: \nisAV: "+isAV();
+        System.out.println(str);
 	}
 	
 	/**

@@ -30,12 +30,11 @@ public class MessageDialog extends SherlockDialogFragment{
 	 * @param message Message to display
 	 * */
 	public MessageDialog(ArrayList<String> message){
-		
-		StringBuffer buffer = new StringBuffer();
+
+        StringBuilder buffer = new StringBuilder();
 		
 		for (String line : message){
-			buffer.append(line);
-			buffer.append("\n");
+			buffer.append(line).append("\n");
 		}
 		
 		this.message = buffer.toString();

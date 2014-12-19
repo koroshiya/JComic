@@ -45,7 +45,7 @@ public class JZipArchive extends SteppableArchive{
 		
 		while (zips.hasMoreElements()){
 			
-			zipEntry = (ZipArchiveEntry) zips.nextElement();
+			zipEntry = zips.nextElement();
 			
 			if (ImageParser.isSupportedImage(zipEntry.getName())){
 				if (zipEntry.getSize() > 0) addImageToCache(zipEntry, zipEntry.getName());
@@ -57,16 +57,14 @@ public class JZipArchive extends SteppableArchive{
 			setIndex(0);
 			setMin(0);
 		}else {
-			IOException ioe = new IOException();
-			throw ioe;
+			throw new IOException();
 		}
 		
 	}
 	
 	@Override
-	public JBitmapDrawable parseImage(int fIndex) throws IOException{
+	public JBitmapDrawable parseImage(int i) throws IOException{
 
-		int i = (Integer)fIndex;
 		ZipArchiveEntry entry = (ZipArchiveEntry)getImages().get(i).getImage();
 		File f = new File(tempDir + "/" + entry.getName());
 		
@@ -126,16 +124,13 @@ public class JZipArchive extends SteppableArchive{
 
 	@Override
 	public boolean extractContentsToDisk(File pathToExtractTo, FileChooser fc) {
-
-		System.out.println("try");
-	    boolean errorFree = true;
 	    
 	    Enumeration<ZipArchiveEntry> zips = zip.getEntries();
 		ZipArchiveEntry zipEntry;
 		String name;
 		while (zips.hasMoreElements()){
 			
-			zipEntry = (ZipArchiveEntry) zips.nextElement();
+			zipEntry = zips.nextElement();
 			name = zipEntry.getName();
 			if (name.contains("/")){
 				name = name.substring(name.lastIndexOf('/') + 1);
@@ -151,8 +146,6 @@ public class JZipArchive extends SteppableArchive{
 				try {
 					System.out.println("Extracting: " + zipEntry.getName());
 					ArchiveParser.writeStreamToDisk(pathToExtractTo, zip.getInputStream(zipEntry), name);
-				} catch (ZipException e) {
-					e.printStackTrace();
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -160,14 +153,14 @@ public class JZipArchive extends SteppableArchive{
 			
 		}
 		
-		return errorFree;
+		return true;
 		
 	}
 
 	@Override
 	public ArrayList<JBitmapDrawable> extractContentsToArrayList() {
 		
-		ArrayList<JBitmapDrawable> imageList = new ArrayList<JBitmapDrawable>();
+		ArrayList<JBitmapDrawable> imageList = new ArrayList<>();
 		
 		for (int i = 0; i < getMax(); i++){
 			
@@ -186,8 +179,8 @@ public class JZipArchive extends SteppableArchive{
 	@Override
 	public ArrayList<String> peekAtContents() {
 		
-		ZipArchiveEntry entry = null;
-		ArrayList<String> names = new ArrayList<String>();
+		ZipArchiveEntry entry;
+		ArrayList<String> names = new ArrayList<>();
 		
 		for (int i = 0; i < getMax(); i++){
 			
