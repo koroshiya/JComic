@@ -26,6 +26,7 @@ import com.japanzai.koroshiya.io_utils.ArchiveParser;
 import com.japanzai.koroshiya.io_utils.ImageParser;
 import com.japanzai.koroshiya.reader.MainActivity;
 import com.japanzai.koroshiya.reader.MessageThread;
+import com.japanzai.koroshiya.reader.Reader;
 import com.japanzai.koroshiya.reader.ToastThread;
 import com.japanzai.koroshiya.settings.SettingsView;
 import com.japanzai.koroshiya.settings.classes.Recent;
@@ -309,7 +310,13 @@ public class ItemClickListener implements OnItemClickListener, ModalReturn {
 					contents.add(f.getName());
 				}
 			}
-		}else {
+		}else if (ArchiveParser.isSupportedArchive(file)){
+            try {
+                contents = ArchiveParser.peekAtContents(ArchiveParser.parseArchive(file, null), false);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }else {
 			contents.add(file.getName());
 		}
 
@@ -474,6 +481,8 @@ public class ItemClickListener implements OnItemClickListener, ModalReturn {
 			ex.printStackTrace();
 			return;
 		}
+
+        Log.d("ItemClickListener", "Processing item " + name);
 		
 		processItemAfter(location, forceReturn);
 		
@@ -493,14 +502,21 @@ public class ItemClickListener implements OnItemClickListener, ModalReturn {
 				}
 			}
 			int i = 0;
-	    	File[] files = file.getParentFile().listFiles();
-	    	Arrays.sort(files);
-	    	for (File f : files){
-				if (f.equals(file)){
-					break;
-				}
-				i++;
-			}
+            if (!ArchiveParser.isSupportedArchive(file)) {
+                Log.d("ItemClickListener", "Processing item " + file.getName());
+                File[] files = file.getParentFile().listFiles();
+                Arrays.sort(files);
+                Log.d("ItemClickListener", "List of files: ");
+                for (File f : files) {
+                    if (ImageParser.isSupportedImage(f)) {
+                        Log.d("ItemClickListener", f.getName());
+                        if (f.getName().equals(file.getName())) {
+                            break;
+                        }
+                        i++;
+                    }
+                }
+            }
 			parent.returnValue(file, i);
 		}else {
 			parent.reset(file);

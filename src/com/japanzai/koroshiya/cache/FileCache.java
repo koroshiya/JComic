@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 
 import android.graphics.Point;
+import android.util.Log;
 
 import com.japanzai.koroshiya.archive.steppable.JImage;
 import com.japanzai.koroshiya.controls.JBitmapDrawable;
@@ -41,8 +42,10 @@ public class FileCache extends Steppable {
 		
 	@Override
 	public void parseCurrent()  {
-    	
-		getParent().setImage(parseImage(getIndex()));
+
+        Log.d("FileCache", "Starting File Cache at "+getIndex());
+
+        getParent().setImage(parseImage(getIndex()));
 		
     	SettingsManager settings = super.parent.getSettings();
     	if (settings.isCacheOnStart()){

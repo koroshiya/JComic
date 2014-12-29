@@ -11,6 +11,7 @@ import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipFile;
 
 import android.graphics.Point;
+import android.util.Log;
 
 import com.japanzai.koroshiya.R;
 import com.japanzai.koroshiya.archive.steppable.thread.zip.IndexZipThread;
@@ -52,6 +53,8 @@ public class JZipArchive extends SteppableArchive{
 			}
 			
 		}
+
+        super.sort();
 		
 		if (getMax() > 0){
 			setIndex(0);
@@ -186,8 +189,9 @@ public class JZipArchive extends SteppableArchive{
 			
 			entry = (ZipArchiveEntry)getImages().get(i).getImage();
 			names.add(entry.getName());
-			
-		}
+            Log.d("JZipArchive", "Zip entry " + i + ": " + entry.getName());
+
+        }
 		
 		return names;
 		

@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.japanzai.koroshiya.R;
 import com.japanzai.koroshiya.archive.steppable.JImage;
+import com.japanzai.koroshiya.archive.steppable.JRarArchive;
 import com.japanzai.koroshiya.controls.JBitmapDrawable;
 import com.japanzai.koroshiya.interfaces.Cacheable;
 import com.japanzai.koroshiya.interfaces.StepThread;
@@ -148,8 +149,10 @@ public abstract class Steppable implements Cacheable{
     	
     	if (i >= 0 && i < max){
     		this.index = i;
-    		parent.getSettings().setLastReadIndex(i);
-    	}
+    		if (parent != null) parent.getSettings().setLastReadIndex(i); //For test archives; not used with real Steppables
+    	}else{
+            Log.d("Steppable", "Index " + i + " is < 0 or > " + max);
+        }
     	
     }
     
@@ -300,7 +303,9 @@ public abstract class Steppable implements Cacheable{
 	 * Otherwise, the previous image is cached.
 	 * */
 	protected void cache(boolean forward){
-		if (parent.getSettings().getCacheLevel() != 0){
+        if (parent.getSettings().getCacheLevel() != 0 &&
+                ((this instanceof JRarArchive && parent.getSettings().isCacheForRar()) ||
+                !(this instanceof JRarArchive))){
 			cachePrimary = null;
 			primary = forward ? getNextThread(true) : getPreviousThread(true);
 	    	((Thread) primary).start();
@@ -611,7 +616,7 @@ public abstract class Steppable implements Cacheable{
      * @return Current index of the Steppable object
      * */
     public int getIndex(){		
-		return this.index;		
+		return this.index;
 	}
 
 	/**

@@ -51,6 +51,8 @@ public class JRarArchive extends SteppableArchive{
 			}
 			
 		}
+
+        super.sort();
 		
 		if (getMax() > 0){
 			setIndex(0);

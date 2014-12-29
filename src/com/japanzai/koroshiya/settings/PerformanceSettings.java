@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 /**
  * Encompasses settings pertaining to application performance.
@@ -22,8 +23,9 @@ public class PerformanceSettings extends SettingTab {
 	
 	private final SettingsView parent;
 	private final SettingsManager settings;
-	
-	private CheckSetting cacheOnStartup;
+
+    private CheckSetting cacheOnStartup;
+    private CheckSetting cacheRarFiles;
 	private SpinnerSetting archiveMode;
 	private SpinnerSetting cacheMode;
 	private SpinnerSetting cacheLevel;
@@ -62,6 +64,17 @@ public class PerformanceSettings extends SettingTab {
 			nfe.printStackTrace();
 			cacheOnStartup = null;
 		}
+
+        try{
+            cacheRarFiles = new CheckSetting(R.string.setting_cache_rar, true, true, this.parent);
+            lLayout.addView(cacheRarFiles);
+            TextView tv = new TextView(this.parent);
+            tv.setText(getString(R.string.setting_cache_rar_warning));
+            lLayout.addView(tv);
+        }catch (NotFoundException nfe){
+            nfe.printStackTrace();
+            cacheRarFiles = null;
+        }
 		
 		try{
 			archiveMode = new SpinnerSetting(this.parent, R.string.setting_archive, R.array.performance_setting_archive_mode, 0);
@@ -101,6 +114,7 @@ public class PerformanceSettings extends SettingTab {
 
 		//settings.setExtractModeEnabled(extractMode.getState() == 1);
         if (cacheOnStartup != null) settings.setCacheOnStart(cacheOnStartup.getState() == 1);
+        if (cacheRarFiles != null) settings.setCacheForRar(cacheRarFiles.getState() == 1);
 		if (archiveMode != null){settings.setArchiveModeIndex(archiveMode.getState());}
 		if (cacheMode != null){settings.setCacheModeIndex(cacheMode.getState());}
 		if (cacheLevel != null){settings.setCacheLevel(cacheLevel.getState());}
@@ -112,6 +126,7 @@ public class PerformanceSettings extends SettingTab {
 
 		//extractMode.setState(settings.getExtractModeEnabled() ? 1 : 0);
         if (cacheOnStartup != null) cacheOnStartup.setState(settings.isCacheOnStart() ? 1 : 0);
+        if (cacheRarFiles != null) cacheRarFiles.setState(settings.isCacheForRar() ? 1 : 0);
 		if (archiveMode != null){archiveMode.setState(settings.getArchiveModeIndex());}
 		if (cacheMode != null){cacheMode.setState(settings.getCacheModeIndex());}
 		if (cacheLevel != null){cacheLevel.setState(settings.getCacheLevel());}

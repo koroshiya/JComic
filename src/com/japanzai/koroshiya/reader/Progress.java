@@ -63,16 +63,19 @@ public class Progress extends SherlockActivity implements ModalReturn{
 		    		reader.runOnUiThread(new MessageThread(R.string.archive_read_error, reader));
 		        	return;
 		    	}
-	    	}else { 
-	    		reader.setCache(new FileCache(reader, f.getAbsolutePath()));
-	    		File parentDir = new File(f.getParent());
+	    	}else {
+                Log.d("Progress", "Running thread with File");
+                File parentDir = new File(f.getParent());
+	    		reader.setCache(new FileCache(reader, parentDir.getAbsolutePath()));
 	    		
 	        	File[] list = parentDir.listFiles();
 	        	Arrays.sort(list);
 
                 for (File file : list){
 	    			parseFile(file);
+                    Log.d("Progress", "Comparing " + file.getName() + " to " + f.getName());
 	    			if (file.getName().equals(f.getName())){
+                        Log.d("Progress", "FileCache, found file " + f.getName() + ", setting index to " + index);
 	    				reader.setCacheIndex(index == -1 ? 0 : index);
 	    			}
 	    		}
@@ -110,8 +113,9 @@ public class Progress extends SherlockActivity implements ModalReturn{
 	        this.index = i;
 	        this.f = new File(b.getString("file"));
 	        reader = Reader.reader;
-	        
-	        Log.d("Progress", "Reading file "+f.getAbsolutePath());
+
+            Log.d("Progress", "Reading file "+f.getAbsolutePath());
+            Log.d("Progress", "Index of "+i);
 	        
 	        ProgressThread thread = new ProgressThread();
 	        thread.start();
@@ -150,10 +154,7 @@ public class Progress extends SherlockActivity implements ModalReturn{
     		}
     	}
     }
-    
-    /**
-     * @param file File to parse; tests if the file is a supported archive
-     * */
+
     public boolean parseArchive(){
     	    	
     	try {

@@ -74,7 +74,7 @@ public class RecentTab extends SherlockFragment {
             		}
             	}
             	
-            	if (listItems.size() == 1){
+            	if (listItems.size() == 0){
                 	listItems.add(getString(R.string.recent_no_recent_files));
             		aList = fc.getEmptyHashList(listItems);
                 }else{

@@ -61,12 +61,20 @@ public class Reader extends SherlockFragmentActivity {
         
         Bundle b = getIntent().getExtras();
         this.tempFile = new File(b.getString("file"));
+
+        settings = new SettingsManager(this);
+        settings.setHomeDir(tempFile.getParent());
+
+        Intent intent = new Intent(this, Progress.class);
+        Bundle ba = new Bundle();
+        ba.putString("file", this.tempFile.getAbsolutePath());
+
+        if (this.tempFile.isFile()) this.tempFile = this.tempFile.getParentFile();
 		MainActivity.mainActivity.tempDir = this.tempFile.getParentFile();
         int index = b.getInt("index");
-        
-		settings = new SettingsManager(this);
-		settings.setHomeDir(tempFile.getParent());
-		settings.setLastReadIndex(index);
+
+        settings.setLastReadIndex(index);
+        ba.putInt("index", index);
 
 		if (settings.saveRecent()) {
 			settings.addRecent(tempFile.getAbsolutePath(), index);
@@ -74,10 +82,7 @@ public class Reader extends SherlockFragmentActivity {
 
 		imgPanel = (JImageSwitcher) findViewById(R.id.imgPanel);
 
-		Intent intent = new Intent(this, Progress.class);
-		Bundle ba = new Bundle();
-		ba.putInt("index", index);
-		ba.putString("file", this.tempFile.getAbsolutePath());
+        Log.d("Reader", "Starting at index " + index);
 		intent.putExtras(ba);
 		startActivity(intent);
 
@@ -288,7 +293,9 @@ public class Reader extends SherlockFragmentActivity {
 		
 		if (this.cache != null){
 			this.cache.setIndex(i);
-		}
+		}else{
+            Log.e("Reader", "Cache is null");
+        }
 		
 	}
 

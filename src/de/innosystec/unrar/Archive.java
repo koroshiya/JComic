@@ -447,14 +447,12 @@ public class Archive implements Closeable {
          * stream it. Please note that this method will create a new Thread and an a
          * pair of Pipe streams.
          * 
-         * @param header
-         *            the header to be extracted
+         * @param hd the header to be extracted
          * @throws RarException
          * @throws IOException
          *             if any IO error occur
          */
-        public InputStream getInputStream(final FileHeader hd) throws RarException,
-                        IOException {
+        public InputStream getInputStream(final FileHeader hd) throws RarException, IOException {
                 final PipedInputStream in = new PipedInputStream(32 * 1024);
                 final PipedOutputStream out = new PipedOutputStream(in);
 

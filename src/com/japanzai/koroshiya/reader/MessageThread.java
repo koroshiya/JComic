@@ -46,8 +46,11 @@ public class MessageThread extends Thread{
      * @param message Message to display as a Dialog
      * */
     public void print(String message){
-    	MessageDialog md = new MessageDialog(message);
-		md.show(parent.getSupportFragmentManager(), "MainActivity");
+        try{
+            new MessageDialog(message).show(parent.getSupportFragmentManager(), "MainActivity");
+        }catch (IllegalStateException e){
+            e.printStackTrace();
+        }
     }
     
     /**

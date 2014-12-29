@@ -26,14 +26,18 @@ public abstract class SteppableArchive extends Steppable implements ReadableArch
 	public SteppableArchive(Reader parent, String path){
 		
 		super(parent, path);
-		File tmp = parent.getCacheDir();
-		this.tempDir = new File(tmp + "/JComic/");
-		System.out.println(this.tempDir);
-		
-		if (this.tempDir.exists() && this.tempDir.isDirectory()){
-			deleteFile(this.tempDir);
-		}
-		this.tempDir.mkdirs();
+        if (parent != null) {
+            File tmp = parent.getCacheDir();
+            this.tempDir = new File(tmp + "/JComic/");
+            System.out.println(this.tempDir);
+
+            if (this.tempDir.exists() && this.tempDir.isDirectory()) {
+                deleteFile(this.tempDir);
+            }
+            this.tempDir.mkdirs();
+        }else{
+            tempDir = null;
+        }
 
 		int mode = MainActivity.mainActivity.getSettings().getCacheModeIndex();
 		if (this instanceof JRarArchive){

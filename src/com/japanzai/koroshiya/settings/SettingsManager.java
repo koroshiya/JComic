@@ -51,7 +51,8 @@ public class SettingsManager {
 	private static final boolean defaultKeepBacklightOn = false;
 	private static final boolean defaultExtractMode = false;
 	private static final boolean defaultCacheSafety = true;
-	private static final boolean defaultCacheOnStart = true;
+    private static final boolean defaultCacheOnStart = true;
+    private static final boolean defaultCacheRarFiles = false;
 	private static final boolean defaultKeepZoomOnPageChange = false;
 	private static final boolean defaultContextMenuEnabled = true;
 	private static final boolean defaultRarPassword = false;
@@ -73,6 +74,7 @@ public class SettingsManager {
 	private static boolean extractMode;
 	private static boolean cacheSafety;
 	private static boolean cacheOnStart;
+    private static boolean cacheRarFiles;
 	private static boolean keepZoomOnPageChange;
 	private static boolean contextMenuEnabled;
 	private static boolean rarPassword;
@@ -125,7 +127,8 @@ public class SettingsManager {
 		keepBacklightOn = preferences.getBoolean("keepBacklightOn", defaultKeepBacklightOn);
 		extractMode = preferences.getBoolean("extractModeIndex", defaultExtractMode);
 		cacheSafety = preferences.getBoolean("cacheSafety", defaultCacheSafety);
-		cacheOnStart = preferences.getBoolean("cacheOnStart", defaultCacheOnStart);
+        cacheOnStart = preferences.getBoolean("cacheOnStart", defaultCacheOnStart);
+        cacheRarFiles = preferences.getBoolean("cacheRarFiles", defaultCacheRarFiles);
 		keepZoomOnPageChange = preferences.getBoolean("keepZoomOnPageChange", defaultKeepZoomOnPageChange);
 		contextMenuEnabled = preferences.getBoolean("contextMenuEnabled", defaultContextMenuEnabled);
 		rarPassword = preferences.getBoolean("rarPassword", defaultRarPassword);
@@ -202,6 +205,7 @@ public class SettingsManager {
 		setSaveRecent(defaultSaveRecent);
 		setBacklightAlwaysOn(defaultKeepBacklightOn);
 		setCacheOnStart(defaultCacheOnStart);
+        setCacheForRar(defaultCacheRarFiles);
 		setKeepZoomOnPageChange(defaultKeepZoomOnPageChange);
 		setContextMenuEnabled(defaultContextMenuEnabled);
 		setRarPasswordEnabled(defaultRarPassword);
@@ -468,21 +472,26 @@ public class SettingsManager {
 				int flag = android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
 				window.addFlags(flag);
 			}
-		}catch (Exception e){
-			e.printStackTrace();
-		}catch (Error e){
+		}catch (Exception | Error e){
 			e.printStackTrace();
 		}
 	}
-	
-	public boolean isCacheOnStart(){
-		return cacheOnStart;
-	}
-	
-	public void setCacheOnStart(boolean enabled){
-		cacheOnStart = enabled;
-		updateBool("cacheOnStart", enabled);
-	}
+
+    public boolean isCacheOnStart(){
+        return cacheOnStart;
+    }
+
+    public void setCacheOnStart(boolean enabled){
+        cacheOnStart = enabled;
+        updateBool("cacheOnStart", enabled);
+    }
+
+    public boolean isCacheForRar(){ return cacheRarFiles; }
+
+    public void setCacheForRar(boolean enabled){
+        cacheRarFiles = enabled;
+        updateBool("cacheRarFiles", enabled);
+    }
 	
 	public boolean keepZoomOnPageChange(){
 		return keepZoomOnPageChange;

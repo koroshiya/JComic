@@ -370,6 +370,7 @@ public class FileChooser extends SherlockFragmentActivity {
 		Bundle b = new Bundle();
 		b.putString("file", value.getAbsolutePath());
 		b.putInt("index", index < 0 ? 0 : index);
+        Log.d("FileChooser", "Starting at index: " + index);
 		intent.putExtras(b);
 		startActivity(intent);
     	

@@ -145,6 +145,8 @@
     <string name="setting_backlight">Conserver l\'écran pendant la lecture</string>
     <string name="setting_cache">Mode cache</string>
     <string name="setting_cache_on_startup">Cache au démarrage</string>
+    <string name="setting_cache_rar">Mettre en cache les fichiers RAR*</string>
+    <string name="setting_cache_rar_warning">*Attention : la mise en cache de certains fichiers RAR peux provoquer des blocages.</string>
     <string name="setting_context_menu">Activer le menu de contexte</string>
     <string name="setting_context_menu_head">Commandes</string>
     <string name="setting_context_menu_heading">Choisir une page</string>

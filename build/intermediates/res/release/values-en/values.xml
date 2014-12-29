@@ -145,6 +145,8 @@
     <string name="setting_backlight">Keep screen on while reading</string>
     <string name="setting_cache">Cache mode</string>
     <string name="setting_cache_on_startup">Cache on startup</string>
+    <string name="setting_cache_rar">Cache RAR files*</string>
+    <string name="setting_cache_rar_warning">*Warning: attempting to cache some RAR files can cause lock-ups.</string>
     <string name="setting_context_menu">Enable context menu</string>
     <string name="setting_context_menu_head">Commands</string>
     <string name="setting_context_menu_heading">Select Page</string>
