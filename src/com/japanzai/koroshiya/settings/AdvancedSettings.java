@@ -52,7 +52,7 @@ public class AdvancedSettings extends SettingTab {
 		lLayout.removeAllViews();
 		
 		try{
-			cacheSafety = new CheckSetting(getString(R.string.advanced_cache_safety), settings.getCacheSafety(), true, this.parent);
+			cacheSafety = new CheckSetting(getString(R.string.advanced_cache_safety), settings.getCacheSafety(), this.parent);
 			lLayout.addView(cacheSafety);
 		}catch (NotFoundException nfe){
 			nfe.printStackTrace();

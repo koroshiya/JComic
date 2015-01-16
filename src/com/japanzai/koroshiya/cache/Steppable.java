@@ -1,7 +1,9 @@
 package com.japanzai.koroshiya.cache;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 
 import android.app.Activity;
@@ -16,6 +18,8 @@ import com.japanzai.koroshiya.archive.steppable.JRarArchive;
 import com.japanzai.koroshiya.controls.JBitmapDrawable;
 import com.japanzai.koroshiya.interfaces.Cacheable;
 import com.japanzai.koroshiya.interfaces.StepThread;
+import com.japanzai.koroshiya.io_utils.ArchiveParser;
+import com.japanzai.koroshiya.io_utils.ImageParser;
 import com.japanzai.koroshiya.reader.MainActivity;
 import com.japanzai.koroshiya.reader.Progress;
 import com.japanzai.koroshiya.reader.Reader;
@@ -30,10 +34,10 @@ public abstract class Steppable implements Cacheable{
 
 	private ArrayList<JImage> images;
 	
-	private int index;
+	protected int index;
 	private int min;
 	private int max;
-	private final String path;
+    protected final String path;
 	
 	private JBitmapDrawable cachePrimary = null;
 	private JBitmapDrawable cacheSecondary = null;
@@ -79,9 +83,9 @@ public abstract class Steppable implements Cacheable{
     		if (index < max - 1){
     			index++;
     		}else if (parent.getSettings().isLoopModeEnabled()){
-    			index = 0;
+                index = 0;
     		}else {
-        		parent.runOnUiThread(new ToastThread(R.string.end_of_chapter, parent, Toast.LENGTH_SHORT));
+                nextChapter();
     			return;
     		}
     		
@@ -95,6 +99,71 @@ public abstract class Steppable implements Cacheable{
     	
     }
 
+    private void goToApplicableChapter(boolean forward){
+        if (parent.getSettings().isSwipeToNextModeEnabled()) {
+            File curFile = new File(path);
+            File curDir;
+            Log.i("Steppable", "Starting at path: " + curFile.getName());
+            if (curFile.isDirectory()){
+                Log.i("Steppable", "File is directory");
+                FileCache fCache = ((FileCache)this);
+                if (curFile.list().length - 1 == fCache.getMax()){
+                    Log.i("Steppable", "File is now parent");
+                }else{
+                    curFile = new File(fCache.getImages().get(fCache.getIndex()).getName());
+                    Log.i("Steppable", "File is now indexed file");
+                }
+            }
+            curDir = curFile.getParentFile();
+            File[] contents = curDir.listFiles();
+            if (forward){
+                Arrays.sort(contents);
+            }else {
+                Arrays.sort(contents, Collections.reverseOrder());
+            }
+            boolean found = false;
+            File replacement = null;
+            Log.i("Steppable", "Compare file: " + curFile.getName());
+            for (File f : contents) {
+                Log.i("Steppable", "Testing file: " + f.getName());
+                if (found) {
+                    if (ArchiveParser.isSupportedArchive(f) || ImageParser.isSupportedDirectory(f)) {
+                        replacement = f;
+                        break;
+                    }
+                } else if (f.getName().equals(curFile.getName())) {
+                    Log.i("Steppable", "Found file");
+                    found = true;
+                }
+            }
+            if (replacement == null || replacement.getName().equals(curFile.getName())) {
+                parent.runOnUiThread(new ToastThread(R.string.no_more_chapters_found, parent, Toast.LENGTH_SHORT));
+            } else {
+                this.parent.finish(); //TODO: look at replacing instead of finishing and restarting
+                MainActivity.mainActivity.runOnUiThread(new ToastThread(forward ? R.string.chapter_next : R.string.chapter_previous, parent, Toast.LENGTH_SHORT));
+
+                Intent intent = new Intent(MainActivity.mainActivity, Reader.class);
+                Bundle b = new Bundle();
+                b.putString("file", replacement.getAbsolutePath());
+                b.putInt("index", 0);
+                Log.d("SteppableArchive", "Starting at index: 0");
+                intent.putExtras(b);
+                MainActivity.mainActivity.startActivity(intent);
+            }
+        }else {
+            parent.runOnUiThread(new ToastThread(forward ? R.string.end_of_chapter : R.string.start_of_chapter, parent, Toast.LENGTH_SHORT));
+            //TODO: context menu entry
+        }
+    }
+
+    public void nextChapter(){
+        goToApplicableChapter(true);
+    }
+
+    public void previousChapter(){
+        goToApplicableChapter(false);
+    }
+
     public synchronized void goToPage(int i){
     	clear();
     	setIndex(i);
@@ -103,10 +172,7 @@ public abstract class Steppable implements Cacheable{
 	}
 
     public synchronized void last(){
-    	if (max > 1){
-    		goToPage(max - 1);
-    	}
-    	
+    	if (max > 1) goToPage(max - 1);
     }
 
     public synchronized void first(){
@@ -128,6 +194,7 @@ public abstract class Steppable implements Cacheable{
     		}else if (parent.getSettings().isLoopModeEnabled()){
     			index = (max - 1);
     		}else {
+                previousChapter();
         		parent.runOnUiThread(new ToastThread(R.string.start_of_chapter, parent, Toast.LENGTH_SHORT));
     			return;
     		}
@@ -512,20 +579,10 @@ public abstract class Steppable implements Cacheable{
 		int cacheModeIndex = parent.getSettings().getCacheModeIndex();
 
 		if (cacheModeIndex == 0 && !forward){
-			if (bitmapExists(cacheSecondary)){
-				return false;
-			}
+			return !bitmapExists(cacheSecondary);
 		}else{
-			if (cacheModeIndex != 2 == forward){
-				if (bitmapExists(cachePrimary)){
-					return false;
-				}
-			}else if (bitmapExists(cacheSecondary)){
-				return false;
-			}
+            return !bitmapExists(cacheModeIndex != 2 == forward ? cachePrimary : cacheSecondary);
 		}
-		
-		return true;
 		
 	}
 	

@@ -2,15 +2,22 @@ package com.japanzai.koroshiya.archive.steppable;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 
+import android.content.Intent;
+import android.os.Bundle;
+import android.util.Log;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.japanzai.koroshiya.R;
 import com.japanzai.koroshiya.cache.Steppable;
 import com.japanzai.koroshiya.filechooser.FileChooser;
 import com.japanzai.koroshiya.interfaces.archive.ReadableArchive;
+import com.japanzai.koroshiya.io_utils.ArchiveParser;
 import com.japanzai.koroshiya.reader.MainActivity;
 import com.japanzai.koroshiya.reader.Reader;
+import com.japanzai.koroshiya.reader.ToastThread;
 import com.japanzai.koroshiya.settings.SettingsManager;
 
 /**
@@ -64,13 +71,6 @@ public abstract class SteppableArchive extends Steppable implements ReadableArch
 	 * @return Returns the archive concealed within.
 	 * */
 	public abstract Object getArchive();
-
-    /**
-     * @param i Index of the entry to return
-     * @return Object extracted from the Steppable at the index parsed in.
-     * 			May be a String reference, a RAR file header, etc.
-     * */
-    public abstract Object getEntry(int i);
 	
 	private boolean deleteFile(File file){
 		

@@ -73,7 +73,7 @@ public class ArchiveParser {
      * @throws IOException if the archive couldn't be read
      * @throws RarException if a RAR archive couldn't be read
      * */
-    public static ReadableArchive parseArchive(File f, Reader r) throws IOException, RarException, ZipException{
+    public static ReadableArchive parseArchive(File f, Reader r) throws IOException, RarException {
     	
     	String s = f.getName().toLowerCase(Locale.getDefault());
     	String fPath = f.getAbsolutePath();
@@ -94,29 +94,6 @@ public class ArchiveParser {
     	}else {
         	return null; //TODO: implement .tar.gz and other formats
     	}    	
-    	
-    }
-    
-    /**
-     * Purpose: Extracts supported archive contents to disk
-     * @param archive Archive to extract the contents of
-     * @param pathToExtractTo Path to extract the contents of an archive to
-     * @return True is extract was successful, otherwise false.
-     * */
-    public static boolean extractArchiveToDisk(ReadableArchive archive, File pathToExtractTo, FileChooser parent){
-    	
-    	return archive.extractContentsToDisk(pathToExtractTo, parent);
-    	
-    }
-    
-    /**
-     * Purpose: Used for extracting supported contents of an archive to cache
-     * @param archive Archive to extract
-     * @return Return supported archive contents as an ArrayList of JBitmapDrawable objects
-     * */
-    public static ArrayList<JBitmapDrawable> extractArchiveToRam(ReadableArchive archive){
-    	
-    	return archive.extractContentsToArrayList();
     	
     }
     

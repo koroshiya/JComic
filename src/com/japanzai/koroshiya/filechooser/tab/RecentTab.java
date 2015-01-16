@@ -34,64 +34,66 @@ public class RecentTab extends SherlockFragment {
 	}
 	
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup group,
-			Bundle saved) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup group, Bundle saved) {
 		return inflater.inflate(R.layout.general_settings, group, false);
 	}
-	
-	@Override
-    public void onCreate(Bundle savedInstanceState) {
-		
-        super.onCreate(savedInstanceState);
-        
-        instantiate();
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        instantiate();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        instantiate();
     }
 	
 	public void instantiate(){
             
-            SettingsManager settings = MainActivity.mainActivity.getSettings();
+        SettingsManager settings = MainActivity.mainActivity.getSettings();
 
-	        ListView lv = new ListView(fc);
-	        ItemClickListener icl = new ItemClickListener(fc);
-	        fc.setItemClickListener(icl);
-            
-            ArrayList<String> listItems = new ArrayList<>();
-        	
-        	List<HashMap<String,String>> aList;
-	        
-            if (!settings.saveRecent()){
-            	listItems.add(getString(R.string.recent_function_disabled));
-            	listItems.add(getString(R.string.recent_general_settings));
-        		aList = fc.getEmptyHashList(listItems);
-            }else{
-            	
-            	String line;
-            	for (Recent recent : settings.getRecent()){
-            		line = recent.getPath();
-            		if ((new File(line)).exists()){
-            			listItems.add(line);
-            		}
-            	}
-            	
-            	if (listItems.size() == 0){
-                	listItems.add(getString(R.string.recent_no_recent_files));
-            		aList = fc.getEmptyHashList(listItems);
-                }else{
-            		aList = fc.getHashList(listItems);
-            	}
-            	
+        ListView lv = new ListView(fc);
+        ItemClickListener icl = new ItemClickListener(fc);
+        fc.setItemClickListener(icl);
+
+        ArrayList<String> listItems = new ArrayList<>();
+
+        List<HashMap<String,String>> aList;
+
+        if (!settings.saveRecent()){
+            listItems.add(getString(R.string.recent_function_disabled));
+            listItems.add(getString(R.string.recent_general_settings));
+            aList = fc.getEmptyHashList(listItems);
+        }else{
+
+            String line;
+            for (Recent recent : settings.getRecent()){
+                line = recent.getPath();
+                if ((new File(line)).exists()){
+                    listItems.add(line);
+                }
             }
 
-	        String[] from = {"image", "name"};
-	        int[] to = {R.id.row_image, R.id.row_text};
-	        SimpleAdapter itemAdapter = new SimpleAdapter(fc, aList, R.layout.list_item, from, to);
-	        
-	        fc.reset();
-	        
-	        lv.setEnabled(true);
-	        lv.setAdapter(itemAdapter);
-			fc.setListView(lv);
+            if (listItems.size() == 0){
+                listItems.add(getString(R.string.recent_no_recent_files));
+                aList = fc.getEmptyHashList(listItems);
+            }else{
+                aList = fc.getHashList(listItems);
+            }
+
+        }
+
+        String[] from = {"image", "name"};
+        int[] to = {R.id.row_image, R.id.row_text};
+        SimpleAdapter itemAdapter = new SimpleAdapter(fc, aList, R.layout.list_item, from, to);
+
+        fc.reset();
+
+        lv.setEnabled(true);
+        lv.setAdapter(itemAdapter);
+        fc.setListView(lv);
         
     }
 

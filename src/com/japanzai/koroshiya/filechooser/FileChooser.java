@@ -228,7 +228,7 @@ public class FileChooser extends SherlockFragmentActivity {
     	this.icl = oicl;
     	v.setOnItemClickListener(oicl);
     }
-    
+
     /**
      * @return This Activity's ListView, displaying the files to choose from
      * */
@@ -306,7 +306,7 @@ public class FileChooser extends SherlockFragmentActivity {
      * @param f File to check if supported
      * @return Returns true if the file is supported, otherwise false
      * */
-    public boolean isSupportedFile(File f){
+    public static boolean isSupportedFile(File f){
     	
     	return f.isDirectory() || f.length() > 0 && (ArchiveParser.isSupportedArchive(f) || ImageParser.isSupportedImage(f));
     	

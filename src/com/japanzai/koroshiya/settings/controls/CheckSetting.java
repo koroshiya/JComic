@@ -11,12 +11,12 @@ import android.widget.CheckBox;
 public class CheckSetting extends CheckBox implements StateBasedSetting{
 	
 	public CheckSetting (Context context){
-		this("Test setting", false, false, context);
+		this("Test setting", false, context);
 	}
 	
 	public CheckSetting(int setting, boolean enabledByDefault, boolean enabledSetting, Context context){
 
-		this(context.getString(setting), enabledByDefault, enabledSetting, context);
+		this(context.getString(setting), enabledByDefault, context);
 		
 	}
 	
@@ -24,14 +24,12 @@ public class CheckSetting extends CheckBox implements StateBasedSetting{
 	 * @param setting Name of this setting. 
 	 * 				This text will be displayed next to the setting.
 	 * @param enabledByDefault If true, the setting is checked by default.
-	 * @param enabledSetting If true, the user can toggle this setting.
 	 * @param context The context within which this class was instantiated.
 	 * */
-	public CheckSetting(String setting, boolean enabledByDefault, boolean enabledSetting, Context context){
+	public CheckSetting(String setting, boolean enabledByDefault, Context context){
 
 		super(context);
 		super.setChecked(enabledByDefault);
-		super.setEnabled(enabledSetting);
 		super.setText(setting);
 		
 	}

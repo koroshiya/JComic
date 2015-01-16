@@ -22,8 +22,9 @@ public class GeneralSettings extends SettingTab {
 	
 	private final SettingsView parent;
 	private final SettingsManager settings;
-	
-	private CheckSetting loop;
+
+    private CheckSetting loop;
+    private CheckSetting swipeToNext;
 	private CheckSetting previousSession;
 	private CheckSetting recent;
 	private CheckSetting backlightOn;
@@ -58,17 +59,25 @@ public class GeneralSettings extends SettingTab {
 		
 		LinearLayout lLayout = (LinearLayout) this.parent.findViewById(R.id.tabGeneralSettings);
 		lLayout.removeAllViews();
+
+        try{
+            loop = new CheckSetting(getString(R.string.setting_loop), settings.isLoopModeEnabled(), this.parent);
+            lLayout.addView(loop);
+        }catch (NotFoundException nfe){
+            nfe.printStackTrace();
+            loop = null;
+        }
+
+        try{
+            swipeToNext = new CheckSetting(getString(R.string.setting_swipe_next), settings.isSwipeToNextModeEnabled(), this.parent);
+            lLayout.addView(swipeToNext);
+        }catch (NotFoundException nfe){
+            nfe.printStackTrace();
+            swipeToNext = null;
+        }
 		
 		try{
-			loop = new CheckSetting(getString(R.string.setting_loop), settings.isLoopModeEnabled(), true, this.parent);
-			lLayout.addView(loop);
-		}catch (NotFoundException nfe){
-			nfe.printStackTrace();
-			loop = null;
-		}
-		
-		try{
-			previousSession = new CheckSetting(getString(R.string.setting_session), settings.saveSession(), true, this.parent);
+			previousSession = new CheckSetting(getString(R.string.setting_session), settings.saveSession(), this.parent);
 			lLayout.addView(previousSession);
 		}catch (NotFoundException nfe){
 			nfe.printStackTrace();
@@ -76,7 +85,7 @@ public class GeneralSettings extends SettingTab {
 		}
 		
 		try{
-			recent = new CheckSetting(getString(R.string.setting_recent), settings.saveRecent(), true, this.parent);
+			recent = new CheckSetting(getString(R.string.setting_recent), settings.saveRecent(), this.parent);
 			lLayout.addView(recent);
 		}catch (NotFoundException nfe){
 			nfe.printStackTrace();
@@ -84,7 +93,7 @@ public class GeneralSettings extends SettingTab {
 		}
 		
 		try{
-			backlightOn = new CheckSetting(getString(R.string.setting_backlight), settings.isBacklightAlwaysOn(), true, this.parent);
+			backlightOn = new CheckSetting(getString(R.string.setting_backlight), settings.isBacklightAlwaysOn(), this.parent);
 			lLayout.addView(backlightOn);
 		}catch (NotFoundException nfe){
 			nfe.printStackTrace();
@@ -92,7 +101,7 @@ public class GeneralSettings extends SettingTab {
 		}
 		
 		try{
-			keepZoom = new CheckSetting(getString(R.string.setting_keep_zoom_page_change), settings.keepZoomOnPageChange(), true, this.parent);
+			keepZoom = new CheckSetting(getString(R.string.setting_keep_zoom_page_change), settings.keepZoomOnPageChange(), this.parent);
 			lLayout.addView(keepZoom);
 		}catch (NotFoundException nfe){
 			nfe.printStackTrace();
@@ -100,7 +109,7 @@ public class GeneralSettings extends SettingTab {
 		}
 		
 		try{
-			contextMenu = new CheckSetting(getString(R.string.setting_context_menu), settings.isContextMenuEnabled(), true, this.parent);
+			contextMenu = new CheckSetting(getString(R.string.setting_context_menu), settings.isContextMenuEnabled(), this.parent);
 			lLayout.addView(contextMenu);
 		}catch (NotFoundException nfe){
 			nfe.printStackTrace();
@@ -150,6 +159,7 @@ public class GeneralSettings extends SettingTab {
 	public void save(){
 
 		if (loop != null){settings.setLoopMode(loop.getState() == 1);}
+        if (swipeToNext != null){settings.setSwipeToNextMode(swipeToNext.getState() == 1);}
 		if (previousSession != null){settings.setSaveSession(previousSession.getState() == 1);}
 		if (recent != null){settings.setSaveRecent(recent.getState() == 1);}
 		if (backlightOn != null){settings.setBacklightAlwaysOn(backlightOn.getState() == 1);}
@@ -164,6 +174,7 @@ public class GeneralSettings extends SettingTab {
 	public void load(){
 
 		if (loop != null){loop.setState(settings.isLoopModeEnabled() ? 1 : 0);}
+        if (swipeToNext != null){swipeToNext.setState(settings.isSwipeToNextModeEnabled() ? 1 : 0);}
 		if (previousSession != null){previousSession.setState(settings.saveSession() ? 1 : 0);}
 		if (recent != null){recent.setState(settings.saveRecent() ? 1 : 0);}
 		if (backlightOn != null){backlightOn.setState(settings.isBacklightAlwaysOn() ? 1 : 0);}

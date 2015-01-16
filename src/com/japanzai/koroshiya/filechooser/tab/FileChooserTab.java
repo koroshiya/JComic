@@ -46,15 +46,6 @@ public class FileChooserTab extends SherlockFragment {
 		
 	}
 	
-	public FileChooserTab(File targetDir, FileChooser fc){
-		
-		this.fc = fc;
-		File tempDir = parent.getTempDir();
-
-		fc.setHome(tempDir == null ? targetDir : tempDir);
-		
-	}
-	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup group, Bundle saved) {
 		return inflater.inflate(R.layout.general_settings, group, false);
@@ -62,11 +53,8 @@ public class FileChooserTab extends SherlockFragment {
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
-		
         super.onCreate(savedInstanceState);
-        
         instantiate();
-
     }
     
     public void instantiate(){
@@ -77,7 +65,7 @@ public class FileChooserTab extends SherlockFragment {
             
             ArrayList<String> tempList = new ArrayList<>();
 	        for (File s : fc.getHomeAsFile().listFiles()){
-	        	if (fc.isSupportedFile(s) && !s.isHidden()){tempList.add(s.getName());}
+	        	if (FileChooser.isSupportedFile(s) && !s.isHidden()){tempList.add(s.getName());}
 	        }
 	        Object[] tempArray = tempList.toArray();
 	        Arrays.sort(tempArray);

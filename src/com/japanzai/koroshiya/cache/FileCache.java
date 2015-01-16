@@ -1,9 +1,5 @@
 package com.japanzai.koroshiya.cache;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
-
 import android.graphics.Point;
 import android.util.Log;
 
@@ -13,6 +9,10 @@ import com.japanzai.koroshiya.interfaces.StepThread;
 import com.japanzai.koroshiya.io_utils.ImageParser;
 import com.japanzai.koroshiya.reader.Reader;
 import com.japanzai.koroshiya.settings.SettingsManager;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 
 /**
  * Cache for images read from disk directly rather than from an archive.
@@ -64,11 +64,11 @@ public class FileCache extends Steppable {
 			String name = (String)getImages().get(findex).getImage();
 			is = new FileInputStream(name);
 			
-			JBitmapDrawable temp = ImageParser.parseImageFromDisk(is, size.x, size.y, name, parent);
+			JBitmapDrawable temp = ImageParser.parseImageFromDisk(is, size.x, size.y, parent);
 			if (temp == null){
 				super.clear();
 				is = new FileInputStream((String)getImages().get(findex).getImage());
-				temp = ImageParser.parseImageFromDisk(is, size.x, size.y, name, parent);
+				temp = ImageParser.parseImageFromDisk(is, size.x, size.y, parent);
 			}
 			return temp;
 		

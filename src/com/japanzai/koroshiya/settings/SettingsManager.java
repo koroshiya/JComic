@@ -44,8 +44,9 @@ public class SettingsManager {
 	 * 
 	 * TODO: manga reading mode; zoom, move to the right
 	 */
-	
-	private static final boolean defaultLoopMode = true;
+
+    private static final boolean defaultLoopMode = true;
+    private static final boolean defaultSwipeToNextMode = false;
 	private static final boolean defaultSaveSession = true;
 	private static final boolean defaultSaveRecent = true;
 	private static final boolean defaultKeepBacklightOn = false;
@@ -66,8 +67,9 @@ public class SettingsManager {
 	private static final int defaultDynamicResizing = 2;
 	private static final int defaultDoubleTapIndex = 0;
 	private final String defaultHomeDir;
-	
-	private static boolean loopMode;
+
+    private static boolean loopMode;
+    private static boolean swipeToNextMode;
 	private static boolean saveSession;
 	private static boolean saveRecent;
 	private static boolean keepBacklightOn;
@@ -120,8 +122,9 @@ public class SettingsManager {
 	}
 	
 	public void initialize(){
-		
-		loopMode = preferences.getBoolean("loopMode", defaultLoopMode);
+
+        loopMode = preferences.getBoolean("loopMode", defaultLoopMode);
+        swipeToNextMode = preferences.getBoolean("swipeToNextMode", defaultSwipeToNextMode);
 		saveSession = preferences.getBoolean("saveSession", defaultSaveSession);
 		saveRecent = preferences.getBoolean("saveRecent", defaultSaveRecent);
 		keepBacklightOn = preferences.getBoolean("keepBacklightOn", defaultKeepBacklightOn);
@@ -222,22 +225,38 @@ public class SettingsManager {
 		setDynamicResizing(defaultDynamicResizing);
 		setHomeDir(System.getProperty("user.home"));
 	}
-	
-	/**
-	 * @return If loop mode is enabled, returns true.
-	 * 			Otherwise, false.
-	 * */
-	public boolean isLoopModeEnabled(){
-		return loopMode;
-	}
-	
-	/**
-	 * @param loop Boolean indicating whether to enable loop mode or not.
-	 * */
-	public void setLoopMode(boolean loop){
-		loopMode = loop;
-		updateBool("loopMode", loop);
-	}
+
+    /**
+     * @return If loop mode is enabled, returns true.
+     * 			Otherwise, false.
+     * */
+    public boolean isLoopModeEnabled(){
+        return loopMode;
+    }
+
+    /**
+     * @param loop Boolean indicating whether to enable loop mode or not.
+     * */
+    public void setLoopMode(boolean loop){
+        loopMode = loop;
+        updateBool("loopMode", loop);
+    }
+
+    /**
+     * @return If swipe to next mode is enabled, returns true.
+     * 			Otherwise, false.
+     * */
+    public boolean isSwipeToNextModeEnabled(){
+        return swipeToNextMode;
+    }
+
+    /**
+     * @param next Boolean indicating whether to enable swipe to next mode or not.
+     * */
+    public void setSwipeToNextMode(boolean next){
+        swipeToNextMode = next;
+        updateBool("swipeToNextMode", next);
+    }
 	
 	/**
 	 * @return If user has set for their viewing session to be saved,
@@ -501,10 +520,14 @@ public class SettingsManager {
 		keepZoomOnPageChange = enabled;
 		updateBool("keepZoomOnPageChange", enabled);
 	}
-	
-	public int getDynamicResizing(){
-		return dynamicResizing;
-	}
+
+    public int getDynamicResizing(){
+        return dynamicResizing;
+    }
+
+    public boolean isDynamicResizingEnabled(){
+        return dynamicResizing != 0;
+    }
 	
 	public void setDynamicResizing(int index){
 		dynamicResizing = index;
@@ -531,10 +554,14 @@ public class SettingsManager {
 		addRecent(new Recent(path, pageNumber));
 		
 	}
-	
-	public ArrayList<Recent> getRecent(){
-		return recent;
-	}
+
+    public ArrayList<Recent> getRecent(){
+        return recent;
+    }
+
+    public int getRecentLength(){
+        return recent.size();
+    }
 	
 	public void removeRecent(String toRemove){
         for (Recent r : recent){

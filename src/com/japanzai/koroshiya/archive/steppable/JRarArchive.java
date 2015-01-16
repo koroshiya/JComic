@@ -1,12 +1,5 @@
 package com.japanzai.koroshiya.archive.steppable;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
-
 import android.graphics.Point;
 
 import com.japanzai.koroshiya.R;
@@ -19,6 +12,13 @@ import com.japanzai.koroshiya.interfaces.StepThread;
 import com.japanzai.koroshiya.io_utils.ArchiveParser;
 import com.japanzai.koroshiya.io_utils.ImageParser;
 import com.japanzai.koroshiya.reader.Reader;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import de.innosystec.unrar.Archive;
 import de.innosystec.unrar.exception.RarException;
@@ -83,38 +83,31 @@ public class JRarArchive extends SteppableArchive{
 				extractFileToDisk(i, tempDir, null);
 			}
 
-			is = new FileInputStream(f);
-			p = ImageParser.getImageSize(is);
+			p = ImageParser.getImageSize(f);
 			is = new FileInputStream(f);
 			
-			temp = ImageParser.parseImageFromDisk(is, p.x, p.y, entry.getFileNameString(), parent);
+			temp = ImageParser.parseImageFromDisk(is, p.x, p.y, parent);
 			if (temp == null){
 				super.clear();
 				is = new FileInputStream(f);
-				temp = ImageParser.parseImageFromDisk(is, p.x, p.y, entry.getFileNameString(), parent);
+				temp = ImageParser.parseImageFromDisk(is, p.x, p.y, parent);
 			}
 		}else{
 			
 			try {
-				
+
 				is = rar.getInputStream(entry);
 				p = ImageParser.getImageSize(is);
 				is = rar.getInputStream(entry);
 				
-				temp = ImageParser.parseImageFromDisk(is, p.x, p.y, entry.getFileNameString(), parent);
+				temp = ImageParser.parseImageFromDisk(is, p.x, p.y, parent);
 				if (temp == null){
 					super.clear();
 					is = rar.getInputStream(entry);
-					temp = ImageParser.parseImageFromDisk(is, p.x, p.y, entry.getFileNameString(), parent);
+					temp = ImageParser.parseImageFromDisk(is, p.x, p.y, parent);
 				}
-			} catch (IOException e) {
+			} catch (IOException | RarException e) {
 				e.printStackTrace();
-			} catch (RarException e) {
-				e.printStackTrace();
-			} finally {
-				if (is != null){
-					is.close();
-				}
 			}
 		}
 		
@@ -139,9 +132,7 @@ public class JRarArchive extends SteppableArchive{
 		if (ImageParser.isSupportedImage(name)){
 			try {
 				ArchiveParser.writeStreamToDisk(pathToExtractTo, rar.getInputStream(header), name);
-			} catch (RarException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
+			} catch (RarException | IOException e) {
 				e.printStackTrace();
 			}
 		}else{
@@ -222,7 +213,6 @@ public class JRarArchive extends SteppableArchive{
 		return new IndexRarThread(this, index);
 	}
 
-	@Override
 	public Object getEntry(int i){
 		if (i < getImages().size()){
 			return rar.getFileHeaders().get((Integer)getImages().get(i).getImage());

@@ -47,6 +47,8 @@
         <item>First page</item>
         <item>Last page</item>
         <item>Go to page…</item>
+        <item>Next Chapter</item>
+        <item>Previous Chapter</item>
     </string-array>
     <string-array name="array_double_tap">
         <item>Cycle zoom</item>
@@ -96,6 +98,8 @@
     <string name="author">Author:</string>
     <string name="cancel_selection">Cancel</string>
     <string name="cant_go_up">Can\'t go up any further</string>
+    <string name="chapter_next">Next Chapter</string>
+    <string name="chapter_previous">Previous Chapter</string>
     <string name="contributions">Third-party contributions:</string>
     <string name="credit_by">by</string>
     <string name="description_credits">Credits</string>
@@ -132,6 +136,7 @@
     <string name="home_directory">Home</string>
     <string name="loading_progress">Loading - Please wait until processing is complete</string>
     <string name="no_images">No supported images found</string>
+    <string name="no_more_chapters_found">No more chapters found</string>
     <string name="rating">Enjoying this app? Let me know what you think by rating and/or reviewing JComic.</string>
     <string name="rating_button">Rate/Review</string>
     <string name="rating_problem">Encountered problems? Please send an error report instead and help me improve JComic.</string>
@@ -165,6 +170,7 @@
     <string name="setting_reset">Reset default settings</string>
     <string name="setting_resize">Dynamic resizing</string>
     <string name="setting_session">Save previous session</string>
+    <string name="setting_swipe_next">Swipe to next/previous chapter</string>
     <string name="setting_zoom">Default zoom: </string>
     <string name="start_of_chapter">Start of chapter</string>
     <string name="string_zoom">zoom</string>

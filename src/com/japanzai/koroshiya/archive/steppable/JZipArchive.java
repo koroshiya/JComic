@@ -33,7 +33,7 @@ public class JZipArchive extends SteppableArchive{
 	
 	private final ZipFile zip;
 
-	public JZipArchive(String path, Reader parent) throws IOException, ZipException {
+	public JZipArchive(String path, Reader parent) throws IOException {
 		
 		super(parent, path);
 		
@@ -94,11 +94,11 @@ public class JZipArchive extends SteppableArchive{
 				Point p = ImageParser.getImageSize(is);
 				is = zip.getInputStream(entry);
 				
-				JBitmapDrawable temp = ImageParser.parseImageFromDisk(is, p.x, p.y, entry.getName(), parent);
+				JBitmapDrawable temp = ImageParser.parseImageFromDisk(is, p.x, p.y, parent);
 				if (temp == null){
 					super.clear();
 					is = zip.getInputStream(entry);
-					temp = ImageParser.parseImageFromDisk(is, p.x, p.y, entry.getName(), parent);
+					temp = ImageParser.parseImageFromDisk(is, p.x, p.y, parent);
 				}
 				is.close();
 				is = null;
@@ -217,11 +217,6 @@ public class JZipArchive extends SteppableArchive{
 	@Override
 	public StepThread getImageThread(int index) {
 		return new IndexZipThread(this, index);
-	}
-	
-	@Override
-	public Object getEntry(int i){
-		return zip.getEntry((String) getImages().get(i).getImage());
 	}
 	
 	public void close(){

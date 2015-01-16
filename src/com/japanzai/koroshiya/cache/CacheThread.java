@@ -38,11 +38,11 @@ public abstract class CacheThread extends Thread implements StepThread {
 			Point p = ImageParser.getImageSize(is);
 			is = new FileInputStream(path);
 			
-			JBitmapDrawable temp = ImageParser.parseImageFromDisk(is, p.x, p.y, path, parent);
+			JBitmapDrawable temp = ImageParser.parseImageFromDisk(is, p.x, p.y, parent);
 			if (temp == null){
 				entry.clear();
 				is = new FileInputStream(path);
-				temp = ImageParser.parseImageFromDisk(is, p.x, p.y, path, parent);
+				temp = ImageParser.parseImageFromDisk(is, p.x, p.y, parent);
 			}
 			
 			return temp;

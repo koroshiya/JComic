@@ -7,6 +7,7 @@ import com.japanzai.koroshiya.io_utils.ImageParser;
 import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 
 /**
@@ -18,10 +19,14 @@ public class JBitmapDrawable extends BitmapDrawable {
 
 	private int originalWidth;
 	private int originalHeight;
-	
-	public JBitmapDrawable(Bitmap decodeStream) {
-		super(null, decodeStream);
-	}
+
+    public JBitmapDrawable(Bitmap decodeStream) {
+        super(null, decodeStream);
+    }
+
+    public JBitmapDrawable(byte[] bytes) {
+        super(null, BitmapFactory.decodeByteArray(bytes, 0, bytes.length));
+    }
 
 	/**
 	 * @param height Original height of this image
@@ -44,25 +49,6 @@ public class JBitmapDrawable extends BitmapDrawable {
 	 * */
 	public int getHeight(){
 		return this.originalHeight;
-	}
-	
-	@SuppressLint("NewApi")
-	public byte[] getByteArray(){
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		CompressFormat fmt;
-		if (android.os.Build.VERSION.SDK_INT >= 14){
-			fmt = Bitmap.CompressFormat.WEBP;
-		}else{
-			fmt = Bitmap.CompressFormat.JPEG;
-		}
-		this.getBitmap().compress(fmt, 100, baos);
-		return ImageParser.compress(baos.toByteArray());
-	}
-
-	public void closeBitmap(){
-		if (getBitmap() != null){
-			//getBitmap().recycle(); //TODO: 
-		}
 	}
 	
 }

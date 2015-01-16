@@ -92,7 +92,6 @@ public class ArWrapper implements ReadableArchive{
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			zip = null;
 		}
 			
 		return true;
@@ -138,7 +137,7 @@ public class ArWrapper implements ReadableArchive{
 						s = new ByteArrayInputStream(ArchiveParser.parseEntry(zip, entry));
 						size = ImageParser.getImageSize(s);
 						s = new ByteArrayInputStream(ArchiveParser.parseEntry(zip, entry));
-						bp = ImageParser.parseImageFromDisk(s, size.x, size.y, entry.getName(), parent);
+						bp = ImageParser.parseImageFromDisk(s, size.x, size.y, parent);
 						bitmaps.add(bp);
 					}
 				}

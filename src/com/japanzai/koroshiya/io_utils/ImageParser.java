@@ -14,6 +14,7 @@ import java.util.zip.GZIPOutputStream;
 import org.apache.commons.compress.utils.IOUtils;
 
 import android.annotation.SuppressLint;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Point;
 
@@ -64,6 +65,24 @@ public class ImageParser {
     	return false;
     	
     }
+
+    /**
+     * Checks if the file is a directory, and if it contains at least one supported image.
+     *
+     * @param f Directory to process
+     *
+     * @return True if the directory is suitable for parsing
+     **/
+    public static boolean isSupportedDirectory(File f){
+        if (f.isDirectory()){
+            for (File img : f.listFiles()){
+                if (img.length() > 0 && isSupportedImage(img)){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 	
 	/**
 	 * Purpose: Parse a displayable object from a stream.
@@ -74,51 +93,90 @@ public class ImageParser {
 	 * @return Return a JBitmapDrawable object to be displayed.
 	 * */
 	@SuppressLint("NewApi")
-	public static JBitmapDrawable parseImageFromDisk(InputStream is, int inWidth, int inHeight, String name, Reader r){
-		
-		BufferedInputStream bis = new BufferedInputStream(is);
-		
-		//android.os.Build.VERSION.SDK_INT >= 14
-		
-		BitmapFactory.Options opts = new BitmapFactory.Options();
-		//opts.inJustDecodeBounds = true;
-		opts.inDither = false;
-		if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.LOLLIPOP){
-			opts.inPurgeable = true;
-			opts.inInputShareable = true;
-		}
-		opts.inTempStorage = new byte[32 * 1024];
-		JBitmapDrawable b;
-		
-		try{
-			
-			int resize = r.getSettings().getDynamicResizing();
-			if (resize != 0){
-				int width = inWidth / r.getWidth();
-				//int height = inHeight / MainActivity.mainActivity.getHeight();
-				if (!(resize == 2 && width < 1)){
-					opts.inSampleSize = width;
-				}
-			}
-			b = new JBitmapDrawable(BitmapFactory.decodeStream(bis, null, opts));
-			b.setDimensions(inWidth, inHeight);
-			
-			return (b);
-		
-		}catch(OutOfMemoryError e){
-			System.out.println("ImageParser OOM exception");
-			System.gc();
-			return null;
-		}catch (Exception ex){
-			return null;
-		}
-		
-	}
+    public static JBitmapDrawable parseImageFromDisk(InputStream is, int inWidth, int inHeight, Reader r){
+
+        BufferedInputStream bis = new BufferedInputStream(is);
+
+        BitmapFactory.Options opts = new BitmapFactory.Options();
+        opts.inDither = false;
+        if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.LOLLIPOP){
+            opts.inPurgeable = true;
+            opts.inInputShareable = true;
+        }
+        opts.inTempStorage = new byte[32 * 1024];
+        JBitmapDrawable b;
+
+        try{
+
+            int resize = r.getSettings().getDynamicResizing();
+            if (resize != 0){
+                int width = inWidth / r.getWidth();
+                if (!(resize == 2 && width < 1)){
+                    opts.inSampleSize = width;
+                }
+            }
+            b = new JBitmapDrawable(BitmapFactory.decodeStream(bis, null, opts));
+            if (inWidth == 0 || inHeight == 0){
+                inWidth = b.getWidth();
+                inHeight = b.getHeight();
+            }
+            b.setDimensions(inWidth, inHeight);
+
+            return (b);
+
+        }catch(OutOfMemoryError e){
+            System.out.println("ImageParser OOM exception");
+            System.gc();
+            return null;
+        }catch (Exception ex){
+            return null;
+        }
+
+    }
+
+
+    public static JBitmapDrawable parseImageFromDisk(byte[] bytes, int inWidth, int inHeight, Reader r){
+
+        BitmapFactory.Options opts = new BitmapFactory.Options();
+        opts.inDither = false;
+        if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.LOLLIPOP){
+            opts.inPurgeable = true;
+            opts.inInputShareable = true;
+        }
+        opts.inTempStorage = new byte[32 * 1024];
+        JBitmapDrawable b;
+
+        try{
+
+            int resize = r.getSettings().getDynamicResizing();
+            if (resize != 0){
+                int width = inWidth / r.getWidth();
+                if (!(resize == 2 && width < 1)){
+                    opts.inSampleSize = width;
+                }
+            }
+            b = new JBitmapDrawable(bytes);
+            if (inWidth == 0 || inHeight == 0){
+                inWidth = b.getWidth();
+                inHeight = b.getHeight();
+            }
+            b.setDimensions(inWidth, inHeight);
+
+            return (b);
+
+        }catch(OutOfMemoryError e){
+            System.out.println("ImageParser OOM exception");
+            System.gc();
+            return null;
+        }catch (Exception ex){
+            return null;
+        }
+
+    }
 
 	public static JBitmapDrawable parseImageFromDisk(File image, Reader r){
 		
 		BitmapFactory.Options opts = new BitmapFactory.Options();
-		//opts.inJustDecodeBounds = true;
 		opts.inDither = false;
 		if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.LOLLIPOP){
 			opts.inPurgeable = true;
@@ -132,7 +190,6 @@ public class ImageParser {
 			if (resize != 0){
 				Point p = getImageSize(new FileInputStream(image));
 				int width = p.x / r.getWidth();
-				//int height = inHeight / MainActivity.mainActivity.getHeight();
 				if (!(resize == 2 && width < 1)){
 					opts.inSampleSize = width;
 				}
@@ -148,30 +205,51 @@ public class ImageParser {
 		}
 		
 	}
-	
-	/**
-	 * Parses an image from the InputStream passed in, but doesn't extract it.
-	 * Instead, its height and width are returned.
-	 * @param is InputStream to parse a file from.
-	 * 			Could be InputFileStream, ByteArrayInputStream, etc.
-	 * @return Point containing the width and height of the image parsed
-	 * */
-	public static Point getImageSize(InputStream is){
-		BufferedInputStream bis = new BufferedInputStream(is);
-		
-		BitmapFactory.Options opts = new BitmapFactory.Options();
-		opts.inJustDecodeBounds = true;
-		opts.inDither = false;
-		if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.LOLLIPOP){
-			opts.inPurgeable = true;
-			opts.inInputShareable = true;
-		}
-		opts.inTempStorage = new byte[32 * 1024];
-		
-		BitmapFactory.decodeStream(bis, null, opts);
-		return new Point(opts.outWidth, opts.outHeight);
-		
-	}
+
+    /**
+     * Parses an image from the InputStream passed in, but doesn't extract it.
+     * Instead, its height and width are returned.
+     * @param is InputStream to parse a file from.
+     * 			Could be InputFileStream, ByteArrayInputStream, etc.
+     * @return Point containing the width and height of the image parsed
+     * */
+    public static Point getImageSize(InputStream is){
+        BufferedInputStream bis = new BufferedInputStream(is);
+
+        BitmapFactory.Options opts = new BitmapFactory.Options();
+        opts.inJustDecodeBounds = true;
+        opts.inDither = false;
+        if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.LOLLIPOP){
+            opts.inPurgeable = true;
+            opts.inInputShareable = true;
+        }
+        opts.inTempStorage = new byte[32 * 1024];
+
+        BitmapFactory.decodeStream(bis, null, opts);
+        return new Point(opts.outWidth, opts.outHeight);
+
+    }
+
+    /**
+     * Parses an image from the InputStream passed in, but doesn't extract it.
+     * Instead, its height and width are returned.
+     * @return Point containing the width and height of the image parsed
+     * */
+    public static Point getImageSize(File f){
+
+        BitmapFactory.Options opts = new BitmapFactory.Options();
+        opts.inJustDecodeBounds = true;
+        opts.inDither = false;
+        if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.LOLLIPOP){
+            opts.inPurgeable = true;
+            opts.inInputShareable = true;
+        }
+        opts.inTempStorage = new byte[32 * 1024];
+
+        BitmapFactory.decodeFile(f.getAbsolutePath(), opts);
+        return new Point(opts.outWidth, opts.outHeight);
+
+    }
 	
 	public static byte[] compress(byte[] content){
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
@@ -184,16 +262,6 @@ public class ImageParser {
         }
         System.out.printf("Compression ratio %f\n", (1.0f * content.length/byteArrayOutputStream.size()));
         return byteArrayOutputStream.toByteArray();
-    }
-	
-	public static byte[] decompress(byte[] contentBytes){
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        try{
-            IOUtils.copy(new GZIPInputStream(new ByteArrayInputStream(contentBytes)), out);
-        } catch(IOException e){
-            throw new RuntimeException(e);
-        }
-        return out.toByteArray();
     }
 	
 }

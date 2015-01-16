@@ -124,7 +124,7 @@ public class Reader extends SherlockFragmentActivity {
     }
 	
 	public void showContextMenu(){
-		final CharSequence[] items = getResources().getStringArray(R.array.array_context_menu);
+		String[] items = getResources().getStringArray(R.array.array_context_menu);
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setTitle(R.string.setting_context_menu_head);
@@ -134,9 +134,13 @@ public class Reader extends SherlockFragmentActivity {
 			    	cache.first();
 			    }else if(id == 1){
 			    	cache.last();
-			    }else{
+			    }else if (id == 2){
 			    	show();
-			    }
+			    }else if (id == 3){
+                    cache.nextChapter();
+                }else if (id == 4){
+                    cache.previousChapter();
+                }
 		    }
 		});
 		AlertDialog alert = builder.create();
@@ -375,7 +379,6 @@ public class Reader extends SherlockFragmentActivity {
 		if (settings.saveSession()) settings.setLastRead(new File(cache.getPath()), cache.getIndex());
 		cache.emptyCache();
 		cache.clear();
-		if (imgPanel != null && imgPanel.getImageDrawable() != null) imgPanel.getImageDrawable().closeBitmap();
 		cache.close();
 		cache = null;
 		

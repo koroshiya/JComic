@@ -95,6 +95,8 @@
     <string name="setting_context_menu_heading">Choisir une page</string>
     <string name="setting_cache_rar">Mettre en cache les fichiers RAR*</string>
     <string name="setting_cache_rar_warning">*Attention : la mise en cache de certains fichiers RAR peux provoquer des blocages.</string>
+    <string name="setting_swipe_next">Balayer pour le prochain/précédant chapitre</string>
+    <string name="no_more_chapters_found">Pas d\'autre chapitre disponible</string>
     <string name="error_report_para_1">Si vous avez remarqué un problème mais n\'avait pas pu la signaler à ce moment-là (ou voulez donner un complément d\'information à son sujet), vous pouvez me contacter par mail directement en cliquant sur le lien ci-dessous.</string>
     <string name="error_report_para_2">Je lirai tous les rapports d\'erreur d\'erreur que je recevrai, je vous prie donc de détailler autant que possible. Par exemple, si vous avez eu un problème lors de la lecture d\'une image/archive, m\'envoyer des infos sur la taille de l\'image, son format (.jpg, .png…) ou directement l\'image en question m\'aiderait considérablement.</string>
     <string name="error_report_para_3">JComic m\'enverra automatiquement le modèle de l\'Android que vous utilisez, ainsi que la version de JComic que vous utilisez. Vous pouvez effacer ces informations si vous le souhaitez mais elles me sont très utiles, en particulier pour le débuggage de l\'application.</string>
@@ -181,6 +183,10 @@
         <item>Première page</item>
         <item>Dernière page</item>
         <item>Aller à la page…</item>
+        <item>Prochain chapitre</item>
+        <item>Précédant chapitre</item>
     </string-array>
+    <string name="chapter_next">Prochain chapitre</string>
+    <string name="chapter_previous">Précédant chapitre</string>
 
 </resources>

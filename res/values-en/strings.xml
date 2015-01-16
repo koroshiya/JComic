@@ -95,6 +95,8 @@
     <string name="setting_context_menu_heading">Select Page</string>
     <string name="setting_cache_rar">Cache RAR files*</string>
     <string name="setting_cache_rar_warning">*Warning: attempting to cache some RAR files can cause lock-ups.</string>
+    <string name="setting_swipe_next">Swipe to next/previous chapter</string>
+    <string name="no_more_chapters_found">No more chapters found</string>
     <string name="error_report_para_1">If you have encountered an error, but weren\'t able to report the error at the time (or you simply want to add a personal note on the matter), you can send me an email directly by clicking the link below.</string>
     <string name="error_report_para_2">I will read any error reports I receive, so please enter as many details as you can. eg. If you encountered a problem while reading an image/archive, sending me information about the file, such as its size, format, etc. (or the file itself) would help tremendously.</string>
     <string name="error_report_para_3">By default, JComic will include the make and model of your device, the version of Android you are running, and the version of JComic you are using. You are free to remove these details if you don\'t want to include them, but the Android and JComic versions in particular are very useful when debugging.</string>
@@ -181,6 +183,10 @@
         <item>First page</item>
         <item>Last page</item>
         <item>Go to page…</item>
+        <item>Next Chapter</item>
+        <item>Previous Chapter</item>
     </string-array>
+    <string name="chapter_next">Next Chapter</string>
+    <string name="chapter_previous">Previous Chapter</string>
 
 </resources>
