@@ -1,3 +1,7 @@
+-Version 1.14.0
+
+Feature: Adds the ability to swipe between chapters (setting)
+
 -Version 1.13.0
 
 Added setting to enable/disable caching of RAR archives

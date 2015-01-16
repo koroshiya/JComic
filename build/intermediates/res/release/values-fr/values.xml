@@ -47,6 +47,8 @@
         <item>Première page</item>
         <item>Dernière page</item>
         <item>Aller à la page…</item>
+        <item>Prochain chapitre</item>
+        <item>Précédant chapitre</item>
     </string-array>
     <string-array name="array_double_tap">
         <item>Agrandissement cyclique</item>
@@ -96,6 +98,8 @@
     <string name="author">Auteur:</string>
     <string name="cancel_selection">Annuler</string>
     <string name="cant_go_up">Vous ne pouvez pas aller plus loin</string>
+    <string name="chapter_next">Prochain chapitre</string>
+    <string name="chapter_previous">Précédant chapitre</string>
     <string name="contributions">Contributions de tierces parties:</string>
     <string name="credit_by">par</string>
     <string name="description_credits">Crédits</string>
@@ -132,6 +136,7 @@
     <string name="home_directory">Accueil</string>
     <string name="loading_progress">Chargement – Veuillez patienter jusqu’à la fin</string>
     <string name="no_images">Aucune image supportée trouvé</string>
+    <string name="no_more_chapters_found">Pas d\'autre chapitre disponible</string>
     <string name="rating">Vous aimez JComic? Notez l\'app et/ou dites ce que vous en pensez.</string>
     <string name="rating_button">Noter/Commenter</string>
     <string name="rating_problem">Un problème? Envoyez un rapport d\'erreur pour m\'aider à améliorer JComic.</string>
@@ -165,6 +170,7 @@
     <string name="setting_reset">Réglages par défaut</string>
     <string name="setting_resize">Redimensionnement dynamique</string>
     <string name="setting_session">Sauvegarder les sessions précédentes</string>
+    <string name="setting_swipe_next">Balayer pour le prochain/précédant chapitre</string>
     <string name="setting_zoom">Défaut zoom:</string>
     <string name="start_of_chapter">Début du Chapitre</string>
     <string name="string_zoom">zoom</string>
