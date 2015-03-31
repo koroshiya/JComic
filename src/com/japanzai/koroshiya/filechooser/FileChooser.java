@@ -228,13 +228,6 @@ public class FileChooser extends SherlockFragmentActivity {
     	this.icl = oicl;
     	v.setOnItemClickListener(oicl);
     }
-
-    /**
-     * @return This Activity's ListView, displaying the files to choose from
-     * */
-    public ListView getListView(){
-    	return this.v;
-    }
     
     @Override
     public void onCreateContextMenu (ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo){
@@ -465,7 +458,7 @@ public class FileChooser extends SherlockFragmentActivity {
 	
 	public List<HashMap<String, String>> getHashList(ArrayList<String> listItems){
         
-        List<HashMap<String,String>> aList = new ArrayList<HashMap<String,String>>();
+        List<HashMap<String,String>> aList = new ArrayList<>();
 
         for (String s : listItems){
             HashMap<String, String> hm = new HashMap<>();
@@ -478,8 +471,6 @@ public class FileChooser extends SherlockFragmentActivity {
             	img = R.drawable.zip;
             }else if (ArchiveParser.isSupportedRarArchive(s)){
             	img = R.drawable.rar;
-            }else if (ArchiveParser.isSupportedMiscArchive(s)){
-            	img = R.drawable.archive;
             }else{
             	img = R.drawable.folder;
             }

@@ -21,7 +21,7 @@ import com.japanzai.koroshiya.settings.SettingsManager;
  * */
 public class Credits extends SherlockFragmentActivity{
 	
-	private String marketAddress = "market://details?id=com.japanzai.koroshiya";
+	private final String marketAddress = "market://details?id=com.japanzai.koroshiya";
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {

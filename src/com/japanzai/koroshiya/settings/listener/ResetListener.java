@@ -10,7 +10,7 @@ import android.widget.Button;
 
 public class ResetListener implements OnClickListener{
 
-	private GeneralSettings parent;
+	private final GeneralSettings parent;
 	
 	public ResetListener(GeneralSettings parent){
 		this.parent = parent;

@@ -33,7 +33,7 @@ import java.util.Queue;
  */
 public class ReadOnlyAccessFile extends RandomAccessFile implements IReadOnlyAccess {
 
-	private Queue<Byte> data = new LinkedList<>();
+	private final Queue<Byte> data = new LinkedList<>();
 
 	/**
 	 * @param file

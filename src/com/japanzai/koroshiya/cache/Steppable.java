@@ -32,7 +32,7 @@ import com.japanzai.koroshiya.settings.SettingsManager;
  * */
 public abstract class Steppable implements Cacheable{
 
-	private ArrayList<JImage> images;
+	private final ArrayList<JImage> images;
 	
 	protected int index;
 	private int min;
@@ -74,7 +74,7 @@ public abstract class Steppable implements Cacheable{
      * Purpose: Moves to the next valid index.
      * @throws InterruptedException Passed up from parse(boolean)
      * */
-	public synchronized void next() throws InterruptedException{
+	public synchronized void next() {
     	
     	if (max > 1){
     		
@@ -183,7 +183,7 @@ public abstract class Steppable implements Cacheable{
      * Purpose: Moves to the previous valid index.
      * @throws InterruptedException Passed up from parse(boolean)
      * */
-	public synchronized void previous() throws InterruptedException{
+	public synchronized void previous() {
     	
     	if (max > 1){
     		
@@ -491,7 +491,7 @@ public abstract class Steppable implements Cacheable{
 	
 	private class ProgressThread extends Thread{
 		
-		private Activity cont;
+		private final Activity cont;
 		
 		private ProgressThread(Activity cont){
 			this.cont = cont;
@@ -628,8 +628,7 @@ public abstract class Steppable implements Cacheable{
 		Log.w("cacheSecondary", "setCacheSecondary");
     	this.cacheSecondary = previous;
     }
-        
-    @Override
+
 	public void emptyCache(){
     	images.clear();
     }

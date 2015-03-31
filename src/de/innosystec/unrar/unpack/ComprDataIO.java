@@ -103,8 +103,7 @@ public class ComprDataIO {
         }
         unpPackedSize = hd.getFullPackSize();
         inputStream = new ReadOnlyAccessInputStream(
-                archive.getRof(), 
-                hd,
+                archive.getRof(),
                 startPos,
                 startPos + unpPackedSize);
 		subHead = hd;
@@ -114,7 +113,7 @@ public class ComprDataIO {
     }
 
     public int unpRead(byte[] addr, int offset, int count)
-            throws IOException, RarException {
+            throws IOException {
         int retCode=0, totalRead=0;
         while (count > 0) {
             int readSize = (count > unpPackedSize) ? (int)unpPackedSize : count;

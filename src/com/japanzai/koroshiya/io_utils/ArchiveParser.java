@@ -7,17 +7,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Locale;
-import java.util.zip.ZipException;
 
-import org.apache.commons.compress.archivers.ArchiveEntry;
-import org.apache.commons.compress.archivers.ArchiveInputStream;
-
-import com.japanzai.koroshiya.archive.non_steppable.JArArchive;
-import com.japanzai.koroshiya.archive.non_steppable.JTarArchive;
 import com.japanzai.koroshiya.archive.steppable.JRarArchive;
 import com.japanzai.koroshiya.archive.steppable.JZipArchive;
-import com.japanzai.koroshiya.controls.JBitmapDrawable;
-import com.japanzai.koroshiya.filechooser.FileChooser;
 import com.japanzai.koroshiya.interfaces.archive.ReadableArchive;
 import com.japanzai.koroshiya.reader.Reader;
 
@@ -32,9 +24,8 @@ public class ArchiveParser {
 		//We don't want this class to be instantiated
 	}
 	
-	private static final String[] supportedArchives = {".zip", ".cbz", ".rar", ".cbr", ".tar", ".ar"}; //TODO: implement .tar.gz and other formats
+	private static final String[] supportedArchives = {".zip", ".cbz", ".rar", ".cbr"};
 	public static final byte[] BUFFER = new byte[8192];
-	public static final int BUFFER_SIZE = 8192;
 	
     /**
      * Purpose: Checks to see if archive is of a supported format
@@ -49,9 +40,6 @@ public class ArchiveParser {
     }
 	public static boolean isSupportedRarArchive(String s){
     	return isSupported(s, new String[]{".rar", ".cbr"});
-    }
-	public static boolean isSupportedMiscArchive(String s){
-    	return isSupported(s, new String[]{".tar", ".ar"});
     }
 	
 	public static boolean isSupported(String name, String[] exts){
@@ -87,22 +75,17 @@ public class ArchiveParser {
     		}else{
     			return arch;
     		}
-    	}else if (s.endsWith(".ar")){
-    		return new JArArchive(f, r);
-    	}else if (s.endsWith(".tar")){
-    		return new JTarArchive(f, r);
     	}else {
-        	return null; //TODO: implement .tar.gz and other formats
+        	return null;
     	}    	
     	
     }
     
     /**
      * @param archive Archive to view the contents of
-     * @param recursive Indicates whether to search recursively or not
      * @return Returns an ArrayList containing the names of the supported files in the archive
      * */
-    public static ArrayList<String> peekAtContents(ReadableArchive archive, boolean recursive){
+    public static ArrayList<String> peekAtContents(ReadableArchive archive){
     	
     	return archive.peekAtContents();
     	
@@ -136,31 +119,6 @@ public class ArchiveParser {
 		}
 		
 		return true;
-		
-    }
-    
-	/**
-	 * @param stream Stream containing the file to extract
-	 * @param entry Archive entry that will be extracted. 
-	 * 				Used to check for compatibility and the size of the write.
-	 * @throws IOException if entry couldn't be extracted
-	 * @return Returns a byte array containing the archive entry
-	 * */
-    public static byte[] parseEntry(ArchiveInputStream stream, ArchiveEntry entry) throws IOException{
-		
-		if (ImageParser.isSupportedImage(entry.getName())){
-				
-			byte[] content = new byte[(int) entry.getSize()];
-			
-			do {
-				stream.read(content, 0, content.length);
-			}while (stream.getBytesRead() == entry.getSize());
-			
-			stream.close();
-			return content;
-		}
-		
-		return null;
 		
     }
     

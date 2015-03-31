@@ -1,7 +1,6 @@
 package com.japanzai.koroshiya.archive.steppable.thread.rar;
 
 import com.japanzai.koroshiya.archive.steppable.SteppableArchive;
-import com.japanzai.koroshiya.reader.Reader;
 
 /**
  * Purpose: Caches the previous file in a rar archive.

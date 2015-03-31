@@ -58,7 +58,7 @@ public class PerformanceSettings extends SettingTab {
 		lLayout.removeAllViews();
 		
 		try{
-			cacheOnStartup = new CheckSetting(R.string.setting_cache_on_startup, true, true, this.parent);
+			cacheOnStartup = new CheckSetting(R.string.setting_cache_on_startup, true, this.parent);
 			lLayout.addView(cacheOnStartup);
 		}catch (NotFoundException nfe){
 			nfe.printStackTrace();
@@ -66,7 +66,7 @@ public class PerformanceSettings extends SettingTab {
 		}
 
         try{
-            cacheRarFiles = new CheckSetting(R.string.setting_cache_rar, true, true, this.parent);
+            cacheRarFiles = new CheckSetting(R.string.setting_cache_rar, true, this.parent);
             lLayout.addView(cacheRarFiles);
             TextView tv = new TextView(this.parent);
             tv.setText(getString(R.string.setting_cache_rar_warning));

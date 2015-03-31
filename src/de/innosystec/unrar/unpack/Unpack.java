@@ -44,25 +44,25 @@ public final class Unpack extends Unpack20 {
 
     private int ppmEscChar;
 
-    private RarVM rarVM = new RarVM();
+    private final RarVM rarVM = new RarVM();
 
     /* Filters code, one entry per filter */
-    private List<UnpackFilter> filters = new ArrayList<>();
+    private final List<UnpackFilter> filters = new ArrayList<>();
 
     /* Filters stack, several entrances of same filter are possible */
-    private List<UnpackFilter> prgStack = new ArrayList<>();
+    private final List<UnpackFilter> prgStack = new ArrayList<>();
 
     /*
      * lengths of preceding blocks, one length per filter. Used to reduce size
      * required to write block length if lengths are repeating
      */
-    private List<Integer> oldFilterLengths = new ArrayList<>();
+    private final List<Integer> oldFilterLengths = new ArrayList<>();
 
     private int lastFilter;
 
     private boolean tablesRead;
 
-    private byte[] unpOldTable = new byte[Compress.HUFF_TABLE_SIZE];
+    private final byte[] unpOldTable = new byte[Compress.HUFF_TABLE_SIZE];
 
     private BlockTypes unpBlockType;
 
@@ -76,7 +76,7 @@ public final class Unpack extends Unpack20 {
 
     private int lowDistRepCount;
 
-    public static int[] DBitLengthCounts = { 4, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+    public static final int[] DBitLengthCounts = { 4, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
 	    2, 2, 2, 2, 2, 14, 0, 12 };
 
     public Unpack(ComprDataIO DataIO) {

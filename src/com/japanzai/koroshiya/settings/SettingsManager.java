@@ -92,8 +92,8 @@ public class SettingsManager {
 	private static File homeDir = null;
 	private static File lastRead = null;
 	private static int lastReadIndex = -1;
-	private static ArrayList<Recent> recent = new ArrayList<>();
-	private static ArrayList<String> favorite = new ArrayList<>();
+	private static final ArrayList<Recent> recent = new ArrayList<>();
+	private static final ArrayList<String> favorite = new ArrayList<>();
 	private final SharedPreferences preferences;
 	
 	public final static int RECURSION_ALL = 3;

@@ -40,12 +40,12 @@ public interface IReadOnlyAccess {
 	public void setPosition(long pos) throws IOException;
 
     /** Read a single byte of data. */
-    public int read() throws IOException;
+    public int read();
 
 	/**
      * Read up to <tt>count</tt> bytes to the specified buffer.
      */
-    public int read(byte[] buffer, int off, int count) throws IOException;
+    public int read(byte[] buffer, int off, int count);
 
     /**
      * Read exactly <tt>count</tt> bytes to the specified buffer.
@@ -57,9 +57,9 @@ public interface IReadOnlyAccess {
 	public int readFully(byte[] buffer, int count) throws IOException;
 
     /** Close this file. */
-    public void close() throws IOException;    
+    public void close();
 
-	public void readFully(byte[] tr, int i, int j) throws IOException;
+	public void readFully(byte[] tr, int i, int j);
 	
 	public void resetData();
 	

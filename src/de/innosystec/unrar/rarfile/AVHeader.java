@@ -33,9 +33,8 @@ public class AVHeader extends BaseBlock {
 	private byte unpackVersion;
 	private byte method;
 	private byte avVersion;
-	private int avInfoCRC;
-	
-	public AVHeader(BaseBlock bb, byte[] avHeader){
+
+    public AVHeader(BaseBlock bb, byte[] avHeader){
 		super(bb);
 		
 		int pos =0;
@@ -45,22 +44,7 @@ public class AVHeader extends BaseBlock {
 		pos++;
 		avVersion |= avHeader[pos]&0xff;
 		pos++;
-		avInfoCRC = Raw.readIntLittleEndian(avHeader, pos);
+        Raw.readIntLittleEndian(avHeader, pos);
 	}
-	
-	public int getAvInfoCRC() {
-		return avInfoCRC;
-	}
-	
-	public byte getAvVersion() {
-		return avVersion;
-	}
-	
-	public byte getMethod() {
-		return method;
-	}
-	
-	public byte getUnpackVersion() {
-		return unpackVersion;
-	}
+
 }

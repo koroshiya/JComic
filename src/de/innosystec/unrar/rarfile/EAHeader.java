@@ -30,10 +30,10 @@ extends SubBlockHeader
 	
 	public static final short EAHeaderSize = 10;
 	
-	private int unpSize;
+	private final int unpSize;
 	private byte unpVer;
 	private byte method;
-	private int EACRC;
+	private final int EACRC;
 	
 	public EAHeader(SubBlockHeader sb, byte[] eahead)
 	{

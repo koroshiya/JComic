@@ -30,7 +30,7 @@ public class BitInput {
 	public static final int MAX_SIZE = 0x8000;
 	protected int inAddr;
 	protected int inBit;
-	protected byte[] inBuf;
+	protected final byte[] inBuf;
 	
 	/**
 	 * 

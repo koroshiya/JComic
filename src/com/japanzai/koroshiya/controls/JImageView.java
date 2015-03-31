@@ -108,7 +108,7 @@ public class JImageView extends ImageView {
 		SettingsManager settings = MainActivity.mainActivity.getSettings();
 		double zoom = settings.getCurrentZoomRatio();
 		if (settings.keepZoomOnPageChange()){
-			pseudoZoom(zoom, drawable);
+			pseudoZoom(drawable);
 		}else{
 			zoom(zoom, drawable);
 		}
@@ -123,13 +123,13 @@ public class JImageView extends ImageView {
 			inheritedZoom = zoom;
 			currentWidth = originalWidth;
 			currentHeight = originalHeight;
-			pseudoZoom(zoom, drawable);
+			pseudoZoom(drawable);
 			
 		}
 		
 	}
 	
-	public void pseudoZoom(double zoom, JBitmapDrawable drawable){
+	public void pseudoZoom(JBitmapDrawable drawable){
 		
 		if (drawable != null){
 

@@ -80,10 +80,6 @@ public class AudioVariables {
 		return dif;
 	}
 
-	public void setDif(int[] dif) {
-		this.dif = dif;
-	}
-
 	public int getK1() {
 		return k1;
 	}

@@ -14,7 +14,7 @@ public class CheckSetting extends CheckBox implements StateBasedSetting{
 		this("Test setting", false, context);
 	}
 	
-	public CheckSetting(int setting, boolean enabledByDefault, boolean enabledSetting, Context context){
+	public CheckSetting(int setting, boolean enabledByDefault, Context context){
 
 		this(context.getString(setting), enabledByDefault, context);
 		

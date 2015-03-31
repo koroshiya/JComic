@@ -61,7 +61,7 @@ public class NewSubHeaderType {
      */
     public static final NewSubHeaderType SUBHEAD_TYPE_BEOSEA = new NewSubHeaderType(new byte[]{'E','A','B','E'});
     
-    private byte[] headerTypes;
+    private final byte[] headerTypes;
     
     /**
      * Private constructor

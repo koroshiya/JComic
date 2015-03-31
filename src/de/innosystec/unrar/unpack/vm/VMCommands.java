@@ -41,7 +41,7 @@ public enum VMCommands {
 
 	VM_STANDARD(54);
 
-	private int vmCommand;
+	private final int vmCommand;
 
 	private VMCommands(int vmCommand) {
 		this.vmCommand = vmCommand;

@@ -4,11 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.zip.ZipException;
-
-import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
-import org.apache.commons.compress.archivers.zip.ZipFile;
 
 import android.graphics.Point;
 import android.util.Log;
@@ -23,6 +18,10 @@ import com.japanzai.koroshiya.interfaces.StepThread;
 import com.japanzai.koroshiya.io_utils.ArchiveParser;
 import com.japanzai.koroshiya.io_utils.ImageParser;
 import com.japanzai.koroshiya.reader.Reader;
+
+import net.lingala.zip4j.core.ZipFile;
+import net.lingala.zip4j.exception.ZipException;
+import net.lingala.zip4j.model.FileHeader;
 
 /**
  * Purpose: Represents a standard Zip archive.
@@ -41,18 +40,22 @@ public class JZipArchive extends SteppableArchive{
 		setSecondary(new PreviousZipThread(this, true));
 		
 		zip = new ZipFile(path);
-		ZipArchiveEntry zipEntry;
-		Enumeration<ZipArchiveEntry> zips = zip.getEntries();
-		
-		while (zips.hasMoreElements()){
-			
-			zipEntry = zips.nextElement();
-			
-			if (ImageParser.isSupportedImage(zipEntry.getName())){
-				if (zipEntry.getSize() > 0) addImageToCache(zipEntry, zipEntry.getName());
-			}
-			
-		}
+
+        if (!zip.isValidZipFile()) throw new IOException();
+
+        String name;
+        FileHeader zipEntry;
+
+        for (Object o : zip.getFileHeaders()) {
+
+            zipEntry = (FileHeader) o;
+            name = zipEntry.getFileName();
+
+            if (ImageParser.isSupportedImage(name) && zipEntry.getCompressedSize() > 0) {
+                addImageToCache(zipEntry, name);
+            }
+
+        }
 
         super.sort();
 		
@@ -68,8 +71,10 @@ public class JZipArchive extends SteppableArchive{
 	@Override
 	public JBitmapDrawable parseImage(int i) throws IOException{
 
-		ZipArchiveEntry entry = (ZipArchiveEntry)getImages().get(i).getImage();
-		File f = new File(tempDir + "/" + entry.getName());
+        JImage j = getImages().get(i);
+        FileHeader zipEntry = (FileHeader)j.getImage();
+        String name = j.getName();
+		File f = new File(tempDir + "/" + name);
 		
 		if (!this.tempDir.exists()){
 			this.tempDir.mkdirs();
@@ -77,7 +82,7 @@ public class JZipArchive extends SteppableArchive{
 		
 		if (this.progressive){
 			if (!f.exists()){
-				if (!ArchiveParser.writeStreamToDisk(this.tempDir, zip.getInputStream(entry), entry.getName())){
+				if (!ArchiveParser.writeStreamToDisk(this.tempDir, zip.getInputStream(zipEntry), name)){
 					return null;
 				}
 			}
@@ -90,14 +95,14 @@ public class JZipArchive extends SteppableArchive{
 		}else{
 			InputStream is = null;
 			try {
-				is = zip.getInputStream(entry);
+				is = zip.getInputStream(zipEntry);
 				Point p = ImageParser.getImageSize(is);
-				is = zip.getInputStream(entry);
+				is = zip.getInputStream(zipEntry);
 				
 				JBitmapDrawable temp = ImageParser.parseImageFromDisk(is, p.x, p.y, parent);
 				if (temp == null){
 					super.clear();
-					is = zip.getInputStream(entry);
+					is = zip.getInputStream(zipEntry);
 					temp = ImageParser.parseImageFromDisk(is, p.x, p.y, parent);
 				}
 				is.close();
@@ -127,36 +132,42 @@ public class JZipArchive extends SteppableArchive{
 
 	@Override
 	public boolean extractContentsToDisk(File pathToExtractTo, FileChooser fc) {
-	    
-	    Enumeration<ZipArchiveEntry> zips = zip.getEntries();
-		ZipArchiveEntry zipEntry;
-		String name;
-		while (zips.hasMoreElements()){
-			
-			zipEntry = zips.nextElement();
-			name = zipEntry.getName();
-			if (name.contains("/")){
-				name = name.substring(name.lastIndexOf('/') + 1);
-			}
-			
-			if (fc != null && (thread == null || !thread.isAlive())){
-				thread = new SetTextThread(fc.getText(R.string.zip_extract_in_progress) + ": " + name, fc);
-				fc.runOnUiThread(thread);
-			}
-			
-			if (ImageParser.isSupportedImage(zipEntry.getName())){
-				addImageToCache(zipEntry, zipEntry.getName());
-				try {
-					System.out.println("Extracting: " + zipEntry.getName());
-					ArchiveParser.writeStreamToDisk(pathToExtractTo, zip.getInputStream(zipEntry), name);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-			
-		}
-		
-		return true;
+
+        String name;
+        FileHeader zipEntry;
+
+        try {
+            for (Object o : zip.getFileHeaders()) {
+
+                zipEntry = (FileHeader) o;
+                name = zipEntry.getFileName();
+                if (name.contains("/")){
+                    name = name.substring(name.lastIndexOf('/') + 1);
+                }
+
+                if (fc != null && (thread == null || !thread.isAlive())){
+                    thread = new SetTextThread(fc.getText(R.string.zip_extract_in_progress) + ": " + name, fc);
+                    fc.runOnUiThread(thread);
+                }
+
+                if (ImageParser.isSupportedImage(name)){
+                    addImageToCache(zipEntry, name);
+                    try {
+                        System.out.println("Extracting: " + name);
+                        ArchiveParser.writeStreamToDisk(pathToExtractTo, zip.getInputStream(zipEntry), name);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+            }
+
+            return true;
+
+        } catch (ZipException e) {
+            e.printStackTrace();
+            return false;
+        }
 		
 	}
 
@@ -181,16 +192,13 @@ public class JZipArchive extends SteppableArchive{
 
 	@Override
 	public ArrayList<String> peekAtContents() {
-		
-		ZipArchiveEntry entry;
+
 		ArrayList<String> names = new ArrayList<>();
 		
 		for (int i = 0; i < getMax(); i++){
-			
-			entry = (ZipArchiveEntry)getImages().get(i).getImage();
-			names.add(entry.getName());
-            Log.d("JZipArchive", "Zip entry " + i + ": " + entry.getName());
-
+			String name = getImages().get(i).getName();
+			names.add(name);
+            Log.d("JZipArchive", "Zip entry " + i + ": " + name);
         }
 		
 		return names;
@@ -219,12 +227,6 @@ public class JZipArchive extends SteppableArchive{
 		return new IndexZipThread(this, index);
 	}
 	
-	public void close(){
-		try {
-			zip.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
+	public void close(){}
 	
 }

@@ -41,23 +41,23 @@ import de.innosystec.unrar.unpack.decode.MultDecode;
 public abstract class Unpack20 extends Unpack15
 {
 
-	protected MultDecode[] MD = new MultDecode[4];
+	protected final MultDecode[] MD = new MultDecode[4];
 
-	protected byte[] UnpOldTable20 = new byte[Compress.MC20 * 4];
+	protected final byte[] UnpOldTable20 = new byte[Compress.MC20 * 4];
 
 	protected int UnpAudioBlock, UnpChannels, UnpCurChannel, UnpChannelDelta;
 
-	protected AudioVariables[] AudV = new AudioVariables[4];
+	protected final AudioVariables[] AudV = new AudioVariables[4];
 
-	protected LitDecode LD = new LitDecode();
+	protected final LitDecode LD = new LitDecode();
 
-	protected DistDecode DD = new DistDecode();
+	protected final DistDecode DD = new DistDecode();
 
-	protected LowDistDecode LDD = new LowDistDecode();
+	protected final LowDistDecode LDD = new LowDistDecode();
 
-	protected RepDecode RD = new RepDecode();
+	protected final RepDecode RD = new RepDecode();
 
-	protected BitDecode BD = new BitDecode();
+	protected final BitDecode BD = new BitDecode();
 
 	public static final int[] LDecode = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 10, 12,
 			14, 16, 20, 24, 28, 32, 40, 48, 56, 64, 80, 96, 112, 128, 160, 192,

@@ -83,8 +83,6 @@ public class Archive implements Closeable {
 	/** Number of bytes of compressed data read from current file. */
 	private long totalPackedRead = 0L;
 
-	private boolean pass;
-
 	public Archive(File file) throws RarException, IOException {
 		this(file, null);
 	}
@@ -96,7 +94,7 @@ public class Archive implements Closeable {
 	 *            the file to extract
 	 * @throws RarException
 	 */
-	public Archive(File file, UnrarCallback unrarCallback) throws RarException, IOException {
+	public Archive(File file, UnrarCallback unrarCallback) throws IOException {
 		dataIO = new ComprDataIO(this);
 		setFile(file);
 		this.unrarCallback = unrarCallback;
@@ -115,9 +113,7 @@ public class Archive implements Closeable {
 		
 		try {
 			readHeaders();
-			this.pass = true;
 		} catch (Exception e) {
-			this.pass = false;
 			e.printStackTrace();
 		}
 		// Calculate size of packed data
@@ -170,18 +166,6 @@ public class Archive implements Closeable {
 
 	public UnrarCallback getUnrarCallback() {
 		return unrarCallback;
-	}
-
-	/**
-	 * 
-	 * @return whether the archive is encrypted
-	 */
-	public boolean isEncrypted() {
-		if (newMhd != null) {
-			return newMhd.isEncrypted();
-		} else {
-			throw new NullPointerException("mainheader is null");
-		}
 	}
 
 	/**
@@ -452,7 +436,7 @@ public class Archive implements Closeable {
          * @throws IOException
          *             if any IO error occur
          */
-        public InputStream getInputStream(final FileHeader hd) throws RarException, IOException {
+        public InputStream getInputStream(final FileHeader hd) throws IOException {
                 final PipedInputStream in = new PipedInputStream(32 * 1024);
                 final PipedOutputStream out = new PipedOutputStream(in);
 
@@ -534,10 +518,6 @@ public class Archive implements Closeable {
 		if (unpack != null) {
 			unpack.cleanUp();
 		}
-	}
-
-	public boolean isPass() {
-		return pass;
 	}
 
 	/**

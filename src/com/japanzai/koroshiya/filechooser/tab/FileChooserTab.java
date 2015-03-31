@@ -25,13 +25,13 @@ import com.japanzai.koroshiya.reader.MainActivity;
 @SuppressLint("ValidFragment")
 public class FileChooserTab extends SherlockFragment {
 
-	private final MainActivity parent = MainActivity.mainActivity;
-	private final FileChooser fc;
+    private final FileChooser fc;
 	
 	public FileChooserTab(FileChooser fc){
 		
 		this.fc = fc;
-		File smHome = parent.getSettings().getHomeDir();
+        MainActivity parent = MainActivity.mainActivity;
+        File smHome = parent.getSettings().getHomeDir();
 		
 		if (smHome != null && smHome.exists() && smHome.isDirectory()){
 			fc.setHome(smHome);

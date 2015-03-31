@@ -47,7 +47,7 @@ public class RarVM extends BitInput {
 
 	private byte[] mem;
 
-	private int[] R = new int[regCount];
+	private final int[] R = new int[regCount];
 
 	private int flags;
 
@@ -129,7 +129,7 @@ public class RarVM extends BitInput {
 		mem.set(offset + 3, ((byte) ((value >>> 24)&0xff))) ;
 	}
 	private int getOperand(VMPreparedOperand cmdOp) {
-		int ret = 0;
+		int ret;
 		if (cmdOp.getType() == VMOpType.VM_OPREGMEM) {
 			int pos = (cmdOp.getOffset() + cmdOp.getBase()) & VM_MEMMASK;
 			ret = Raw.readIntLittleEndian(mem, pos);
@@ -341,7 +341,7 @@ public class RarVM extends BitInput {
 				}
 				break;
 			case VM_INC: {
-				int result = (int) (0xFFffFFff + 1);
+				int result = 0xFFffFFff + 1;
 				if (cmd.isByteMode()) {
 					result &= 0xff;
 				}
@@ -357,10 +357,10 @@ public class RarVM extends BitInput {
 						true,
 						mem,
 						op1,
-						(int) (0xFFffFFff + 1));
+                        0xFFffFFff + 1);
 				break;
 			case VM_INCD:
-				setValue(false, mem, op1, (int) (0xFFffFFff + 1));
+				setValue(false, mem, op1, 0xFFffFFff + 1);
 				break;
 
 			case VM_DEC: {
@@ -627,7 +627,7 @@ public class RarVM extends BitInput {
 
 		prg.setCmdCount(0);
 		if (xorSum == code[0]) {
-			VMStandardFilters filterType = IsStandardFilter(code, codeSize);
+			VMStandardFilters filterType = IsStandardFilter(code);
 			if (filterType != VMStandardFilters.VMSF_NONE) {
 
 				VMPreparedCommand curCmd = new VMPreparedCommand();
@@ -862,7 +862,7 @@ public class RarVM extends BitInput {
 		}
 	}
 
-	private VMStandardFilters IsStandardFilter(byte[] code, int codeSize) {
+	private VMStandardFilters IsStandardFilter(byte[] code) {
 		VMStandardFilterSignature stdList[]={
 				new VMStandardFilterSignature(53, 0xad576887, VMStandardFilters.VMSF_E8),
 				new VMStandardFilterSignature(57, 0x3cd7e57e, VMStandardFilters.VMSF_E8E9),

@@ -48,7 +48,7 @@ public class FileHeader extends BlockHeader {
 
     private short nameSize;
 
-    private int highPackSize;
+    private final int highPackSize;
 
     private int highUnpackSize;
 

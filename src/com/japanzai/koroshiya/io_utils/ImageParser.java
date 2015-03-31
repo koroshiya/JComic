@@ -1,20 +1,14 @@
 package com.japanzai.koroshiya.io_utils;
 
 import java.io.BufferedInputStream;
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Locale;
-import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
-import org.apache.commons.compress.utils.IOUtils;
-
-import android.annotation.SuppressLint;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Point;
 
@@ -92,7 +86,6 @@ public class ImageParser {
 	 * @param inHeight Height at which to extract the image
 	 * @return Return a JBitmapDrawable object to be displayed.
 	 * */
-	@SuppressLint("NewApi")
     public static JBitmapDrawable parseImageFromDisk(InputStream is, int inWidth, int inHeight, Reader r){
 
         BufferedInputStream bis = new BufferedInputStream(is);
@@ -116,46 +109,6 @@ public class ImageParser {
                 }
             }
             b = new JBitmapDrawable(BitmapFactory.decodeStream(bis, null, opts));
-            if (inWidth == 0 || inHeight == 0){
-                inWidth = b.getWidth();
-                inHeight = b.getHeight();
-            }
-            b.setDimensions(inWidth, inHeight);
-
-            return (b);
-
-        }catch(OutOfMemoryError e){
-            System.out.println("ImageParser OOM exception");
-            System.gc();
-            return null;
-        }catch (Exception ex){
-            return null;
-        }
-
-    }
-
-
-    public static JBitmapDrawable parseImageFromDisk(byte[] bytes, int inWidth, int inHeight, Reader r){
-
-        BitmapFactory.Options opts = new BitmapFactory.Options();
-        opts.inDither = false;
-        if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.LOLLIPOP){
-            opts.inPurgeable = true;
-            opts.inInputShareable = true;
-        }
-        opts.inTempStorage = new byte[32 * 1024];
-        JBitmapDrawable b;
-
-        try{
-
-            int resize = r.getSettings().getDynamicResizing();
-            if (resize != 0){
-                int width = inWidth / r.getWidth();
-                if (!(resize == 2 && width < 1)){
-                    opts.inSampleSize = width;
-                }
-            }
-            b = new JBitmapDrawable(bytes);
             if (inWidth == 0 || inHeight == 0){
                 inWidth = b.getWidth();
                 inHeight = b.getHeight();

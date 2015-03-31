@@ -1,15 +1,10 @@
 package com.japanzai.koroshiya.filechooser;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-
-import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
-import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
-import org.apache.commons.compress.utils.IOUtils;
 
 import android.content.Intent;
 import android.util.Log;
@@ -26,10 +21,12 @@ import com.japanzai.koroshiya.io_utils.ArchiveParser;
 import com.japanzai.koroshiya.io_utils.ImageParser;
 import com.japanzai.koroshiya.reader.MainActivity;
 import com.japanzai.koroshiya.reader.MessageThread;
-import com.japanzai.koroshiya.reader.Reader;
 import com.japanzai.koroshiya.reader.ToastThread;
 import com.japanzai.koroshiya.settings.SettingsView;
 import com.japanzai.koroshiya.settings.classes.Recent;
+
+import net.lingala.zip4j.core.ZipFile;
+import net.lingala.zip4j.model.ZipParameters;
 
 import de.innosystec.unrar.exception.RarException;
 
@@ -114,7 +111,7 @@ public class ItemClickListener implements OnItemClickListener, ModalReturn {
 	 * @throws IOException 
 	 * @throws RarException 
 	 * */
-	public void process(String name, String command) throws IOException, Exception{
+	public void process(String name, String command) {
 		
 		String location = name.startsWith("/") ? name : parent.getHome() + File.separator + name;
 		File file = new File(location);
@@ -312,7 +309,7 @@ public class ItemClickListener implements OnItemClickListener, ModalReturn {
 			}
 		}else if (ArchiveParser.isSupportedArchive(file)){
             try {
-                contents = ArchiveParser.peekAtContents(ArchiveParser.parseArchive(file, null), false);
+                contents = ArchiveParser.peekAtContents(ArchiveParser.parseArchive(file, null));
             }catch (Exception e){
                 e.printStackTrace();
             }
@@ -381,28 +378,15 @@ public class ItemClickListener implements OnItemClickListener, ModalReturn {
 					message = getString(R.string.zip_already_exists);
 				}else{
 					try{
-						ZipArchiveOutputStream zip = new ZipArchiveOutputStream(output);
-						ZipArchiveEntry entry;
-						byte[] array;
-						String name;
-						SetTextThread thread = null;
-						for (File f : imagesToZip){
+                        ZipFile zip = new ZipFile(output);
+                        ZipParameters p = new ZipParameters();
+                        p.setReadHiddenFiles(false);
 
-							name = f.getName();
-							
-							if (fc != null && (thread == null || !thread.isAlive())){
-								thread = new SetTextThread(fc.getText(R.string.zip_zipping_in_progress) + ": " + name, fc);
-								fc.runOnUiThread(thread);
-							}
-							
-							entry = new ZipArchiveEntry(f.getName());
-							zip.putArchiveEntry(entry);
-							array = IOUtils.toByteArray(new FileInputStream(f));
-							zip.write(array, 0, (int)f.length());
-							zip.closeArchiveEntry();
-						}
-						zip.finish();
-						zip.close();
+                        if (fc != null){
+                            fc.runOnUiThread(new SetTextThread(fc.getText(R.string.zip_zipping_in_progress).toString(), fc));
+                        }
+
+                        zip.createZipFile(imagesToZip, p);
 						success = true;
 						message = getString(R.string.zip_successfully_created);
 					} catch (IOException e) {
@@ -442,13 +426,6 @@ public class ItemClickListener implements OnItemClickListener, ModalReturn {
 			tv.setText(text);
 		}
 		
-	}
-	
-	/**
-	 * @param resourceID ID of a String resource to get the text for
-	 * */
-	public void process(int resourceID){
-		processItem(false, parent.getString(resourceID));
 	}
 	
 	/**

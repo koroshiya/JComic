@@ -12,10 +12,6 @@ import java.io.InputStream;
  * @author alban
  */
 public class AnalyzeHeapDump {
-    
-    /** Creates a new instance of AnalyzeHeapDump */
-    public AnalyzeHeapDump() {
-    }
 
     public static void main(String[] argv) {
         File cfile = new File("P:\\test\\heapdumpc");

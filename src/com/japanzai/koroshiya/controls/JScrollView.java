@@ -107,7 +107,7 @@ public class JScrollView extends TwoDScrollView {
 
 	private class GestureListener extends GestureDetector.SimpleOnGestureListener implements OnTouchListener{
 		
-		private ScaleGestureDetector sgd = new ScaleGestureDetector(getContext(), new ScaleListener());
+		private final ScaleGestureDetector sgd = new ScaleGestureDetector(getContext(), new ScaleListener());
 		
 		private void cycleZoom(MainActivity parent, SettingsManager settings){
 			double defaultZoom = settings.getCurrentZoomRatio();
@@ -136,7 +136,7 @@ public class JScrollView extends TwoDScrollView {
 			view.zoom(newIndex);
 		}
 		
-		private void zoom(MainActivity parent, SettingsManager settings, boolean zoomIn){
+		private void zoom(MainActivity parent, boolean zoomIn){
 			int curZoom = SettingsManager.getZoomIndex(view.getZoom());
 			String[] zooms = getResources().getStringArray(R.array.general_setting_default_zoom);
 			if (zoomIn){
@@ -159,9 +159,9 @@ public class JScrollView extends TwoDScrollView {
 			if (doubleTapIndex == 0){
 				cycleZoom(parent, settings);
 			}else if (doubleTapIndex == 1){
-				zoom(parent, settings, true);
+				zoom(parent, true);
 			}else if (doubleTapIndex == 2){
-				zoom(parent, settings, false);
+				zoom(parent, false);
 			}
 			
 			return false;

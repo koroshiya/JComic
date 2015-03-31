@@ -21,8 +21,6 @@ package de.innosystec.unrar.io;
 import java.io.IOException;
 import java.io.InputStream;
 
-import de.innosystec.unrar.rarfile.FileHeader;
-
 /**
  * DOCUMENT ME
  *
@@ -31,13 +29,13 @@ import de.innosystec.unrar.rarfile.FileHeader;
  */
 public class ReadOnlyAccessInputStream extends InputStream {
 
-	private IReadOnlyAccess file;
+	private final IReadOnlyAccess file;
 	
 	private long curPos;
 	protected final long startPos;
 	private final long endPos;
 	
-	public ReadOnlyAccessInputStream(IReadOnlyAccess file, FileHeader hd, long startPos, long endPos) throws IOException {
+	public ReadOnlyAccessInputStream(IReadOnlyAccess file, long startPos, long endPos) throws IOException {
 		super();
 		this.file = file;
 		this.startPos = startPos;

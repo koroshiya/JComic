@@ -58,14 +58,14 @@ public class ReadOnlyAccessByteArray implements IReadOnlyAccess{
 	}
 
     /** Read a single byte of data. */
-    public int read() throws IOException {
+    public int read() {
         return file[positionInFile++];
     }
 
 	/**
      * Read up to <tt>count</tt> bytes to the specified buffer.
      */
-    public int read(byte[] buffer, int off, int count) throws IOException {
+    public int read(byte[] buffer, int off, int count) {
         int read = Math.min(count, file.length-positionInFile);
         System.arraycopy(file, positionInFile, buffer, off, read);
         positionInFile += read;
@@ -85,11 +85,11 @@ public class ReadOnlyAccessByteArray implements IReadOnlyAccess{
 		return read;
 	}
 
-    public void close() throws IOException {
+    public void close() {
     }
 
 	@Override
-	public void readFully(byte[] tr, int i, int j) throws IOException {
+	public void readFully(byte[] tr, int i, int j) {
 		// TODO Auto-generated method stub
 		
 	}
