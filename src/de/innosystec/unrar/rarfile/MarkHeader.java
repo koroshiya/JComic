@@ -18,6 +18,8 @@
  */
 package de.innosystec.unrar.rarfile;
 
+import java.io.IOException;
+
 import de.innosystec.unrar.io.Raw;
 
 /**
@@ -30,11 +32,8 @@ public class MarkHeader extends BaseBlock {
 	
 	private boolean oldFormat = false;
 	
-	public MarkHeader(BaseBlock bb){
+	public MarkHeader(BaseBlock bb) throws IOException {
 		super(bb);
-	}
-	public boolean isValid(){
-        return getHeadCRC() == 0x6152 && getHeaderType() == UnrarHeadertype.MarkHeader && getFlags() == 0x1a21 && getHeaderSize() == BaseBlockSize;
 	}
 	
 	public boolean isSignature() {
@@ -62,8 +61,5 @@ public class MarkHeader extends BaseBlock {
     public boolean isOldFormat() {
         return oldFormat;
     }
-    
-	public void print(){
-		super.print();
-	}
+
 }

@@ -29,15 +29,15 @@ import java.util.Vector;
  */
 public class VMPreparedProgram 
 {
-	private List<VMPreparedCommand> Cmd  = new ArrayList<>();
+	private final List<VMPreparedCommand> Cmd  = new ArrayList<>();
 	private List<VMPreparedCommand> AltCmd  =new ArrayList<>();
 	private int CmdCount;
 
 
 	
-	private Vector<Byte> GlobalData = new Vector<>();
+	private final Vector<Byte> GlobalData = new Vector<>();
 	private Vector<Byte> StaticData = new Vector<>(); // static data contained in DB operators
-	private int InitR[] = new int[7];
+	private final int[] InitR = new int[7];
 
 	private int FilteredDataOffset;
 	private int FilteredDataSize;
@@ -63,10 +63,6 @@ public class VMPreparedProgram
 
 	public List<VMPreparedCommand> getCmd() {
 		return Cmd;
-	}
-
-	public void setCmd(List<VMPreparedCommand> cmd) {
-		Cmd = cmd;
 	}
 
 	public int getCmdCount() {
@@ -103,16 +99,8 @@ public class VMPreparedProgram
 		return GlobalData;
 	}
 
-	public void setGlobalData(Vector<Byte> globalData) {
-		GlobalData = globalData;
-	}
-
 	public int[] getInitR() {
 		return InitR;
-	}
-
-	public void setInitR(int[] initR) {
-		InitR = initR;
 	}
 
 	public Vector<Byte> getStaticData() {

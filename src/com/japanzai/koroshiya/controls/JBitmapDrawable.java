@@ -1,7 +1,6 @@
 package com.japanzai.koroshiya.controls;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 
 /**
@@ -16,10 +15,6 @@ public class JBitmapDrawable extends BitmapDrawable {
 
     public JBitmapDrawable(Bitmap decodeStream) {
         super(null, decodeStream);
-    }
-
-    public JBitmapDrawable(byte[] bytes) {
-        super(null, BitmapFactory.decodeByteArray(bytes, 0, bytes.length));
     }
 
 	/**

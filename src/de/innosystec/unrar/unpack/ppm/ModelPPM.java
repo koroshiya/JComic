@@ -20,15 +20,8 @@ package de.innosystec.unrar.unpack.ppm;
 import java.io.IOException;
 import java.util.Arrays;
 
-import de.innosystec.unrar.exception.RarException;
 import de.innosystec.unrar.unpack.Unpack;
 
-/**
- * DOCUMENT ME
- * 
- * @author $LastChangedBy$
- * @version $LastChangedRevision$
- */
 public class ModelPPM
 {
 	public static final int MAX_O = 64; /* maximum allowed model order */
@@ -49,7 +42,7 @@ public class ModelPPM
 
 	private SEE2Context dummySEE2Cont;
 
-	private PPMContext minContext, maxContext;
+	private PPMContext minContext = null, maxContext = null;
 
 	private State foundState; // found next state transition
 
@@ -76,23 +69,7 @@ public class ModelPPM
 			0x64A1, 0x5ABC, 0x6632, 0x6051 };
 
     // Temp fields
-    private final State tempState1 = new State(null);
-    private final State tempState2 = new State(null);
-    private final State tempState3 = new State(null);
-    private final State tempState4 = new State(null);
-    private final StateRef tempStateRef1 = new StateRef();
-    private final StateRef tempStateRef2 = new StateRef();
-    private final PPMContext tempPPMContext1 = new PPMContext(null);
-    private final PPMContext tempPPMContext2 = new PPMContext(null);
-    private final PPMContext tempPPMContext3 = new PPMContext(null);
-    private final PPMContext tempPPMContext4 = new PPMContext(null);
     private final int[] ps = new int[MAX_O];
-
-	public ModelPPM()
-	{
-		minContext = null;
-		maxContext = null;
-	}
 
 	public SubAllocator getSubAlloc()
 	{
@@ -111,7 +88,7 @@ public class ModelPPM
 		orderFall = maxOrder;
 		minContext.setNumStats(256);
 		minContext.getFreqData().setSummFreq(minContext.getNumStats()+1);
-				
+
 		addr = subAlloc.allocUnits(256 / 2);
 		foundState.setAddress(addr);
 		minContext.getFreqData().setStats(addr);
@@ -172,7 +149,7 @@ public class ModelPPM
 		for (int j = 0; j < 0x100 - 0x40; j++) {
 			HB2Flag[0x40 + j] = 0x08;
 		}
-		dummySEE2Cont.setShift(PERIOD_BITS);
+		dummySEE2Cont.setShift();
 
 	}
 
@@ -181,7 +158,7 @@ public class ModelPPM
 		Arrays.fill(charMask, 0);
 	}
 
-	public boolean decodeInit(Unpack unpackRead, int escChar/* ref */) throws IOException, RarException{
+	public boolean decodeInit(Unpack unpackRead /* ref */) throws IOException{
 
 		int MaxOrder = unpackRead.getChar() & 0xff;
 		boolean reset = ((MaxOrder & 0x20) != 0);
@@ -195,7 +172,7 @@ public class ModelPPM
 			}
 		}
 		if ((MaxOrder & 0x40) != 0) {
-			escChar = unpackRead.getChar();
+            int escChar = unpackRead.getChar();
 			unpackRead.setPpmEscChar(escChar);
 		}
 		coder.initDecoder(unpackRead);
@@ -223,22 +200,18 @@ public class ModelPPM
 		return (minContext.getAddress() != 0);
 	}
 
-	public int decodeChar() throws IOException, RarException
-	{
+	public int decodeChar() throws IOException {
         // Debug
         //subAlloc.dumpHeap();
 
-		if (minContext.getAddress() <= subAlloc.getPText()
-				|| minContext.getAddress() > subAlloc.getHeapEnd()) {
+		if (minContext.getAddress() <= subAlloc.getPText() || minContext.getAddress() > subAlloc.getHeapEnd()) {
 			return (-1);
 		}
 
 		if (minContext.getNumStats() != 1) {
 			if (minContext.getFreqData().getStats() <= subAlloc.getPText()
-					|| minContext.getFreqData().getStats() > subAlloc.getHeapEnd()) {
-				return (-1);
-			}
-			if (!minContext.decodeSymbol1(this)) {
+					|| minContext.getFreqData().getStats() > subAlloc.getHeapEnd()
+                    || !minContext.decodeSymbol1(this)) {
 				return (-1);
 			}
 		} else {
@@ -249,9 +222,8 @@ public class ModelPPM
 			coder.ariDecNormalize();
 			do {
 				orderFall++;
-				minContext.setAddress(minContext.getSuffix());// =MinContext->Suffix;
-				if (minContext.getAddress() <= subAlloc.getPText()
-						|| minContext.getAddress() > subAlloc.getHeapEnd()) {
+				minContext.setAddress(minContext.getSuffix());
+				if (minContext.getAddress() <= subAlloc.getPText() || minContext.getAddress() > subAlloc.getHeapEnd()) {
 					return (-1);
 				}
 			} while (minContext.getNumStats() == numMasked);
@@ -268,12 +240,11 @@ public class ModelPPM
 			maxContext.setAddress(addr);
 		} else {
 			updateModel();
-			//this.foundState.setAddress(foundState.getAddress());//TODO just 4 debugging
 			if (escCount == 0) {
 				clearMask();
 			}
 		}
-		coder.ariDecNormalize();// ARI_DEC_NORMALIZE(Coder.code,Coder.low,Coder.range,Coder.UnpackRead);
+		coder.ariDecNormalize();
 		return (Symbol);
 	}
 
@@ -302,8 +273,8 @@ public class ModelPPM
 		return escCount;
 	}
 
-    public void incEscCount(int dEscCount) {
-        setEscCount(getEscCount() + dEscCount);
+    public void incEscCount() {
+        setEscCount(getEscCount() + 1);
     }
 
 	public int[] getCharMask()
@@ -324,11 +295,6 @@ public class ModelPPM
 	public void setPrevSuccess(int prevSuccess)
 	{
 		this.prevSuccess = prevSuccess&0xff;
-	}
-
-	public int getInitEsc()
-	{
-		return initEsc;
 	}
 
 	public void setInitEsc(int initEsc)
@@ -408,17 +374,16 @@ public class ModelPPM
 	private int /* ppmcontext ptr */createSuccessors(boolean Skip,
             State p1 /* state ptr */) {
 		//State upState = tempState1.init(null);
-		StateRef upState = tempStateRef2;
-		State tempState = tempState1.init(getHeap());
+		StateRef upState = new StateRef();
+		State tempState = new State(getHeap());
 
 		// PPM_CONTEXT* pc=MinContext, * UpBranch=FoundState->Successor;
-		PPMContext pc = tempPPMContext1.init(getHeap());
+		PPMContext pc = new PPMContext(getHeap());
 		pc.setAddress(minContext.getAddress());
-		PPMContext upBranch = tempPPMContext2.init(getHeap());
+		PPMContext upBranch = new PPMContext(getHeap());
 		upBranch.setAddress(foundState.getSuccessor());
 
-		// STATE * p, * ps[MAX_O], ** pps=ps;
-		State p = tempState2.init(getHeap());
+		State p = new State(getHeap());
 		int pps = 0;
 
 		boolean noLoop = false;
@@ -505,13 +470,13 @@ public class ModelPPM
 	{
         //System.out.println("ModelPPM.updateModel()");
 		// STATE fs = *FoundState, *p = NULL;
-		StateRef fs = tempStateRef1;
+		StateRef fs = new StateRef();
 		fs.setValues(foundState);
-		State p = tempState3.init(getHeap());
-		State tempState = tempState4.init(getHeap());
+		State p = new State(getHeap());
+		State tempState = new State(getHeap());
 
-		PPMContext pc = tempPPMContext3.init(getHeap());
-		PPMContext successor = tempPPMContext4.init(getHeap());
+		PPMContext pc = new PPMContext(getHeap());
+		PPMContext successor = new PPMContext(getHeap());
 
 		int ns1, ns, cf, sf, s0;
 		pc.setAddress(minContext.getSuffix());
@@ -569,7 +534,7 @@ public class ModelPPM
 			if (--orderFall == 0) {
 				successor.setAddress(fs.getSuccessor());
                 if (maxContext.getAddress() != minContext.getAddress()) {
-                    subAlloc.decPText(1);
+                    subAlloc.decPText();
                 }
 			}
 		}
@@ -639,7 +604,7 @@ public class ModelPPM
 			p.setFreq(cf);
 			pc.setNumStats(++ns1);
 		}
-		
+
 		int address = fs.getSuccessor();
 		maxContext.setAddress(address);
 		minContext.setAddress(address);

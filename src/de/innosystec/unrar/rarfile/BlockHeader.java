@@ -18,13 +18,12 @@
  */
 package de.innosystec.unrar.rarfile;
 
+import java.io.IOException;
+
 import de.innosystec.unrar.io.Raw;
 
 /**
  * Base class of headers that contain data
- *
- * @author $LastChangedBy$
- * @version $LastChangedRevision$
  */
 public class BlockHeader extends BaseBlock{
 	public static final short blockHeaderSize = 4;
@@ -32,19 +31,14 @@ public class BlockHeader extends BaseBlock{
 	private int dataSize;
 	private int packSize;
     
-    public BlockHeader(){
-    	
-    }
-    
-    public BlockHeader(BlockHeader bh){
+    public BlockHeader(BlockHeader bh) throws IOException{
     	super(bh);
     	this.packSize = bh.getDataSize();
     	this.dataSize = packSize;
     	this.positionInFile = bh.getPositionInFile();
     }
     
-    public BlockHeader(BaseBlock bb, byte[] blockHeader) 
-    {
+    public BlockHeader(BaseBlock bb, byte[] blockHeader) throws IOException{
     	super(bb);
     	
     	this.packSize = Raw.readIntLittleEndian(blockHeader, 0);
@@ -58,9 +52,5 @@ public class BlockHeader extends BaseBlock{
 	public int getPackSize() {
 		return packSize;
 	}
-    
-    public void print(){
-    	super.print();
-    	//String s = "DataSize: "+getDataSize()+" packSize: "+getPackSize();
-    }
+
 }

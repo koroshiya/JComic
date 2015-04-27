@@ -1,27 +1,22 @@
 package com.japanzai.koroshiya.archive.steppable;
 
 import java.io.File;
-import java.io.IOException;
+import java.util.ArrayList;
 
-import android.widget.TextView;
-
-import com.japanzai.koroshiya.R;
+import com.japanzai.koroshiya.cache.IndexThread;
+import com.japanzai.koroshiya.cache.StepThread;
 import com.japanzai.koroshiya.cache.Steppable;
-import com.japanzai.koroshiya.filechooser.FileChooser;
-import com.japanzai.koroshiya.interfaces.archive.ReadableArchive;
 import com.japanzai.koroshiya.reader.MainActivity;
 import com.japanzai.koroshiya.reader.Reader;
-import com.japanzai.koroshiya.settings.SettingsManager;
 
 /**
  * Purpose: Represents an archive that can be moved through sequentially and randomly.
  * 			Non-steppable archives can only be moved through sequentially.
  * */
-public abstract class SteppableArchive extends Steppable implements ReadableArchive{
+public abstract class SteppableArchive extends Steppable {
 	
 	protected final File tempDir;
 	protected final boolean progressive;
-	protected SetTextThread thread = null;
 	
 	public SteppableArchive(Reader parent, String path){
 		
@@ -29,7 +24,6 @@ public abstract class SteppableArchive extends Steppable implements ReadableArch
         if (parent != null) {
             File tmp = parent.getCacheDir();
             this.tempDir = new File(tmp + "/JComic/");
-            System.out.println(this.tempDir);
 
             if (this.tempDir.exists() && this.tempDir.isDirectory()) {
                 deleteFile(this.tempDir);
@@ -47,23 +41,6 @@ public abstract class SteppableArchive extends Steppable implements ReadableArch
 		}
 		
 	}
-	
-	@Override
-	public void parseCurrent() throws IOException  {
-
-    	getParent().setImage(parseImage(getIndex()));
-    	
-    	SettingsManager settings = super.parent.getSettings();
-    	if (settings.isCacheOnStart()){
-    		super.cache(settings.getCacheModeIndex() != 2);
-    	}
-		
-	}
-	
-	/**
-	 * @return Returns the archive concealed within.
-	 * */
-	public abstract Object getArchive();
 	
 	private boolean deleteFile(File file){
 		
@@ -87,23 +64,20 @@ public abstract class SteppableArchive extends Steppable implements ReadableArch
 		return completeSuccess;
 		
 	}
-	
-	protected class SetTextThread extends Thread{
-		
-		private final String text;
-		private final FileChooser fc;
-		
-		public SetTextThread(String text, FileChooser fc){
-			this.text = text;
-			this.fc = fc;
-		}
-		
-		@Override
-		public void run(){
-			TextView tv = (TextView)fc.findViewById(R.id.progressText);
-			tv.setText(text);
-		}
-		
-	}
+
+    /**
+     * @return Returns the names of files within.
+     * */
+    public abstract ArrayList<String> peekAtContents();
+
+    @Override
+    public StepThread getImageThread(int index) {
+        return new IndexThread(this, index);
+    }
+
+    @Override
+    public StepThread getThread(boolean primary, boolean forward) {
+        return new StepThread(this, primary, forward);
+    }
 	
 }

@@ -1,3 +1,0 @@
-/home/mitch/Seafile/Dropbox/dev/Android/JComic/build/intermediates/classes/release
-/home/mitch/Seafile/Dropbox/dev/Android/JComic/build/intermediates/pre-dexed/release/classes-75e9c0b383efcc6e2d6dded5d7fb64dd34c3f8ae.jar
-/home/mitch/Seafile/Dropbox/dev/Android/JComic/build/intermediates/pre-dexed/release/android-support-v4-bf24915bd610a530dc9f9a2a90df4c6605798a22.jar

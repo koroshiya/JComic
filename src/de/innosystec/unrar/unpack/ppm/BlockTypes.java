@@ -17,27 +17,7 @@
  */
 package de.innosystec.unrar.unpack.ppm;
 
-
-/**
- * DOCUMENT ME
- * 
- * @author $LastChangedBy$
- * @version $LastChangedRevision$
- */
-public enum BlockTypes
-{
-	BLOCK_LZ(0), BLOCK_PPM(1);
-
-	private final int blockType;
-
-	private BlockTypes(int blockType)
-	{
-		this.blockType = blockType;
-	}
-
-	public boolean equals(int blockType)
-	{
-		return this.blockType == blockType;
-	}
-
+public class BlockTypes{
+    public static final int BLOCK_LZ = 0;
+    public static final int BLOCK_PPM = 1;
 }

@@ -17,13 +17,6 @@
  */
 package de.innosystec.unrar.unpack.ppm;
 
-
-/**
- * DOCUMENT ME
- * 
- * @author $LastChangedBy$
- * @version $LastChangedRevision$
- */
 public class StateRef {
 
 	private int symbol;
@@ -50,10 +43,6 @@ public class StateRef {
 	public void setFreq(int freq) {
 		this.freq = freq&0xff;
 	}
-
-    public void incFreq(int dFreq) {
-        freq = (freq + dFreq)&0xff;
-    }
 
     public void decFreq(int dFreq) {
         freq = (freq - dFreq)&0xff;

@@ -17,14 +17,8 @@
  */
 package de.innosystec.unrar.unpack.vm;
 
-/**
- * DOCUMENT ME
- *
- * @author $LastChangedBy$
- * @version $LastChangedRevision$
- */
 public class VMPreparedOperand {
-	private VMOpType Type;
+	private int Type;
 	private int Data;
 	private int Base;
 	private int offset;
@@ -42,10 +36,10 @@ public class VMPreparedOperand {
 	public void setData(int data) {
 		Data = data;
 	}
-	public VMOpType getType() {
+	public int getType() {
 		return Type;
 	}
-	public void setType(VMOpType type) {
+	public void setType(int type) {
 		Type = type;
 	}
 	public int getOffset() {

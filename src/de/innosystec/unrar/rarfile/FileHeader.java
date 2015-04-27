@@ -18,8 +18,7 @@
  */
 package de.innosystec.unrar.rarfile;
 
-import java.util.Calendar;
-import java.util.Date;
+import java.io.IOException;
 import java.util.regex.Pattern;
 
 import de.innosystec.unrar.io.Raw;
@@ -32,403 +31,162 @@ import de.innosystec.unrar.io.Raw;
  */
 public class FileHeader extends BlockHeader {
 
-    private static final byte SALT_SIZE = 8;
-
-    private static final byte NEWLHD_SIZE = 32;
-
-    private long unpSize;
-
-    private final HostSystem hostOS;
-
     private final int fileCRC;
 
     private byte unpVersion;
 
     private byte unpMethod;
 
-    private short nameSize;
-
-    private final int highPackSize;
-
-    private int highUnpackSize;
-
-    private final byte[] fileNameBytes;
-
     private String fileName;
-    private String fileNameW;
-
-    private byte[] subData;
-
-    private final byte[] salt = new byte[SALT_SIZE];
-
-    private Date mTime;
-
-    private Date cTime;
-
-    private Date aTime;
-
-    private Date arcTime;
 
     private long fullPackSize;
 
     private long fullUnpackSize;
 
-    private int fileAttr;
+    public FileHeader(BlockHeader bh, byte[] fileHeader) throws IOException {
+        super(bh);
 
-    private int subFlags; // same as fileAttr (in header)
+        int position = 0;
+        long unpSize = Raw.readIntLittleEndian(fileHeader, position);
+        position += 5;
 
-    private int recoverySectors = -1;
+        fileCRC = Raw.readIntLittleEndian(fileHeader, position);
+        position += 4;
 
-	private int paddedSize;
+        Raw.readIntLittleEndian(fileHeader, position);
+        position += 4;
 
-    public FileHeader(BlockHeader bh, byte[] fileHeader) {
-	super(bh);
+        unpVersion |= fileHeader[13] & 0xff;
+        position++;
+        unpMethod |= fileHeader[14] & 0xff;
+        position++;
+        short nameSize = Raw.readShortLittleEndian(fileHeader, position);
+        position += 2;
 
-	int position = 0;
-	unpSize = Raw.readIntLittleEndian(fileHeader, position);
-	position += 4;
-	hostOS = HostSystem.findHostSystem(fileHeader[4]);
-	position++;
+        Raw.readIntLittleEndian(fileHeader, position);
+        position += 4;
+        int highPackSize;
+        int highUnpackSize;
+        if (isLargeBlock()) {
+            highPackSize = Raw.readIntLittleEndian(fileHeader, position);
+            position += 4;
 
-	fileCRC = Raw.readIntLittleEndian(fileHeader, position);
-	position += 4;
+            highUnpackSize = Raw.readIntLittleEndian(fileHeader, position);
+            position += 4;
+        } else {
+            highPackSize = 0;
+            highUnpackSize = 0;
+            if (unpSize == 0xffffffff) {
 
-	final int fileTime = Raw.readIntLittleEndian(fileHeader, position);
-	position += 4;
+            unpSize = 0xffffffff;
+            highUnpackSize = Integer.MAX_VALUE;
+            }
 
-	unpVersion |= fileHeader[13] & 0xff;
-	position++;
-	unpMethod |= fileHeader[14] & 0xff;
-	position++;
-	nameSize = Raw.readShortLittleEndian(fileHeader, position);
-	position += 2;
-
-	fileAttr = Raw.readIntLittleEndian(fileHeader, position);
-	position += 4;
-	if (isLargeBlock()) {
-	    highPackSize = Raw.readIntLittleEndian(fileHeader, position);
-	    position += 4;
-
-	    highUnpackSize = Raw.readIntLittleEndian(fileHeader, position);
-	    position += 4;
-	} else {
-	    highPackSize = 0;
-	    highUnpackSize = 0;
-	    if (unpSize == 0xffffffff) {
-
-		unpSize = 0xffffffff;
-		highUnpackSize = Integer.MAX_VALUE;
-	    }
-
-	}
-	fullPackSize |= highPackSize;
-	fullPackSize <<= 32;
-	fullPackSize |= getPackSize();
-
-	fullUnpackSize |= highUnpackSize;
-	fullUnpackSize <<= 32;
-	fullUnpackSize += unpSize;
-
-	nameSize = nameSize > 4 * 1024 ? 4 * 1024 : nameSize;
-
-	fileNameBytes = new byte[nameSize];
-	for (int i = 0; i < nameSize; i++) {
-	    fileNameBytes[i] = fileHeader[position];
-	    position++;
-	}
-
-	if (isFileHeader()) {
-	    if (isUnicode()) {
-		int length = 0;
-		fileName = "";
-		fileNameW = "";
-		while (length < fileNameBytes.length
-			&& fileNameBytes[length] != 0) {
-		    length++;
-		}
-		byte[] name = new byte[length];
-		System.arraycopy(fileNameBytes, 0, name, 0, name.length);
-		fileName = new String(name);
-		if (length != nameSize) {
-		    length++;
-		    fileNameW = FileNameDecoder.decode(fileNameBytes, length);
-		}
-	    } else {
-		fileName = new String(fileNameBytes);
-		fileNameW = "";
-	    }
-	    
-	    //added by hoy, 处理中文问题
-	    if(existZH(fileNameW)){  
-            fileName = fileNameW;  
         }
-	}
+        fullPackSize |= highPackSize;
+        fullPackSize <<= 32;
+        fullPackSize |= getPackSize();
 
-	if (UnrarHeadertype.NewSubHeader.equals(headerType)) {
-	    int datasize = headerSize - NEWLHD_SIZE - nameSize;
-	    if (hasSalt()) {
-		datasize -= SALT_SIZE;
-	    }
-	    if (datasize > 0) {
-		subData = new byte[datasize];
-		for (int i = 0; i < datasize; i++) {
-		    subData[i] = (fileHeader[position]);
-		    position++;
-		}
-	    }
+        fullUnpackSize |= highUnpackSize;
+        fullUnpackSize <<= 32;
+        fullUnpackSize += unpSize;
 
-	    if (NewSubHeaderType.SUBHEAD_TYPE_RR.byteEquals(fileNameBytes)) {
-		recoverySectors = subData[8] + (subData[9] << 8)
-			+ (subData[10] << 16) + (subData[11] << 24);
-	    }
-	}
+        nameSize = nameSize > 4 * 1024 ? 4 * 1024 : nameSize;
 
-	if (hasSalt()) {
-	    for (int i = 0; i < SALT_SIZE; i++) {
-		salt[i] = fileHeader[position];
-		position++;
-	    }
-	}
-	mTime = getDateDos(fileTime);
-	// TODO rartime -> extended
+        byte[] fileNameBytes = new byte[nameSize];
+        for (int i = 0; i < nameSize; i++) {
+            fileNameBytes[i] = fileHeader[position];
+            position++;
+        }
+
+        if (isFileHeader()) {
+            String fileNameW;
+            if (isUnicode()) {
+            int length = 0;
+            fileName = "";
+            fileNameW = "";
+            while (length < fileNameBytes.length
+                && fileNameBytes[length] != 0) {
+                length++;
+            }
+            byte[] name = new byte[length];
+            System.arraycopy(fileNameBytes, 0, name, 0, name.length);
+            fileName = new String(name);
+            if (length != nameSize) {
+                length++;
+                fileNameW = FileNameDecoder.decode(fileNameBytes, length);
+            }
+            } else {
+            fileName = new String(fileNameBytes);
+            fileNameW = "";
+            }
+
+            //added by hoy, 处理中文问题
+            if(existZH(fileNameW)){
+                fileName = fileNameW;
+            }
+        }
 
     }
 
     private boolean existZH(String str) {
         return Pattern.compile("[\\u4e00-\\u9fa5]").matcher(str).find();
-    }  
-    
-    @Override
-    public void print() {
-	    super.print();
-        String str = "unpSize: "+getUnpSize()+
-        "\nHostOS: "+hostOS.name()+
-        "\nMDate: "+mTime+
-        "\nFileName: "+getFileNameString()+
-        "\nunpMethod: "+Integer.toHexString(getUnpMethod())+
-        "\nunpVersion: "+Integer.toHexString(getUnpVersion())+
-        "\nfullpackedsize: "+getFullPackSize()+
-        "\nfullunpackedsize: "+getFullUnpackSize()+
-        "\nisEncrypted: "+isEncrypted()+
-        "\nisfileHeader: "+isFileHeader()+
-        "\nisSolid: "+isSolid()+
-        "\nisSplitafter: "+isSplitAfter()+
-        "\nisSplitBefore:"+isSplitBefore()+
-        "\nunpSize: "+getUnpSize()+
-        "\ndataSize: "+getDataSize()+
-        "\nisUnicode: "+isUnicode()+
-        "\nhasVolumeNumber: "+hasVolumeNumber()+
-        "\nhasArchiveDataCRC: "+hasArchiveDataCRC()+
-        "\nhasSalt: "+hasSalt()+
-        "\nhasEncryptVersions: "+hasEncryptVersion()+
-        "\nisSubBlock: "+isSubBlock();
-        System.out.println(str);
-    }
-
-    private Date getDateDos(int time) {
-	Calendar cal = Calendar.getInstance();
-	cal.set(Calendar.YEAR, (time >>> 25) + 1980);
-	cal.set(Calendar.MONTH, ((time >>> 21) & 0x0f) - 1);
-	cal.set(Calendar.DAY_OF_MONTH, (time >>> 16) & 0x1f);
-	cal.set(Calendar.HOUR_OF_DAY, (time >>> 11) & 0x1f);
-	cal.set(Calendar.MINUTE, (time >>> 5) & 0x3f);
-	cal.set(Calendar.SECOND, (time & 0x1f) * 2);
-	return cal.getTime();
-    }
-
-    public Date getArcTime() {
-	return arcTime;
-    }
-
-    public void setArcTime(Date arcTime) {
-	this.arcTime = arcTime;
-    }
-
-    public Date getATime() {
-	return aTime;
-    }
-
-    public void setATime(Date time) {
-	aTime = time;
-    }
-
-    public Date getCTime() {
-	return cTime;
-    }
-
-    public void setCTime(Date time) {
-	cTime = time;
-    }
-
-    public int getFileAttr() {
-	return fileAttr;
-    }
-
-    public void setFileAttr(int fileAttr) {
-	this.fileAttr = fileAttr;
     }
 
     public int getFileCRC() {
-	return fileCRC;
-    }
-
-    public byte[] getFileNameByteArray() {
-	return fileNameBytes;
+	    return fileCRC;
     }
 
     public String getFileNameString() {
-	return fileName;
-    }
-
-    public void setFileName(String fileName) {
-	this.fileName = fileName;
-    }
-
-    public String getFileNameW() {
-	return fileNameW;
-    }
-
-    public void setFileNameW(String fileNameW) {
-	this.fileNameW = fileNameW;
-    }
-
-    public int getHighPackSize() {
-	return highPackSize;
-    }
-
-    public int getHighUnpackSize() {
-	return highUnpackSize;
-    }
-
-    public HostSystem getHostOS() {
-	return hostOS;
-    }
-
-    public Date getMTime() {
-	return mTime;
-    }
-
-    public void setMTime(Date time) {
-	mTime = time;
-    }
-
-    public short getNameSize() {
-	return nameSize;
-    }
-
-    public int getRecoverySectors() {
-	return recoverySectors;
-    }
-
-    public byte[] getSalt() {
-	return salt;
-    }
-
-    public byte[] getSubData() {
-	return subData;
-    }
-
-    public int getSubFlags() {
-	return subFlags;
+	    return fileName;
     }
 
     public byte getUnpMethod() {
-	return unpMethod;
-    }
-
-    public long getUnpSize() {
-	return unpSize;
+	    return unpMethod;
     }
 
     public byte getUnpVersion() {
-	return unpVersion;
+	    return unpVersion;
     }
 
     public long getFullPackSize() {
-	return fullPackSize;
+	    return fullPackSize;
     }
 
     public long getFullUnpackSize() {
-	return fullUnpackSize;
-    }
-
-    @Override
-    public String toString() {
-	return super.toString();
+	    return fullUnpackSize;
     }
 
     /**
      * the file will be continued in the next archive part
-     * 
-     * @return
+     *
      */
     public boolean isSplitAfter() {
-	return (this.flags & BlockHeader.LHD_SPLIT_AFTER) != 0;
-    }
-
-    /**
-     * the file is continued in this archive
-     * 
-     * @return
-     */
-    public boolean isSplitBefore() {
-	return (this.flags & LHD_SPLIT_BEFORE) != 0;
+	    return (this.flags & BlockHeader.LHD_SPLIT_AFTER) != 0;
     }
 
     /**
      * this file is compressed as solid (all files handeled as one)
-     * 
-     * @return
+     *
      */
     public boolean isSolid() {
-	return (this.flags & LHD_SOLID) != 0;
-    }
-
-    /**
-     * the file is encrypted
-     * 
-     * @return
-     */
-    public boolean isEncrypted() {
-	return (this.flags & BlockHeader.LHD_PASSWORD) != 0;
+	    return (this.flags & LHD_SOLID) != 0;
     }
 
     /**
      * the filename is also present in unicode
-     * 
-     * @return
+     *
      */
     public boolean isUnicode() {
-	return (flags & LHD_UNICODE) != 0;
+	    return (flags & LHD_UNICODE) != 0;
     }
 
     public boolean isFileHeader() {
-	return UnrarHeadertype.FileHeader.equals(headerType);
-    }
-
-    public boolean hasSalt() {
-	return (flags & LHD_SALT) != 0;
+	    return UnrarHeadertype.FileHeader.equals(headerType);
     }
 
     public boolean isLargeBlock() {
-	return (flags & LHD_LARGE) != 0;
+	    return (flags & LHD_LARGE) != 0;
     }
 
-    /**
-     * whether this fileheader represents a directory
-     * 
-     * @return
-     */
-    public boolean isDirectory() {
-	return (flags & LHD_WINDOWMASK) == LHD_DIRECTORY;
-    }
-
-	public void setPaddingSize(int paddedSize) {
-		this.paddedSize = paddedSize;
-		
-	}
-	
-	public int getPaddedSize(){
-		return this.paddedSize;
-	}
 }

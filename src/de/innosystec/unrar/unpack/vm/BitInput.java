@@ -31,18 +31,13 @@ public class BitInput {
 	protected int inAddr;
 	protected int inBit;
 	protected final byte[] inBuf;
-	
-	/**
-	 * 
-	 */
+
 	public void InitBitInput()
     {
       inAddr=0;
       inBit=0;
     }
-    /**
-     * @param Bits 
-     */
+
     public void addbits(int Bits)
     {
       Bits+=inBit;
@@ -93,11 +88,10 @@ public class BitInput {
     
     /**
      * Indicates an Overfow
-     * @param IncPtr how many bytes to inc
      * @return true if an Oververflow would occur
      */
-    public boolean Overflow(int IncPtr) {
-    	return(inAddr+IncPtr>=MAX_SIZE);
+    public boolean Overflow() {
+    	return(inAddr+ 3 >=MAX_SIZE);
     }
 	public byte[] getInBuf()
 	{

@@ -10,6 +10,7 @@ import com.japanzai.koroshiya.settings.SettingsView;
 import android.content.Intent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.TextView;
 
 /**
  * Used to handle button clicks on the main screen
@@ -23,33 +24,34 @@ public class MainClickListener implements OnClickListener {
 	}
 	
 	@Override
-	public void onClick(View v) {process(v.getId());}
+	public void onClick(View v) {process(((TextView)v).getText().toString());}
 	
 	/**
 	 * Processes a view's ID to figure out which event should be triggered
-	 * @param resourceID ID of the control clicked on
+	 * @param desc Text of the clicked item
 	 * */
-	public void process(int resourceID){
+	public void process(String desc){
 		
-		Intent i = null;
+		Intent i;
 		
-		if (resourceID == R.id.btnSettings){
-			i = new Intent(parent, SettingsView.class);
-		}else if (resourceID == R.id.btnInitiate){
+		if (desc.equals(parent.getString(R.string.description_settings))) {
+            i = new Intent(parent, SettingsView.class);
+        }else if (desc.equals(parent.getString(R.string.description_read))){
 			i = new Intent(parent, FileChooser.class);
-		}else if (resourceID == R.id.btnHelp){
+        }else if (desc.equals(parent.getString(R.string.description_help))){
 			i = new Intent(parent, About.class);
-		}else if (resourceID == R.id.btnCredits){
+        }else if (desc.equals(parent.getString(R.string.description_credits))){
 			i = new Intent(parent, Credits.class);
-		}else if (resourceID == R.id.btnResumeReading){
+        }else if (desc.equals(parent.getString(R.string.description_resume))){
 			parent.resumeReading();
-		}else if (resourceID == R.id.btnErrorReporting){
+            return;
+        }else if (desc.equals(parent.getString(R.string.error_button))){
 			i = new Intent(parent, ErrorReport.class);
-		}
-		
-		if (i != null){
-			parent.startActivity(i);
-		}
+		}else{
+            return;
+        }
+
+		parent.startActivity(i);
 		
 	}
 

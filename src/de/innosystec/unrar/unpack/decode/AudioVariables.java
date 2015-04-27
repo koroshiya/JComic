@@ -30,7 +30,7 @@ public class AudioVariables {
 
 	int lastDelta;
 
-	int dif[] = new int[11];
+	final int[] dif = new int[11];
 
 	int byteCount;
 

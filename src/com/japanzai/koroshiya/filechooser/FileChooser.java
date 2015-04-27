@@ -3,56 +3,43 @@ package com.japanzai.koroshiya.filechooser;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.v4.app.Fragment;
 import android.util.Log;
-import android.view.ContextMenu;
+import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup.LayoutParams;
-import android.view.animation.AlphaAnimation;
-import android.widget.AdapterView;
-import android.widget.AdapterView.AdapterContextMenuInfo;
-import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
-import android.widget.ViewFlipper;
+import android.widget.GridView;
 
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
+import com.japanzai.koroshiya.DrawerActivity;
 import com.japanzai.koroshiya.R;
 import com.japanzai.koroshiya.dialog.ConfirmDialog;
-import com.japanzai.koroshiya.filechooser.tab.FileChooserTab;
 import com.japanzai.koroshiya.interfaces.ModalReturn;
 import com.japanzai.koroshiya.io_utils.ArchiveParser;
 import com.japanzai.koroshiya.io_utils.ImageParser;
 import com.japanzai.koroshiya.reader.MainActivity;
 import com.japanzai.koroshiya.reader.Reader;
-import com.japanzai.koroshiya.reader.ToastThread;
 import com.japanzai.koroshiya.settings.SettingsManager;
 import com.japanzai.koroshiya.settings.SettingsView;
+import com.japanzai.koroshiya.settings.classes.Recent;
 
 /**
  * Activity responsible for displaying file chooser options and processing such events.
  * This includes displaying favorites, recently viewed files, navigating through and
  * selecting files from disk, etc.
  * */
-public class FileChooser extends SherlockFragmentActivity {
+public class FileChooser extends DrawerActivity {
 
 	private File home = null;
-	private ItemClickListener icl;
+	private final ItemClickListener icl = new ItemClickListener(this);
 	private final MainActivity parent = MainActivity.mainActivity;
-	private ArrayList<String> tempCommandList;
-	private ListView v;
-	private Fragment frag = null;
-	private ViewFlipper vf;
+	protected GridView v;
+
+    public final static int FILES = 100;
+    public final static int FAVORITE = 200;
+    public final static int RECENT = 300;
+    private int type = FILES;
 	
 	public FileChooser(){
 		
@@ -81,7 +68,8 @@ public class FileChooser extends SherlockFragmentActivity {
         parent.getSettings().keepBacklightOn(this.getWindow());
         SettingsManager.setFullScreen(this);
         setContentView(R.layout.activity_file_chooser);
-		vf = (ViewFlipper) this.findViewById(R.id.viewFlipper1);
+        v = (GridView) findViewById(R.id.FileChooserPane);
+        instantiateParent();
         instantiate();
 
     }
@@ -94,205 +82,82 @@ public class FileChooser extends SherlockFragmentActivity {
     	} else {
     		MainActivity.mainActivity.getSettings().forceOrientation(this);
     	}
-    }
-	
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getSupportMenuInflater().inflate(R.menu.activity_main, menu);
-        return true;
-    }
-    
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-    	
-    	return super.onOptionsItemSelected(item);
-    	
+        instantiate();
     }
         
     /**
      * Called upon creation of this Activity.
      * Sets the default interface up.
      * */
-    public void instantiate(){
-    	        
-        ActionBar bar = getSupportActionBar();
-        bar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-        bar.removeAllTabs();
-        FileChooserTabListener fctl = new FileChooserTabListener(this);
-        ActionBar.Tab tab1 = setTab(getString(R.string.tab_recent), bar, fctl);
-        ActionBar.Tab tab2 = setTab(getString(R.string.tab_files), bar, fctl);
-        ActionBar.Tab tab3 = setTab(getString(R.string.tab_favorite), bar, fctl);
-        bar.addTab(tab1);
-        bar.addTab(tab2);
-        bar.addTab(tab3);
-        bar.setDisplayShowTitleEnabled(true);
-        
-        bar.selectTab(tab2);
-        
-        LinearLayout lv = (LinearLayout) this.findViewById(R.id.FileChooserScrollView);
-        v = new ListView(parent);
-    	registerForContextMenu(v);
-        lv.addView(v, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
-        this.setContentView(vf, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
-        
-        final AlphaAnimation fadeIn = new AlphaAnimation(0.5f , 1.0f ) ; 
-        fadeIn.setDuration(300);
-        fadeIn.setFillAfter(true);
-        
-        final AlphaAnimation fadeOut = new AlphaAnimation(1.0f , 0.5f);
-        fadeOut.setDuration(300);
-        fadeOut.setFillAfter(true);
+    public void instantiateParent(){
 
-        final TextView cancel = ((TextView)findViewById(R.id.btn_cancel));
-        final TextView home = ((TextView)findViewById(R.id.btn_home));
-        final TextView up = ((TextView)findViewById(R.id.btn_up));
-        final TextView refresh = ((TextView)findViewById(R.id.btn_refresh));
+        String[] items = new String[]{
+                getString(R.string.back),
+                getString(R.string.tab_recent),
+                getString(R.string.tab_files),
+                getString(R.string.tab_favorite)
+        };
 
-        cancel.setOnClickListener(new View.OnClickListener() {
+        instantiateDrawer(items);
+
+        findViewById(R.id.btn_home).setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				cancel.startAnimation(fadeOut);
-				cancel.startAnimation(fadeIn);
-				finish();
+				icl.processItemAfter(Environment.getExternalStorageDirectory().getAbsolutePath(), false);
 			}
 		});
-        home.setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.btn_up).setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				home.startAnimation(fadeOut);
-				home.startAnimation(fadeIn);
-				if (icl != null) icl.processItemAfter(Environment.getExternalStorageDirectory().getAbsolutePath(), false);
+				icl.processItemAfter(getHome().equals("/") ? "/" : getHomeAsFile().getParent(), false);
 			}
 		});
-        up.setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.btn_refresh).setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				up.startAnimation(fadeOut);
-				up.startAnimation(fadeIn);
-				if (icl != null) icl.processItemAfter(getHome().equals("/") ? "/" : getHomeAsFile().getParent(), false);
-			}
-		});
-        refresh.setOnClickListener(new View.OnClickListener() {
-			public void onClick(View v) {
-				refresh.startAnimation(fadeOut);
-				refresh.startAnimation(fadeIn);
 				refreshTab();
 			}
 		});
+
+        findViewById(R.id.btn_bulk_delete).setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v) {
+                startActivity(new Intent(parent, BulkDelete.class));
+            }
+        });
         
     }
-    
-    /**
-     * @param text Text to display on the tab being created
-     * @param bar ActionBar to assign the tab being created to
-     * @return Tab created given the parameters passed in
-     * */
-    private ActionBar.Tab setTab(String text, ActionBar bar, FileChooserTabListener fctl){
-    	ActionBar.Tab tab = bar.newTab();
-    	tab.setText(text);
-    	tab.setTabListener(fctl);
-    	return tab;
+
+    public void drawerClick(int i){
+
+        Log.e("SettingsView", Integer.toString(i));
+
+        int type;
+        switch (i){
+            case 0:
+                finish();
+                return;
+            case 1:
+            case RECENT:
+                type = RECENT;
+                break;
+            case 2:
+            case FILES:
+                type = FILES;
+                break;
+            default:
+                type = FAVORITE;
+                break;
+        }
+        setAdapter(type);
+        mDrawerLayout.closeDrawer(android.os.Build.VERSION.SDK_INT >= 14 ? Gravity.START : Gravity.LEFT);
+
     }
-    
+
     /**
      * Swaps from the current tab to another and back.
      * This is desirable when the current tab needs refreshing.
      * */
     public void refreshTab(){
-    	
-		ActionBar bar = getSupportActionBar();
-		ActionBar.Tab tab = bar.getSelectedTab();
-		
-		int curTab = bar.getTabAt(0) == tab ? 2 : 0;
-		
-    	bar.selectTab(bar.getTabAt(curTab));
-    	bar.selectTab(tab);
-    	
-    }
-    
-    /**
-     * Removes the current Adapter being displayed
-     * */
-    public void reset(){
-        v.setAdapter(null);
-    }
-    
-    /**
-     * @param lv ListView for which to display the items pertaining to
-     * */
-    public void setListView(ListView lv){
-    	v.setAdapter(lv.getAdapter());
-    }
-    
-    /**
-     * @param oicl New listener for the items in this Activity's ListView
-     * */
-    public void setItemClickListener(ItemClickListener oicl){
-    	this.icl = oicl;
-    	v.setOnItemClickListener(oicl);
-    }
-    
-    @Override
-    public void onCreateContextMenu (ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo){
-    	
-    	super.onCreateContextMenu(menu, v, menuInfo);
-    	
-    	Log.d("FileChooser", "Trying to instantiate context menu");
-    	
-    	ActionBar bar = getSupportActionBar();
-    	ActionBar.Tab tab = bar.getSelectedTab();
-    	
-		AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
-		int position = info.position;
-		
-		ListView lv = (ListView) v;
-		HashMap<String,String> item = (HashMap<String, String>) lv.getAdapter().getItem(position);
-		String name = item.get("name");
-		
-		if (name.equals(getString(R.string.recent_function_disabled)) ||
-				name.equals(getString(R.string.recent_general_settings)) ||
-				name.equals(getString(R.string.recent_no_recent_files)))
-		{
-			Log.d("FileChooser", "Failed to instantiate context menu");
-			return;
-		}
-		
-		menu.setHeaderTitle(name);
-		if (icl == null){
-			return; //Happens if there are no valid items in the list
-		}
-		int id = icl.processContext(name);
-		if (id == -1){
-			return; //Unknown selection
-		}
-		tempCommandList = new ArrayList<>();
-        tempCommandList.addAll(Arrays.asList(getResources().getStringArray(id)));
-    	if (tab == bar.getTabAt(0)){
-    		tempCommandList.add(getResources().getString(R.string.file_remove_recent));
-    		tempCommandList.add(getResources().getString(R.string.file_clear_recent));
-    	} else if (tab == bar.getTabAt(2)){
-    		tempCommandList.remove(tempCommandList.size() - 1); //removes the add to favorites command
-    		tempCommandList.add(getResources().getString(R.string.file_remove_favorite));
-    		tempCommandList.add(getResources().getString(R.string.file_clear_favorite));
-    	}
-		for (int i = 0; i < tempCommandList.size(); i++){
-			menu.add(Menu.NONE, i, i, tempCommandList.get(i));
-		}
-    	
-    }
-    
-    @Override
-    public boolean onContextItemSelected(android.view.MenuItem item){
-    	
-    	AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
-		HashMap<String,String> s = (HashMap<String, String>) this.v.getAdapter().getItem(info.position);
-    	String command = tempCommandList.get(item.getItemId());
-    	
-    	try {
-			icl.process(s.get("name"), command);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-    	
-    	return true;
-    	
+
+        instantiate();
+
     }
     
     /**
@@ -304,45 +169,24 @@ public class FileChooser extends SherlockFragmentActivity {
     	return f.isDirectory() || f.length() > 0 && (ArchiveParser.isSupportedArchive(f) || ImageParser.isSupportedImage(f));
     	
     }
-        
-    /**
-     * @param dir Path to the directory to display the contents of
-     * */
-    public void reset(String dir){
-    	
-    	try{
-    		reset(new File(dir));
-    	}catch (NullPointerException npe){
-    		parent.runOnUiThread(new ToastThread(R.string.cant_go_up, parent, Toast.LENGTH_SHORT));
-    	}
-    	
-    }
     
     /**
      * @param newDir Directory to display the contents of
      * */
     public void reset(File newDir){
-    	
-    	this.home = newDir;
-    	
-    	if (frag != null){
-    		if (frag instanceof FileChooserTab){
-    			FileChooserTab fct = (FileChooserTab) frag;
-    			fct.reset(newDir);
-    		}else{
-    			parent.getSettings().setHomeDir(newDir.getAbsolutePath());
-    			ActionBar bar = getSupportActionBar();
-    			bar.selectTab(bar.getTabAt(1));
-    		}
-    	}
+
+        setHome(newDir);
+        if (this.type == FILES){
+            //instantiate();
+            setAdapter(this.type);
+        }else if (this.type == FAVORITE){
+            drawerClick(FILES);
+        }
     	
     }
-    
-    /**
-     * @param frag Fragment to set as the displayed fragment
-     * */
-    public void setFrag(Fragment frag){
-    	this.frag = frag;
+
+    public int getType(){
+        return this.type;
     }
     
     /**
@@ -368,6 +212,107 @@ public class FileChooser extends SherlockFragmentActivity {
 		startActivity(intent);
     	
     }
+
+    public void instantiate(){
+        if (this.type == FILES){
+            File smHome = MainActivity.mainActivity.getSettings().getHomeDir();
+
+            if (smHome != null && smHome.exists() && smHome.isDirectory()){
+                setHome(smHome);
+            }else{
+                File home = Environment.getExternalStorageDirectory();
+                if (home == null){
+                    String userHome = System.getProperty("user.home");
+                    home = new File(userHome);
+                }
+                setHome(home);
+            }
+
+            if (getHomeAsFile().list() != null){
+                setAdapter(this.type);
+            }else {
+                reset(new File("/"));
+
+                setButtons(true);
+            }
+        }else {
+            setAdapter(this.type);
+        }
+    }
+
+    public void setAdapter(int type){
+
+        SettingsManager settings = MainActivity.mainActivity.getSettings();
+        ArrayList<String> listItems = new ArrayList<>();
+        FileItemAdapter aList;
+
+        switch (type){
+            case FAVORITE:
+
+                for (String favorite : settings.getFavorite()){
+                    if ((new File(favorite)).exists()){
+                        listItems.add(favorite);
+                    }
+                }
+
+                aList = new FileItemAdapter(this, FileItem.getHashList(listItems, this), icl, icl);
+                break;
+            case RECENT:
+
+                if (!settings.saveRecent()){
+                    listItems.add(getString(R.string.recent_function_disabled));
+                    listItems.add(getString(R.string.recent_general_settings));
+                    aList = new FileItemAdapter(this, getEmptyHashList(listItems), icl, icl);
+                }else{
+
+                    String line;
+                    for (Recent recent : settings.getRecent()){
+                        line = recent.getPath();
+                        if ((new File(line)).exists()){
+                            listItems.add(line);
+                        }
+                    }
+
+                    if (listItems.size() == 0){
+                        listItems.add(getString(R.string.recent_no_recent_files));
+                        aList = new FileItemAdapter(this, getEmptyHashList(listItems), icl, icl);
+                    }else{
+                        aList = new FileItemAdapter(this, FileItem.getHashList(listItems, this), icl, icl);
+                    }
+
+                }
+                break;
+            case FILES:
+            default:
+
+                ArrayList<String> tempList = new ArrayList<>();
+                for (File s : getHomeAsFile().listFiles()){
+                    if (FileChooser.isSupportedFile(s) && !s.isHidden()){tempList.add(s.getName());}
+                }
+                Object[] tempArray = tempList.toArray();
+                Arrays.sort(tempArray);
+                for (Object obj : tempArray){
+                    listItems.add(obj.toString());
+                }
+
+                aList = new FileItemAdapter(this, FileItem.getHashList(listItems, this), icl, icl);
+                break;
+        }
+
+        this.type = type;
+
+        v.setAdapter(aList);
+
+        setButtons(type == FILES);
+
+    }
+
+    private void setButtons(boolean visible){
+        int[] affectedButtons = {R.id.btn_home, R.id.btn_up, R.id.btn_refresh, R.id.btn_bulk_delete};
+        for (int id : affectedButtons){
+            findViewById(id).setVisibility(visible ? View.VISIBLE : View.GONE);
+        }
+    }
 		
     /**
      * @param smHome File to set as this Activity's current directory.
@@ -388,107 +333,22 @@ public class FileChooser extends SherlockFragmentActivity {
     }
 	    
     /**
-     * @param resIdConfirm ID of the string resource to be displayed as a confirm option
-     * @param resIdDecline ID of the string resource to be displayed as a decline option
      * @param message Actual prompt/question to be displayed
-     * @param target ModalReturn to target with the prompt created
-     * */
-	public void confirm(int resIdConfirm, int resIdDecline, String message, ModalReturn target){
-		ConfirmDialog confirm = new ConfirmDialog(getString(resIdConfirm), 
-				getString(resIdDecline), 
+     * @param target ModalReturn to target with the prompt created  */
+	public void confirm(String message, ModalReturn target){
+		ConfirmDialog confirm = new ConfirmDialog(getString(R.string.file_confirm),
+				getString(R.string.file_deny),
 				message, 
 				target);
 		confirm.show(getSupportFragmentManager(), "MainActivity");
     }
-    
-	public MainActivity getMainActivity(){
-		return this.parent;
-	}
-	
-	/**
-	 * Swaps this class's ViewFlipper to the next view
-	 * */
-	public void showNext() {
-		runOnUiThread(new ViewFlipThreadForward());
-	}
 
-	/**
-	 * Swaps this class's ViewFlipper to the previous view
-	 * */
-	public void showPrevious() {
-		runOnUiThread(new ViewFlipThreadBackward());
-	}
-	
-	private class ViewFlipThreadForward implements Runnable{
-
-		@Override
-		public void run() {
-			flipView(true);
-		}
-
-	}
-	
-	private class ViewFlipThreadBackward implements Runnable{
-		
-		@Override
-		public void run() {
-			flipView(false);
-		}
-
-	}
-	
-	public synchronized void flipView(boolean forward) {
-
-		if (forward) {
-			vf.showNext();
-		} else {
-			vf.showPrevious();
-		}
-
-	}
-	
-	@Override
-	public void onBackPressed(){
-		if (icl.isThreadRunning()){
-			parent.runOnUiThread(new ToastThread(R.string.zip_operation_running, parent, Toast.LENGTH_SHORT));
-		}else{
-			super.onBackPressed();
-		}
-	}
-	
-	public List<HashMap<String, String>> getHashList(ArrayList<String> listItems){
+	public ArrayList<FileItem> getEmptyHashList(ArrayList<String> listItems){
         
-        List<HashMap<String,String>> aList = new ArrayList<>();
+        ArrayList<FileItem> aList = new ArrayList<>();
 
         for (String s : listItems){
-            HashMap<String, String> hm = new HashMap<>();
-            hm.put("name", s);
-            
-            int img;
-            if (ImageParser.isSupportedImage(s)){
-            	img = R.drawable.image;
-            }else if (ArchiveParser.isSupportedZipArchive(s)){
-            	img = R.drawable.zip;
-            }else if (ArchiveParser.isSupportedRarArchive(s)){
-            	img = R.drawable.rar;
-            }else{
-            	img = R.drawable.folder;
-            }
-            hm.put("image", Integer.toString(img));
-            aList.add(hm);
-        }
-        
-        return aList;
-	}
-	
-	public List<HashMap<String, String>> getEmptyHashList(ArrayList<String> listItems){
-        
-        List<HashMap<String,String>> aList = new ArrayList<>();
-
-        for (String s : listItems){
-            HashMap<String, String> hm = new HashMap<>();
-            hm.put("name", s);
-            hm.put("image", Integer.toString(R.drawable.transparent));
+            FileItem hm = new FileItem(s, R.drawable.transparent, this);
             aList.add(hm);
         }
         

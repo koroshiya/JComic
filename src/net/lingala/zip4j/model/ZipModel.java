@@ -16,15 +16,7 @@
 
 package net.lingala.zip4j.model;
 
-import java.util.List;
-
 public class ZipModel implements Cloneable {
-	
-	private List localFileHeaderList;
-	
-	private List dataDescriptorList;
-	
-	private ArchiveExtraDataRecord archiveExtraDataRecord;
 	
 	private CentralDirectory centralDirectory;
 	
@@ -36,39 +28,9 @@ public class ZipModel implements Cloneable {
 	
 	private boolean splitArchive;
 	
-	private long splitLength;
-	
 	private String zipFile;
 
 	private boolean isZip64Format;
-	
-	private boolean isNestedZipFile;
-	
-	private long start;
-	
-	private long end;
-	
-	private String fileNameCharset;
-	
-	public ZipModel() {
-		splitLength = -1;
-	}
-	
-	public List getLocalFileHeaderList() {
-		return localFileHeaderList;
-	}
-
-	public void setLocalFileHeaderList(List localFileHeaderList) {
-		this.localFileHeaderList = localFileHeaderList;
-	}
-
-	public List getDataDescriptorList() {
-		return dataDescriptorList;
-	}
-
-	public void setDataDescriptorList(List dataDescriptorList) {
-		this.dataDescriptorList = dataDescriptorList;
-	}
 
 	public CentralDirectory getCentralDirectory() {
 		return centralDirectory;
@@ -84,15 +46,6 @@ public class ZipModel implements Cloneable {
 
 	public void setEndCentralDirRecord(EndCentralDirRecord endCentralDirRecord) {
 		this.endCentralDirRecord = endCentralDirRecord;
-	}
-
-	public ArchiveExtraDataRecord getArchiveExtraDataRecord() {
-		return archiveExtraDataRecord;
-	}
-
-	public void setArchiveExtraDataRecord(
-			ArchiveExtraDataRecord archiveExtraDataRecord) {
-		this.archiveExtraDataRecord = archiveExtraDataRecord;
 	}
 
 	public boolean isSplitArchive() {
@@ -136,49 +89,9 @@ public class ZipModel implements Cloneable {
 	public void setZip64Format(boolean isZip64Format) {
 		this.isZip64Format = isZip64Format;
 	}
-
-	public boolean isNestedZipFile() {
-		return isNestedZipFile;
-	}
-
-	public void setNestedZipFile(boolean isNestedZipFile) {
-		this.isNestedZipFile = isNestedZipFile;
-	}
-
-	public long getStart() {
-		return start;
-	}
-
-	public void setStart(long start) {
-		this.start = start;
-	}
-
-	public long getEnd() {
-		return end;
-	}
-
-	public void setEnd(long end) {
-		this.end = end;
-	}
-
-	public long getSplitLength() {
-		return splitLength;
-	}
-
-	public void setSplitLength(long splitLength) {
-		this.splitLength = splitLength;
-	}
 	
 	public Object clone() throws CloneNotSupportedException {
 		return super.clone();
-	}
-
-	public String getFileNameCharset() {
-		return fileNameCharset;
-	}
-
-	public void setFileNameCharset(String fileNameCharset) {
-		this.fileNameCharset = fileNameCharset;
 	}
 	
 }

@@ -48,12 +48,6 @@ public class PPMContext extends Pointer
             { 25, 14, 9, 7, 5, 5, 4, 4, 4, 3, 3, 3, 2, 2, 2, 2 };
 
     // Temp fields
-    private final State tempState1 = new State(null);
-    private final State tempState2 = new State(null);
-    private final State tempState3 = new State(null);
-    private final State tempState4 = new State(null);
-    private final State tempState5 = new State(null);
-    private PPMContext tempPPMContext = null;
     private final int[] ps = new int[256];
 
 	public PPMContext(byte[] mem)
@@ -63,23 +57,9 @@ public class PPMContext extends Pointer
 		freqData = new FreqData(mem);
 	}
 
-    public PPMContext init(byte[] mem) {
-		this.mem = mem;
-        pos = 0;
-		oneState.init(mem);
-		freqData.init(mem);
-        return this;
-    }
-
 	public FreqData getFreqData()
 	{
 		return freqData;
-	}
-
-	public void setFreqData(FreqData freqData)
-	{
-		this.freqData.setSummFreq(freqData.getSummFreq());
-		this.freqData.setStats(freqData.getStats());
 	}
 
 	public final int getNumStats()
@@ -138,10 +118,7 @@ public class PPMContext extends Pointer
 	}
 
     private PPMContext getTempPPMContext(byte[] mem) {
-        if (tempPPMContext == null) {
-            tempPPMContext = new PPMContext(null);
-        }
-        return tempPPMContext.init(mem);
+        return new PPMContext(mem);
     }
 
 	public int createChild(ModelPPM model, State pStats/* ptr */, StateRef firstState /* ref */){
@@ -162,9 +139,7 @@ public class PPMContext extends Pointer
 		State p = new State(model.getHeap());
 		State temp = new State(model.getHeap());
 
-		for (p.setAddress(model.getFoundState().getAddress());
-                p.getAddress() != freqData.getStats();
-                p.decAddress()) {
+		for (p.setAddress(model.getFoundState().getAddress()); p.getAddress() != freqData.getStats(); p.decAddress()) {
 			temp.setAddress(p.getAddress() - State.size);
 			State.ppmdSwap(p, temp);
 		}
@@ -188,7 +163,6 @@ public class PPMContext extends Pointer
 				State temp2 = new State(model.getHeap());
 				State temp3 = new State(model.getHeap());
 				do {
-					// p1[0]=p1[-1];
 					temp2.setAddress(p1.getAddress() - State.size);
 					p1.setValues(temp2);
                     p1.decAddress();
@@ -208,9 +182,7 @@ public class PPMContext extends Pointer
 				StateRef tmp = new StateRef();
 				temp.setAddress(freqData.getStats());
 				tmp.setValues(temp);
-				// STATE tmp=*U.Stats;
 				do {
-                    // tmp.Freq-=(tmp.Freq >> 1)
 					tmp.decFreq(tmp.getFreq() >>> 1);
 					EscFreq >>>= 1;
 				} while (EscFreq > 1);
@@ -241,31 +213,30 @@ public class PPMContext extends Pointer
 		return ret;
 	}
 
-    public int getMean(int summ, int shift, int round)
-	{
-		return ( (summ + (1 << (shift - round) ) ) >>> (shift) );
+    public int getMean(int summ){
+		return ( (summ + (1 << (ModelPPM.PERIOD_BITS - 2) ) ) >>> (ModelPPM.PERIOD_BITS) );
 	}
 
 	public void decodeBinSymbol(ModelPPM model)
 	{
-		State rs = tempState1.init(model.getHeap());
+		State rs = new State(model.getHeap());
 		rs.setAddress(oneState.getAddress());// State&
 		model.setHiBitsFlag(model.getHB2Flag()[model.getFoundState().getSymbol()]);
 		int off1 = rs.getFreq() - 1;
 		int off2 = getArrayIndex(model, rs);
 		int bs = model.getBinSumm()[off1][off2];
-		if (model.getCoder().getCurrentShiftCount(ModelPPM.TOT_BITS) < bs) {
+		if (model.getCoder().getCurrentShiftCount() < bs) {
 			model.getFoundState().setAddress(rs.getAddress());
 			rs.incFreq((rs.getFreq() < 128) ? 1 : 0);
 			model.getCoder().getSubRange().setLowCount(0);
 			model.getCoder().getSubRange().setHighCount(bs); 
-			bs = ((bs + ModelPPM.INTERVAL - getMean(bs, ModelPPM.PERIOD_BITS, 2)) & 0xffff);
+			bs = ((bs + ModelPPM.INTERVAL - getMean(bs)) & 0xffff);
 			model.getBinSumm()[off1][off2] = bs;
 			model.setPrevSuccess(1); 
 			model.incRunLength(1);
 		} else {
 			model.getCoder().getSubRange().setLowCount(bs);
-			bs = (bs - getMean(bs, ModelPPM.PERIOD_BITS, 2)) & 0xFFFF;
+			bs = (bs - getMean(bs)) & 0xFFFF;
 			model.getBinSumm()[off1][off2] = bs;
 			model.getCoder().getSubRange().setHighCount(ModelPPM.BIN_SCALE);
 			model.setInitEsc(ExpEscape[bs >>> 10]);
@@ -274,31 +245,15 @@ public class PPMContext extends Pointer
 			model.setPrevSuccess(0);
 			model.getFoundState().setAddress(0);
 		}
-		//int a = 0;//TODO just 4 debugging
 	}
-
-//	public static void ppmdSwap(ModelPPM model, StatePtr state1, StatePtr state2)
-//	{
-//		byte[] bytes = model.getSubAlloc().getHeap();
-//		int p1 = state1.getAddress();
-//		int p2 = state2.getAddress();
-//		
-//		for (int i = 0; i < StatePtr.size; i++) {
-//			byte temp = bytes[p1+i];
-//			bytes[p1+i] = bytes[p2+i];
-//			bytes[p2+i] = temp;
-//		}
-//		state1.setAddress(p1);
-//		state2.setAddress(p2);
-//	}
 
 	public void update1(ModelPPM model, int p/* ptr */)
 	{
 		model.getFoundState().setAddress(p);
 		model.getFoundState().incFreq(4);
 		freqData.incSummFreq(4);
-		State p0 = tempState3.init(model.getHeap());
-		State p1 = tempState4.init(model.getHeap());
+		State p0 = new State(model.getHeap());
+		State p1 = new State(model.getHeap());
 		p0.setAddress(p);
 		p1.setAddress(p - State.size);
 		if (p0.getFreq() > p1.getFreq()) {
@@ -316,8 +271,8 @@ public class PPMContext extends Pointer
 		SEE2Context psee2c = makeEscFreq2(model, i);
 		RangeCoder coder = model.getCoder();
 		// STATE* ps[256], ** pps=ps, * p=U.Stats-1;
-		State p = tempState1.init(model.getHeap());
-		State temp = tempState2.init(model.getHeap());
+		State p = new State(model.getHeap());
+		State temp = new State(model.getHeap());
 		p.setAddress(freqData.getStats() - State.size); 
 		int pps = 0;
 		hiCnt = 0;
@@ -360,9 +315,9 @@ public class PPMContext extends Pointer
 		return (true);
 	}
 
-	public void update2(ModelPPM model, int p/* state ptr */)
+	public void update2(ModelPPM model, int p)
 	{
-		State temp = tempState5.init(model.getHeap());
+		State temp = new State(model.getHeap());
 		temp.setAddress(p);
 		model.getFoundState().setAddress(p);
 		model.getFoundState().incFreq(4); 
@@ -370,7 +325,7 @@ public class PPMContext extends Pointer
 		if (temp.getFreq() > ModelPPM.MAX_FREQ) {
 			rescale(model);
 		}
-		model.incEscCount(1);
+		model.incEscCount();
 		model.setRunLength(model.getInitRL());
 	}
 

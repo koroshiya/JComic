@@ -1,13 +1,10 @@
 package com.japanzai.koroshiya.io_utils;
 
 import java.io.BufferedInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.Locale;
-import java.util.zip.GZIPOutputStream;
 
 import android.graphics.BitmapFactory;
 import android.graphics.Point;
@@ -48,13 +45,11 @@ public class ImageParser {
 		
 		if ((new File(comp)).getName().charAt(0) == '.'){ //Prevents hidden files and, more importantly MACOSX folder contents, from being read
 			return false;
-		}if (android.os.Build.VERSION.SDK_INT >= 14){ //WebP is only natively available for android 4.0+
-			if (comp.endsWith(".webp")){return true;}
+		}else if (android.os.Build.VERSION.SDK_INT >= 14 && comp.endsWith(".webp")){ //WebP is only natively available for android 4.0+
+			return true;
 		}
 		
-    	for (String ext : supportedImages){
-    		if (comp.endsWith(ext)){return true;}
-    	}
+    	for (String ext : supportedImages) if (comp.endsWith(ext)) return true;
     	
     	return false;
     	
@@ -88,16 +83,7 @@ public class ImageParser {
 	 * */
     public static JBitmapDrawable parseImageFromDisk(InputStream is, int inWidth, int inHeight, Reader r){
 
-        BufferedInputStream bis = new BufferedInputStream(is);
-
-        BitmapFactory.Options opts = new BitmapFactory.Options();
-        opts.inDither = false;
-        if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.LOLLIPOP){
-            opts.inPurgeable = true;
-            opts.inInputShareable = true;
-        }
-        opts.inTempStorage = new byte[32 * 1024];
-        JBitmapDrawable b;
+        BitmapFactory.Options opts = getRealOpts();
 
         try{
 
@@ -108,14 +94,14 @@ public class ImageParser {
                     opts.inSampleSize = width;
                 }
             }
-            b = new JBitmapDrawable(BitmapFactory.decodeStream(bis, null, opts));
+            JBitmapDrawable b = new JBitmapDrawable(BitmapFactory.decodeStream(new BufferedInputStream(is), null, opts));
             if (inWidth == 0 || inHeight == 0){
                 inWidth = b.getWidth();
                 inHeight = b.getHeight();
             }
             b.setDimensions(inWidth, inHeight);
 
-            return (b);
+            return b;
 
         }catch(OutOfMemoryError e){
             System.out.println("ImageParser OOM exception");
@@ -129,14 +115,7 @@ public class ImageParser {
 
 	public static JBitmapDrawable parseImageFromDisk(File image, Reader r){
 		
-		BitmapFactory.Options opts = new BitmapFactory.Options();
-		opts.inDither = false;
-		if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.LOLLIPOP){
-			opts.inPurgeable = true;
-			opts.inInputShareable = true;
-		}
-		opts.inTempStorage = new byte[32 * 1024];
-		JBitmapDrawable b;
+		BitmapFactory.Options opts = getRealOpts();
 		
 		try{
 			int resize = r.getSettings().getDynamicResizing();
@@ -147,8 +126,7 @@ public class ImageParser {
 					opts.inSampleSize = width;
 				}
 			}
-			b = new JBitmapDrawable(BitmapFactory.decodeFile(image.getAbsolutePath(), opts));
-			return (b);
+            return new JBitmapDrawable(BitmapFactory.decodeFile(image.getAbsolutePath(), opts));
 		}catch(OutOfMemoryError e){
 			System.out.println("ImageParser OOM exception");
 			System.gc();
@@ -167,19 +145,11 @@ public class ImageParser {
      * @return Point containing the width and height of the image parsed
      * */
     public static Point getImageSize(InputStream is){
+
+        BitmapFactory.Options opts = getSampleOpts();
         BufferedInputStream bis = new BufferedInputStream(is);
-
-        BitmapFactory.Options opts = new BitmapFactory.Options();
-        opts.inJustDecodeBounds = true;
-        opts.inDither = false;
-        if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.LOLLIPOP){
-            opts.inPurgeable = true;
-            opts.inInputShareable = true;
-        }
-        opts.inTempStorage = new byte[32 * 1024];
-
         BitmapFactory.decodeStream(bis, null, opts);
-        return new Point(opts.outWidth, opts.outHeight);
+        return new Point(opts.outWidth * 4, opts.outHeight * 4);
 
     }
 
@@ -190,31 +160,35 @@ public class ImageParser {
      * */
     public static Point getImageSize(File f){
 
+        BitmapFactory.Options opts = getSampleOpts();
+        BitmapFactory.decodeFile(f.getAbsolutePath(), opts);
+        return new Point(opts.outWidth * 4, opts.outHeight * 4);
+
+    }
+
+    private static BitmapFactory.Options getSampleOpts(){
         BitmapFactory.Options opts = new BitmapFactory.Options();
         opts.inJustDecodeBounds = true;
+        if (android.os.Build.VERSION.SDK_INT >= 10) opts.inPreferQualityOverSpeed = false;
+        opts.inDither = false;
+        opts.inSampleSize = 4;
+        if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.LOLLIPOP){
+            opts.inPurgeable = true;
+            opts.inInputShareable = true;
+        }
+        opts.inTempStorage = new byte[32768]; //32kb
+        return opts;
+    }
+
+    private static BitmapFactory.Options getRealOpts(){
+        BitmapFactory.Options opts = new BitmapFactory.Options();
         opts.inDither = false;
         if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.LOLLIPOP){
             opts.inPurgeable = true;
             opts.inInputShareable = true;
         }
-        opts.inTempStorage = new byte[32 * 1024];
-
-        BitmapFactory.decodeFile(f.getAbsolutePath(), opts);
-        return new Point(opts.outWidth, opts.outHeight);
-
-    }
-	
-	public static byte[] compress(byte[] content){
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        try{
-            GZIPOutputStream gzipOutputStream = new GZIPOutputStream(byteArrayOutputStream);
-            gzipOutputStream.write(content);
-            gzipOutputStream.close();
-        } catch(IOException e){
-            throw new RuntimeException(e);
-        }
-        System.out.printf("Compression ratio %f\n", (1.0f * content.length/byteArrayOutputStream.size()));
-        return byteArrayOutputStream.toByteArray();
+        opts.inTempStorage = new byte[32768]; //32kb
+        return opts;
     }
 	
 }

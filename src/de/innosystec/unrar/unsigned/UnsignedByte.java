@@ -18,38 +18,18 @@
  */
 package de.innosystec.unrar.unsigned;
 
-/**
- * DOCUMENT ME
- *
- * @author $LastChangedBy$
- * @version $LastChangedRevision$
- */
 public class UnsignedByte {
-	
-	public static byte longToByte(long unsignedByte1){
-		return (byte) (unsignedByte1&0xff);
-	}
-	public static byte intToByte(int unsignedByte1){
-		return (byte) (unsignedByte1&0xff);
-	}
-	public static byte shortToByte(short unsignedByte1){
-		return (byte) (unsignedByte1&0xff);
-	}
-	
 	
 	public static short add(byte unsignedByte1, byte unsignedByte2){
 		return (short) (unsignedByte1 + unsignedByte2);
 	}
 	
 	public static short sub(byte unsignedByte1, byte unsignedByte2){
-		
 		return (short) (unsignedByte1 - unsignedByte2);
 	}
 	
 	
-	public static void main(String[] args)
-	{
-	//tests unsigned (signed)
+	public static void main(String[] args){
 		//add
 		System.out.println(add((byte)0xfe,(byte)0x01)); //255 (-1)
 		System.out.println(add((byte)0xff,(byte)0x01)); //0 (0)

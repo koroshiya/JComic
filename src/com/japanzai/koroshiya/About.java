@@ -5,19 +5,19 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.widget.TextView;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.japanzai.koroshiya.reader.MainActivity;
 import com.japanzai.koroshiya.settings.SettingsManager;
 
 /**
  * Purpose: Used to display information about this application
  * */
-public class About extends SherlockFragmentActivity {
+public class About extends Activity {
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {

@@ -17,5 +17,17 @@ public class Recent {
 	public int getPageNumber(){
 		return this.pageNumber;
 	}
+
+    @Override
+    public String toString(){
+        return this.path + ";" + this.pageNumber;
+    }
+
+    public static Recent fromString(String str){
+        int pos = str.lastIndexOf(';');
+        String path = str.substring(0, pos);
+        int page = Integer.parseInt(str.substring(pos + 1));
+        return new Recent(path, page);
+    }
 	
 }

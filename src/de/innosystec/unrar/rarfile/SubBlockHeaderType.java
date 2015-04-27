@@ -37,7 +37,6 @@ public enum SubBlockHeaderType
 	
 	/**
 	 * Return true if the given value is equal to the enum's value
-	 * @param subblocktype
 	 * @return true if the given value is equal to the enum's value
 	 */
 	public boolean equals(short subblocktype)
@@ -47,7 +46,6 @@ public enum SubBlockHeaderType
 
 	/**
 	 * find the header type for the given short value
-	 * @param SubType the short value
 	 * @return the correspo nding enum or null
 	 */
 	public static SubBlockHeaderType findSubblockHeaderType(short subType)

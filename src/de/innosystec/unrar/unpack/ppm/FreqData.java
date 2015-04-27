@@ -19,31 +19,13 @@ package de.innosystec.unrar.unpack.ppm;
 
 import de.innosystec.unrar.io.Raw;
 
-/**
- * DOCUMENT ME
- * 
- * @author $LastChangedBy$
- * @version $LastChangedRevision$
- */
 public class FreqData extends Pointer{
 
-	public static final int size = 6; 
-
-//    struct FreqData
-//    {
-//        ushort SummFreq;
-//        STATE _PACK_ATTR * Stats;
-//    };
+	public static final int size = 6;
 
 	public FreqData(byte[]mem){
 		super(mem);
 	}
-
-    public FreqData init(byte[] mem) {
-        this.mem = mem;
-        pos = 0;
-        return this;
-    }
 
     public int getSummFreq() {
 		return Raw.readShortLittleEndian(mem,  pos)&0xffff;

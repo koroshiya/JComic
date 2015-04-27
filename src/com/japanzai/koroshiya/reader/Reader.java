@@ -1,9 +1,7 @@
 package com.japanzai.koroshiya.reader;
 
 import java.io.File;
-import java.io.IOException;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -11,27 +9,24 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Point;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.NumberPicker;
-import android.widget.Toast;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.japanzai.koroshiya.R;
 import com.japanzai.koroshiya.cache.Steppable;
 import com.japanzai.koroshiya.controls.JBitmapDrawable;
 import com.japanzai.koroshiya.controls.JImageSwitcher;
-import com.japanzai.koroshiya.dialog.ConfirmDialog;
-import com.japanzai.koroshiya.interfaces.ModalReturn;
 import com.japanzai.koroshiya.settings.SettingsManager;
 
 /**
  * Purpose: Used to display information about this application
  * */
-public class Reader extends SherlockFragmentActivity {
+public class Reader extends FragmentActivity {
 	
 	private Steppable cache = null;
 	private JImageSwitcher imgPanel;
@@ -47,15 +42,13 @@ public class Reader extends SherlockFragmentActivity {
 	
 	private SettingsManager settings;
 	
-	public static final int OPTION_EXTRACT = 667;
-	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
 		
         super.onCreate(savedInstanceState);
         SettingsManager.setFullScreen(this);
         setContentView(R.layout.activity_reader);
-        this.getSupportActionBar().hide();
+        MainActivity.hideActionBar(this);
         
         reader = this;
         
@@ -69,12 +62,20 @@ public class Reader extends SherlockFragmentActivity {
         Bundle ba = new Bundle();
         ba.putString("file", this.tempFile.getAbsolutePath());
 
-        if (this.tempFile.isFile()) this.tempFile = this.tempFile.getParentFile();
-		MainActivity.mainActivity.tempDir = this.tempFile.getParentFile();
-        int index = b.getInt("index");
+        int index;
+        if (settings.getLastFileRead() != null && settings.getLastFileRead().equals(this.tempFile)){
+            index = settings.getLastFileReadIndex();
+            Log.d("Reader", "Last read index is "+index);
+        }else{
+            index = b.getInt("index");
+            settings.setLastReadIndex(index);
+            Log.d("Reader", "Starting from index " + index);
+        }
 
-        settings.setLastReadIndex(index);
         ba.putInt("index", index);
+
+        //if (this.tempFile.isFile()) this.tempFile = this.tempFile.getParentFile();
+        MainActivity.mainActivity.tempDir = this.tempFile.getParentFile();
 
 		if (settings.saveRecent()) {
 			settings.addRecent(tempFile.getAbsolutePath(), index);
@@ -103,19 +104,13 @@ public class Reader extends SherlockFragmentActivity {
 		
     	if (!reading && parsed){
     		if (cache != null && cache.getMax() != 0) {
-    			// imgPanel.setOnTouchListener(swipe);
     			this.cache.sort();
-    			
-    			try {
-    				cache.parseCurrent();
-    				reading = true;
-    			} catch (IOException e) {
-    				e.printStackTrace();
-    				finish();
-    			}
-    			// vf.showNext();
+
+                cache.parseCurrent();
+                reading = true;
+                // vf.showNext();
     		} else {
-    			runOnUiThread(new ToastThread(R.string.no_images, this, Toast.LENGTH_SHORT));
+    			runOnUiThread(new ToastThread(R.string.no_images, this));
     			finish();
     		}
     	}else{
@@ -146,8 +141,7 @@ public class Reader extends SherlockFragmentActivity {
 		AlertDialog alert = builder.create();
 		alert.show();
 	}
-	
-	@SuppressLint("NewApi")
+
 	public void show(){
 		
 		if (android.os.Build.VERSION.SDK_INT >= 11){
@@ -160,6 +154,7 @@ public class Reader extends SherlockFragmentActivity {
 		        final NumberPicker np = (NumberPicker) d.findViewById(R.id.numberPicker);
 		        np.setMaxValue(cache.getMax());
 		        np.setMinValue(1);
+                np.setValue(cache.getIndex() + 1);
 		        np.setWrapSelectorWheel(false);
 		        b1.setOnClickListener(new OnClickListener(){
 		          @Override
@@ -198,9 +193,6 @@ public class Reader extends SherlockFragmentActivity {
 
     }
 
-
-	@SuppressLint("NewApi")
-	@SuppressWarnings("deprecation")
 	public static Point getScreenDimensions(Activity act) {
 		if (android.os.Build.VERSION.SDK_INT >= 13) {
 			Display display = act.getWindowManager().getDefaultDisplay();
@@ -211,14 +203,6 @@ public class Reader extends SherlockFragmentActivity {
 			Display display = act.getWindowManager().getDefaultDisplay();
 			return new Point(display.getWidth(), display.getHeight());
 		}
-	}
-	
-	public static int getWidth(Activity act){
-		return getScreenDimensions(act).x;
-	}
-	
-	public static int getHeight(Activity act){
-		return getScreenDimensions(act).y;
 	}
 	
 	/**
@@ -237,33 +221,13 @@ public class Reader extends SherlockFragmentActivity {
 		imgPanel.clear();
 		
 		if (cache != null && cache.getMax() != 0) {
-			// imgPanel.setOnTouchListener(swipe);
 			this.cache.sort();
-			
-			try {
-				cache.parseCurrent();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			// vf.showNext();
-		} else {
-			runOnUiThread(new ToastThread(R.string.no_images, this, Toast.LENGTH_SHORT));
-		}
-	}
 
-	/**
-	 * @param resIdConfirm
-	 *            ID of the string resource to be displayed as a confirm option
-	 * @param resIdDecline
-	 *            ID of the string resource to be displayed as a decline option
-	 * @param message
-	 *            Actual prompt/question to be displayed
-	 * @param target
-	 *            ModalReturn to target with the prompt created
-	 * */
-	public void confirm(int resIdConfirm, int resIdDecline, String message, ModalReturn target) {
-		ConfirmDialog confirm = new ConfirmDialog(getString(resIdConfirm), getString(resIdDecline), message, target);
-		confirm.show(getSupportFragmentManager(), "Reader");
+            cache.parseCurrent();
+            // vf.showNext();
+		} else {
+			runOnUiThread(new ToastThread(R.string.no_images, this));
+		}
 	}
 
 	/**
@@ -280,13 +244,6 @@ public class Reader extends SherlockFragmentActivity {
 	 * */
 	public Steppable getCache() {
 		return this.cache;
-	}
-
-	/**
-	 * @return Returns the file this class is temporarily storing
-	 * */
-	public File getTempFile() {
-		return this.tempFile;
 	}
 
 	/**
@@ -341,7 +298,6 @@ public class Reader extends SherlockFragmentActivity {
 		@Override
 		public void run() {
 			if (imgPanel.getImageDrawable() != null){
-				//imgPanel.getImageDrawable().closeBitmap();
 				imgPanel.setImageDrawable(null);
 			}
 			imgPanel.setImageDrawable(d);

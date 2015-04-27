@@ -13,16 +13,16 @@ public class ToastThread extends Thread{
 	private final Activity parent;
 	private final int duration;
 	
-	public ToastThread(String message, Activity parent, int duration){
+	public ToastThread(String message, Activity parent){
 		this.message = message;
 		this.parent = parent;
-		this.duration = duration;
+		this.duration = Toast.LENGTH_SHORT;
 	}
 	
-	public ToastThread(int messageID, Activity parent, int duration){
+	public ToastThread(int messageID, Activity parent){
 		this.message = parent.getString(messageID);
 		this.parent = parent;
-		this.duration = duration;
+		this.duration = Toast.LENGTH_SHORT;
 	}
 	
 	@Override

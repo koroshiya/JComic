@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- From: file:/home/mitch/Seafile/Dropbox/dev/Android/JComic/res/values-v7/styles.xml -->
+    <eat-comment/>
+    <style name="AppTheme" parent="@android:style/Theme.Black">
+    <!-- Customize your theme using Material Design here. -->
+    <item name="colorPrimary">@color/blue_grey_200</item>
+    <item name="colorPrimaryDark">@color/blue_grey_900</item>
+    <item name="colorAccent">@color/grey_800</item>
+</style>
+</resources>

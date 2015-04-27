@@ -1,14 +1,10 @@
 package com.japanzai.koroshiya.cache;
 
 import android.graphics.Point;
-import android.util.Log;
 
-import com.japanzai.koroshiya.archive.steppable.JImage;
 import com.japanzai.koroshiya.controls.JBitmapDrawable;
-import com.japanzai.koroshiya.interfaces.StepThread;
 import com.japanzai.koroshiya.io_utils.ImageParser;
 import com.japanzai.koroshiya.reader.Reader;
-import com.japanzai.koroshiya.settings.SettingsManager;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -24,33 +20,11 @@ public class FileCache extends Steppable {
 		
 		super(parent, path);
 		
-		setPrimary(new PrimaryThread(this, true, parent));
-		setSecondary(new SecondaryThread(this, false, parent));
+		setPrimary(new StepThread(this, true, true));
+		setSecondary(new StepThread(this, false, false));
 		
-		setMax(0);
-		setMin(0);
-		
-	}
-	
-	@Override
-	public void addImageToCache(Object absoluteFilePath, String name){
-		
-		JImage j = new JImage(absoluteFilePath, name);
-		addImage(j);
-		
-	}
-		
-	@Override
-	public void parseCurrent()  {
-
-        Log.d("FileCache", "Starting File Cache at "+getIndex());
-
-        getParent().setImage(parseImage(getIndex()));
-		
-    	SettingsManager settings = super.parent.getSettings();
-    	if (settings.isCacheOnStart()){
-    		super.cache(settings.getCacheModeIndex() != 2);
-    	}
+		setMax();
+		setMin();
 		
 	}
 
@@ -78,20 +52,15 @@ public class FileCache extends Steppable {
 		
 		return null;
 	}
-	
-	@Override
-	public StepThread getNextThread(boolean primary) {
-		return primary ? new PrimaryThread(this, true, parent) : new SecondaryThread(this, true, parent);
-	}
 
 	@Override
-	public StepThread getPreviousThread(boolean primary) {
-		return primary ? new PrimaryThread(this, false, parent) : new SecondaryThread(this, false, parent);
+	public StepThread getThread(boolean primary, boolean forward) {
+		return new StepThread(this, primary, forward);
 	}
 	
 	@Override
 	public StepThread getImageThread(int index) {
-		return new IndexThread(this, index, parent);
+		return new IndexThread(this, index);
 	}
 	
 	public void close(){}

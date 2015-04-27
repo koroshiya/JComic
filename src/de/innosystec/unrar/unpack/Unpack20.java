@@ -20,28 +20,13 @@ package de.innosystec.unrar.unpack;
 import java.io.IOException;
 import java.util.Arrays;
 
-import de.innosystec.unrar.exception.RarException;
 import de.innosystec.unrar.unpack.decode.AudioVariables;
-import de.innosystec.unrar.unpack.decode.BitDecode;
 import de.innosystec.unrar.unpack.decode.Compress;
 import de.innosystec.unrar.unpack.decode.Decode;
-import de.innosystec.unrar.unpack.decode.DistDecode;
-import de.innosystec.unrar.unpack.decode.LitDecode;
-import de.innosystec.unrar.unpack.decode.LowDistDecode;
-import de.innosystec.unrar.unpack.decode.RepDecode;
 
-import de.innosystec.unrar.unpack.decode.MultDecode;
+public abstract class Unpack20 extends Unpack15 {
 
-/**
- * DOCUMENT ME
- * 
- * @author $LastChangedBy$
- * @version $LastChangedRevision$
- */
-public abstract class Unpack20 extends Unpack15
-{
-
-	protected final MultDecode[] MD = new MultDecode[4];
+	protected final Decode[] MD = new Decode[4];
 
 	protected final byte[] UnpOldTable20 = new byte[Compress.MC20 * 4];
 
@@ -49,15 +34,11 @@ public abstract class Unpack20 extends Unpack15
 
 	protected final AudioVariables[] AudV = new AudioVariables[4];
 
-	protected final LitDecode LD = new LitDecode();
-
-	protected final DistDecode DD = new DistDecode();
-
-	protected final LowDistDecode LDD = new LowDistDecode();
-
-	protected final RepDecode RD = new RepDecode();
-
-	protected final BitDecode BD = new BitDecode();
+	protected final Decode LD = new Decode(Decode.LitDecode);
+	protected final Decode DD = new Decode(Decode.DistDecode);
+	protected final Decode LDD = new Decode(Decode.LowDistDecode);
+	protected final Decode RD = new Decode(Decode.RepDecode);
+	protected final Decode BD = new Decode(Decode.BitDecode);
 
 	public static final int[] LDecode = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 10, 12,
 			14, 16, 20, 24, 28, 32, 40, 48, 56, 64, 80, 96, 112, 128, 160, 192,
@@ -80,8 +61,7 @@ public abstract class Unpack20 extends Unpack15
 
 	public static final int[] SDBits = { 2, 2, 3, 4, 5, 6, 6, 6 };
 
-	protected void unpack20(boolean solid) throws IOException, RarException
-	{
+	protected void unpack20(boolean solid) throws IOException {
 
 		int Bits;
 
@@ -381,8 +361,7 @@ public abstract class Unpack20 extends Unpack15
 		return (dec.getDecodeNum()[N]);
 	}
 
-	protected boolean ReadTables20() throws IOException, RarException
-	{
+	protected boolean ReadTables20() throws IOException	{
 		byte[] BitLength = new byte[Compress.BC20];
 		byte[] Table = new byte[Compress.MC20 * 4];
 		int TableSize, N, I;
@@ -473,8 +452,7 @@ public abstract class Unpack20 extends Unpack15
 		}
 	}
 
-	protected void ReadLastTables() throws IOException, RarException
-	{
+	protected void ReadLastTables() throws IOException {
 		if (readTop >= inAddr + 5) {
 			if (UnpAudioBlock != 0) {
 				if (decodeNumber(MD[UnpCurChannel]) == 256) {

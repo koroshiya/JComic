@@ -21,24 +21,16 @@ package de.innosystec.unrar.io;
 import java.io.IOException;
 import java.io.InputStream;
 
-/**
- * DOCUMENT ME
- *
- * @author $LastChangedBy$
- * @version $LastChangedRevision$
- */
 public class ReadOnlyAccessInputStream extends InputStream {
 
-	private final IReadOnlyAccess file;
+	private final ReadOnlyAccessFile file;
 	
 	private long curPos;
-	protected final long startPos;
 	private final long endPos;
 	
-	public ReadOnlyAccessInputStream(IReadOnlyAccess file, long startPos, long endPos) throws IOException {
+	public ReadOnlyAccessInputStream(ReadOnlyAccessFile file, long startPos, long endPos) throws IOException {
 		super();
 		this.file = file;
-		this.startPos = startPos;
 		curPos = startPos;
 		this.endPos = endPos;
 		file.setPosition(curPos);
@@ -71,8 +63,5 @@ public class ReadOnlyAccessInputStream extends InputStream {
 	public int read(byte[] b) throws IOException {
         return read(b, 0, b.length);
 	}
-//
-//    public void close() throws IOException {
-//        file.close();
-//    }
+
 }

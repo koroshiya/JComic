@@ -17,12 +17,6 @@
  */
 package de.innosystec.unrar.unpack.ppm;
 
-/**
- * DOCUMENT ME
- * 
- * @author $LastChangedBy$
- * @version $LastChangedRevision$
- */
 public class SEE2Context {
 	public static final int size = 4;
 	
@@ -49,7 +43,7 @@ public class SEE2Context {
 
 	public void update() {
 		if (shift < ModelPPM.PERIOD_BITS && --count == 0) {
-			summ += summ;
+			summ *= 2;
 			count = (3 << shift++);
 		}
         summ &= 0xffff;
@@ -57,20 +51,8 @@ public class SEE2Context {
         shift &= 0xff;
 	}
 
-	public int getCount() {
-		return count;
-	}
-
-	public void setCount(int count) {
-		this.count = count&0xff;
-	}
-
-	public int getShift() {
-		return shift;
-	}
-
-	public void setShift(int shift) {
-		this.shift = shift&0xff;
+	public void setShift() {
+		this.shift = ModelPPM.PERIOD_BITS &0xff;
 	}
 
 	public int getSumm() {

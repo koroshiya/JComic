@@ -17,17 +17,11 @@
  */
 package de.innosystec.unrar.unpack.vm;
 
-/**
- * DOCUMENT ME
- *
- * @author $LastChangedBy$
- * @version $LastChangedRevision$
- */
 public class VMPreparedCommand {
 	private VMCommands OpCode;
 	private boolean ByteMode;
-	private VMPreparedOperand Op1 = new VMPreparedOperand();
-	private VMPreparedOperand Op2 = new VMPreparedOperand();
+	private final VMPreparedOperand Op1 = new VMPreparedOperand();
+	private final VMPreparedOperand Op2 = new VMPreparedOperand();
 	
 	public boolean isByteMode() {
 		return ByteMode;
@@ -38,14 +32,8 @@ public class VMPreparedCommand {
 	public VMPreparedOperand getOp1() {
 		return Op1;
 	}
-	public void setOp1(VMPreparedOperand op1) {
-		Op1 = op1;
-	}
 	public VMPreparedOperand getOp2() {
 		return Op2;
-	}
-	public void setOp2(VMPreparedOperand op2) {
-		Op2 = op2;
 	}
 	public VMCommands getOpCode() {
 		return OpCode;

@@ -31,7 +31,7 @@ public class RarNode extends Pointer{
 	private int next; //rarnode pointer
 
 	public static final int size = 4;
-	
+
 	public RarNode(byte[] mem){
 		super(mem);
 	}

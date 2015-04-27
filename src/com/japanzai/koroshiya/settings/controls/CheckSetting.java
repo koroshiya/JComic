@@ -1,22 +1,16 @@
 package com.japanzai.koroshiya.settings.controls;
 
-import com.japanzai.koroshiya.interfaces.StateBasedSetting;
-
 import android.content.Context;
 import android.widget.CheckBox;
 
 /**
  * StateBasedSetting with two states. Defined by a CheckBox.
  * */
-public class CheckSetting extends CheckBox implements StateBasedSetting{
+public class CheckSetting extends CheckBox {
 	
-	public CheckSetting (Context context){
-		this("Test setting", false, context);
-	}
-	
-	public CheckSetting(int setting, boolean enabledByDefault, Context context){
+	public CheckSetting(int setting, Context context){
 
-		this(context.getString(setting), enabledByDefault, context);
+		this(context.getString(setting), true, context);
 		
 	}
 	
@@ -34,12 +28,10 @@ public class CheckSetting extends CheckBox implements StateBasedSetting{
 		
 	}
 
-	@Override
 	public int getState() {
 		return this.isChecked() ? 1 : 0;
 	}
-	
-	@Override
+
 	public void setState(int state){
 		this.setChecked(state == 1);
 	}

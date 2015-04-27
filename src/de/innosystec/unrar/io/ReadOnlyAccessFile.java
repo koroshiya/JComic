@@ -21,34 +21,21 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
-import java.util.LinkedList;
-import java.util.Queue;
 
-
-/**
- * DOCUMENT ME
- * 
- * @author $LastChangedBy$
- * @version $LastChangedRevision$
- */
-public class ReadOnlyAccessFile extends RandomAccessFile implements IReadOnlyAccess {
-
-	private final Queue<Byte> data = new LinkedList<>();
+public class ReadOnlyAccessFile extends RandomAccessFile {
 
 	/**
-	 * @param file
-	 *            the file
+	 * @param file the file
 	 * @throws FileNotFoundException
 	 */
 	public ReadOnlyAccessFile(File file) throws FileNotFoundException {
 		super(file, "r");
 	}
 
-	public int readFully(byte[] buffer, int count) throws IOException {
-		assert (count > 0) : count;
-		this.readFully(buffer, 0, count);
-		return count;
-	}
+    public int readFully(byte[] buffer, int count) throws IOException {
+        if (count > 0) this.readFully(buffer, 0, count);
+        return count;
+    }
 
 	public long getPosition() throws IOException {
 		return this.getFilePointer();
@@ -57,14 +44,5 @@ public class ReadOnlyAccessFile extends RandomAccessFile implements IReadOnlyAcc
 	public void setPosition(long pos) throws IOException {
 		this.seek(pos);
 	}
-	
-	public void resetData(){
-		this.data.clear();
-	}
 
-	@Override
-	public int paddedSize() {
-		// TODO Auto-generated method stub
-		return this.data.size();
-	}
 }

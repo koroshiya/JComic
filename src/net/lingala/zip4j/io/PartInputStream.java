@@ -19,12 +19,7 @@ package net.lingala.zip4j.io;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 
-import net.lingala.zip4j.crypto.AESDecrypter;
-import net.lingala.zip4j.crypto.IDecrypter;
-import net.lingala.zip4j.exception.ZipException;
 import net.lingala.zip4j.unzip.UnzipEngine;
-import net.lingala.zip4j.util.InternalZipConstants;
-import net.lingala.zip4j.util.Zip4jConstants;
 
 public class PartInputStream extends BaseInputStream
 {
@@ -32,20 +27,13 @@ public class PartInputStream extends BaseInputStream
 	private long bytesRead;
     private final long length;
 	private final UnzipEngine unzipEngine;
-	private final IDecrypter decrypter;
 	private final byte[] oneByteBuff = new byte[1];
-	private final byte[] aesBlockByte = new byte[16];
-	private int aesBytesReturned = 0;
-	private boolean isAESEncryptedFile = false;
 
     public PartInputStream(RandomAccessFile raf, long len, UnzipEngine unzipEngine) {
 	    this.raf = raf;
 	    this.unzipEngine = unzipEngine;
-	    this.decrypter = unzipEngine.getDecrypter();
 	    this.bytesRead = 0;
 	    this.length = len;
-	    this.isAESEncryptedFile = unzipEngine.getFileHeader().isEncrypted() && 
-			unzipEngine.getFileHeader().getEncryptionMethod() == Zip4jConstants.ENC_METHOD_AES;
 	}
   
 	public int available() {
@@ -58,18 +46,8 @@ public class PartInputStream extends BaseInputStream
 	public int read() throws IOException {
 		if (bytesRead >= length)
 			return -1;
-		
-		if (isAESEncryptedFile) {
-			if (aesBytesReturned == 0 || aesBytesReturned == 16) {
-				if (read(aesBlockByte) == -1) {
-					return -1;
-				}
-				aesBytesReturned = 0;
-			}
-			return aesBlockByte[aesBytesReturned++] & 0xff;
-		} else {
-			return read(oneByteBuff, 0, 1) == -1 ? -1 : oneByteBuff[0] & 0xff;
-		}
+
+        return read(oneByteBuff, 0, 1) == -1 ? -1 : oneByteBuff[0] & 0xff;
 	}
 	
 	public int read(byte[] b) throws IOException {
@@ -80,20 +58,11 @@ public class PartInputStream extends BaseInputStream
 		if (len > length - bytesRead) {
 			len = (int) (length - bytesRead);
 			if (len == 0) {
-				checkAndReadAESMacBytes();
 				return -1;
 			}
 		}
-		
-		if (unzipEngine.getDecrypter() instanceof AESDecrypter) {
-			if (bytesRead + len  < length) {
-				if (len % 16 != 0) {
-					len = len - (len%16);
-				}
-			}
-		}
 
-        int count = -1;
+        int count;
         synchronized (raf) {
 			count = raf.read(b, off, len);
 			if ((count < len) && unzipEngine.getZipModel().isSplitArchive()) {
@@ -107,46 +76,10 @@ public class PartInputStream extends BaseInputStream
 		}
 		
 		if (count > 0) {
-			if (decrypter != null) {
-				try {
-					decrypter.decryptData(b, off, count);
-				} catch (ZipException e) {
-					throw new IOException(e.getMessage());
-				}
-			}
 			bytesRead += count;
 		}
 		
-		if (bytesRead >= length) {
-			checkAndReadAESMacBytes();
-		}
-		
 		return count;
-	}
-	
-	protected void checkAndReadAESMacBytes() throws IOException {
-		if (isAESEncryptedFile) {
-			if (decrypter != null && decrypter instanceof AESDecrypter) {
-				if (((AESDecrypter)decrypter).getStoredMac() != null) {
-					//Stored mac already set
-					return;
-				}
-				byte[] macBytes = new byte[InternalZipConstants.AES_AUTH_LENGTH];
-				int readLen;
-				readLen = raf.read(macBytes);
-				if (readLen != InternalZipConstants.AES_AUTH_LENGTH) {
-					if (unzipEngine.getZipModel().isSplitArchive()) {
-						raf.close();
-						raf = unzipEngine.startNextSplitFile();
-						raf.read(macBytes, readLen, InternalZipConstants.AES_AUTH_LENGTH - readLen);
-					} else {
-						throw new IOException("Error occured while reading stored AES authentication bytes");
-					}
-				}
-				
-				((AESDecrypter)unzipEngine.getDecrypter()).setStoredMac(macBytes);
-			}
-		}
 	}
 
 	public long skip(long amount) throws IOException {
@@ -160,10 +93,6 @@ public class PartInputStream extends BaseInputStream
   
 	public void close() throws IOException {
 		raf.close();
-	}
-  
-	public void seek(long pos) throws IOException {
-		raf.seek(pos);
 	}
 	
 	public UnzipEngine getUnzipEngine() {

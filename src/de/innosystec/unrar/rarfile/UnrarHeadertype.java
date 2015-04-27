@@ -141,7 +141,6 @@ public enum UnrarHeadertype {
 	
 	/**
 	 * Return true if the given byte is equal to the enum's byte
-	 * @param header
 	 * @return true if the given byte is equal to the enum's byte
 	 */
 	public boolean equals(byte header)

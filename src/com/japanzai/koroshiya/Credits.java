@@ -1,5 +1,6 @@
 package com.japanzai.koroshiya;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
@@ -9,7 +10,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.japanzai.koroshiya.reader.MainActivity;
 import com.japanzai.koroshiya.settings.SettingsManager;
 
@@ -19,7 +19,7 @@ import com.japanzai.koroshiya.settings.SettingsManager;
  * When implementing your own, make sure to change the marketAddress to point to your own application or developer profile.
  * Same deal with the author and potentially the license in the instantiate() method.
  * */
-public class Credits extends SherlockFragmentActivity{
+public class Credits extends Activity {
 	
 	private final String marketAddress = "market://details?id=com.japanzai.koroshiya";
 	
@@ -41,7 +41,7 @@ public class Credits extends SherlockFragmentActivity{
 	
 	private void instantiate(){
 		
-		setText(R.id.txtApplication, R.string.app_name); //Test for PRO here as well?
+		setText(R.id.txtApplication, getString(R.string.app_name));
 		
 		String versionName;
 		try{
@@ -53,24 +53,22 @@ public class Credits extends SherlockFragmentActivity{
 		
 		setText(R.id.txtAuthor, R.string.author, " Koro" + "\n");
 		
-		setText(R.id.txtContributions, R.string.contributions, "\n" + "http://jcomic.japanzai.com/license.php" + "\n" +
+		setText(R.id.txtContributions, R.string.contributions, "\n" + "http://jcomic.japanzai.com/index.php?sub=license" + "\n" +
 										"Source: https://github.com/koroshiya/JComic" + "\n");
 		
 		setText(R.id.txtRating, R.string.rating, "\n" + getString(R.string.rating_problem) + "\n");
-		
-		 //https://play.google.com/store/apps/details?id=com.japanzai.koroshiya
 
 		findViewById(R.id.btnSendError).setOnClickListener(
-			new OnClickListener(){
-				@Override
-				public void onClick(View v) {
-					Intent intent = new Intent(Intent.ACTION_VIEW,Uri.parse(marketAddress));
-					startActivity(intent);
-				}
-			}
-		);
+                new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(marketAddress));
+                        startActivity(intent);
+                    }
+                }
+        );
 		
-		final SherlockFragmentActivity act = this;
+		final Activity act = this;
 		
 		findViewById(R.id.btnError).setOnClickListener(
 			new OnClickListener(){
@@ -82,14 +80,6 @@ public class Credits extends SherlockFragmentActivity{
 			}
 		);
 		
-	}
-	
-	/**
-	 * @param id ID of the TextView for which to set the text
-	 * @param resID ID of the String resource to display the text of
-	 * */
-	private void setText(int id, int resID){
-		setText(id, getString(resID));
 	}
 	
 	/**

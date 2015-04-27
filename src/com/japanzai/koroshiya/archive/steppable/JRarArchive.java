@@ -2,13 +2,8 @@ package com.japanzai.koroshiya.archive.steppable;
 
 import android.graphics.Point;
 
-import com.japanzai.koroshiya.R;
-import com.japanzai.koroshiya.archive.steppable.thread.rar.IndexRarThread;
-import com.japanzai.koroshiya.archive.steppable.thread.rar.NextRarThread;
-import com.japanzai.koroshiya.archive.steppable.thread.rar.PreviousRarThread;
 import com.japanzai.koroshiya.controls.JBitmapDrawable;
-import com.japanzai.koroshiya.filechooser.FileChooser;
-import com.japanzai.koroshiya.interfaces.StepThread;
+import com.japanzai.koroshiya.cache.StepThread;
 import com.japanzai.koroshiya.io_utils.ArchiveParser;
 import com.japanzai.koroshiya.io_utils.ImageParser;
 import com.japanzai.koroshiya.reader.Reader;
@@ -21,7 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.innosystec.unrar.Archive;
-import de.innosystec.unrar.exception.RarException;
 import de.innosystec.unrar.rarfile.FileHeader;
 
 /**
@@ -32,12 +26,12 @@ public class JRarArchive extends SteppableArchive{
 
 	private final Archive rar;
 	
-	public JRarArchive(String path, Reader parent) throws IOException, RarException {
+	public JRarArchive(String path, Reader parent) throws IOException {
 		
 		super(parent, path);
 		
-		setPrimary(new NextRarThread(this, true));
-		//setSecondary(new PreviousRarThread(this, true));
+		setPrimary(new StepThread(this, true, true));
+		//setSecondary(new ArchiveThread(this, true, false));
 
 		FileHeader header;
 		rar = new Archive(new File(path));
@@ -47,7 +41,7 @@ public class JRarArchive extends SteppableArchive{
 			
 			header = heads.get(i);
 			if (ImageParser.isSupportedImage(header.getFileNameString())){
-				if (header.getUnpSize() > 0) addImageToCache(i, header.getFileNameString());
+				if (header.getFullUnpackSize() > 0) addImageToCache(i, header.getFileNameString());
 			}
 			
 		}
@@ -56,7 +50,7 @@ public class JRarArchive extends SteppableArchive{
 		
 		if (getMax() > 0){
 			setIndex(0);
-			setMin(0);
+			setMin();
 		}else {
 			throw new IOException();
 		}
@@ -64,7 +58,9 @@ public class JRarArchive extends SteppableArchive{
 	}
 	
 	@Override
-	public JBitmapDrawable parseImage(int i) throws IOException{
+	public JBitmapDrawable parseImage(int i) {
+
+        //Debug.startMethodTracing("calc");
 
 		FileHeader entry = (FileHeader)getEntry(i);
 		String name = entry.getFileNameString();
@@ -77,107 +73,73 @@ public class JRarArchive extends SteppableArchive{
 		if (!this.tempDir.exists()){
 			this.tempDir.mkdirs();
 		}
-		
-		if (this.progressive){
-			if (!f.exists()){
-				extractFileToDisk(i, tempDir, null);
-			}
 
-			p = ImageParser.getImageSize(f);
-			is = new FileInputStream(f);
-			
-			temp = ImageParser.parseImageFromDisk(is, p.x, p.y, parent);
-			if (temp == null){
-				super.clear();
-				is = new FileInputStream(f);
-				temp = ImageParser.parseImageFromDisk(is, p.x, p.y, parent);
-			}
-		}else{
-			
-			try {
+        try {
 
-				is = rar.getInputStream(entry);
-				p = ImageParser.getImageSize(is);
-				is = rar.getInputStream(entry);
-				
-				temp = ImageParser.parseImageFromDisk(is, p.x, p.y, parent);
-				if (temp == null){
-					super.clear();
-					is = rar.getInputStream(entry);
-					temp = ImageParser.parseImageFromDisk(is, p.x, p.y, parent);
-				}
-			} catch (IOException | RarException e) {
-				e.printStackTrace();
-			}
-		}
-		
-		if (is != null){
-			is.close();
-		}
-		return temp;
+            if (this.progressive) {
+                if (!f.exists()) {
+                    extractFileToDisk(i, tempDir);
+                }
+
+                p = ImageParser.getImageSize(f);
+                is = new FileInputStream(f);
+
+                temp = ImageParser.parseImageFromDisk(is, p.x, p.y, parent);
+                if (temp == null) {
+                    super.clear();
+                    is = new FileInputStream(f);
+                    temp = ImageParser.parseImageFromDisk(is, p.x, p.y, parent);
+                }
+            } else {
+
+                try {
+
+                    is = rar.getInputStream(entry);
+                    p = ImageParser.getImageSize(is);
+                    is = rar.getInputStream(entry);
+
+                    temp = ImageParser.parseImageFromDisk(is, p.x, p.y, parent);
+                    if (temp == null) {
+                        super.clear();
+                        is = rar.getInputStream(entry);
+                        temp = ImageParser.parseImageFromDisk(is, p.x, p.y, parent);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            if (is != null) {
+                is.close();
+            }
+
+            //Debug.stopMethodTracing();
+
+            return temp;
+
+        }catch (IOException ioe){
+            //Debug.stopMethodTracing();
+            return null;
+        }
     	
     }
-		
-	private void extractFileToDisk(int i, File pathToExtractTo, FileChooser fc){
-		
+
+	private void extractFileToDisk(int i, File pathToExtractTo){
+
 		FileHeader header = (FileHeader) getEntry(i);
 		String name = header.getFileNameString();
 		name = name.substring(name.lastIndexOf('\\') + 1);
-		
-		if (fc != null && (thread == null || !thread.isAlive())){
-			thread = new SetTextThread(fc.getText(R.string.zip_extract_in_progress) + ": " + name, fc);
-			fc.runOnUiThread(thread);
-		}
-		
+
 		if (ImageParser.isSupportedImage(name)){
 			try {
 				ArchiveParser.writeStreamToDisk(pathToExtractTo, rar.getInputStream(header), name);
-			} catch (RarException | IOException e) {
+			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}else{
 			System.out.println("unsupported");
 		}
-		
-	}
-    
-	@Override
-	public void addImageToCache(Object absoluteFilePath, String name) {
-		
-		JImage j = new JImage(absoluteFilePath, name);
-		addImage(j);
-		
-	}
-	
-	@Override
-	public boolean extractContentsToDisk(File pathToExtractTo, FileChooser fc) {
 
-		for (int i = 0; i < getImages().size(); i++){
-			extractFileToDisk(i, pathToExtractTo, fc);
-		}
-		
-		return true;
-		
-	}
-
-	@Override
-	public ArrayList<JBitmapDrawable> extractContentsToArrayList() {
-
-		ArrayList<JBitmapDrawable> imageList = new ArrayList<>();
-		
-		for (int i = 0; i < getMax(); i++){
-			
-			try {
-				imageList.add(parseImage(i));
-			} catch (IOException e) {
-				e.printStackTrace();
-				return imageList;
-			}
-			
-		}
-
-		return imageList;
-		
 	}
 
 	@Override
@@ -193,24 +155,8 @@ public class JRarArchive extends SteppableArchive{
 		
 	}
 
-	@Override
 	public Archive getArchive() {
 		return this.rar;
-	}
-	
-	@Override
-	public StepThread getNextThread(boolean primary) {
-		return new NextRarThread(this, primary);
-	}
-
-	@Override
-	public StepThread getPreviousThread(boolean primary) {
-		return new PreviousRarThread(this, primary);
-	}
-	
-	@Override
-	public StepThread getImageThread(int index) {
-		return new IndexRarThread(this, index);
 	}
 
 	public Object getEntry(int i){

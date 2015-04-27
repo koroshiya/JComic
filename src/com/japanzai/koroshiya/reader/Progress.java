@@ -3,34 +3,31 @@ package com.japanzai.koroshiya.reader;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.zip.ZipException;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Toast;
 
-import com.actionbarsherlock.app.SherlockActivity;
 import com.japanzai.koroshiya.R;
 import com.japanzai.koroshiya.archive.steppable.SteppableArchive;
 import com.japanzai.koroshiya.cache.FileCache;
 import com.japanzai.koroshiya.interfaces.ModalReturn;
-import com.japanzai.koroshiya.interfaces.archive.ReadableArchive;
 import com.japanzai.koroshiya.io_utils.ArchiveParser;
 import com.japanzai.koroshiya.io_utils.ImageParser;
 import com.japanzai.koroshiya.settings.SettingsManager;
-
-import de.innosystec.unrar.exception.RarException;
 
 /**
  * Purpose: Parses directories, image files and archives.
  * 			Essentially initializes the main activity's cache.
  * */
-public class Progress extends SherlockActivity implements ModalReturn{
+public class Progress extends Activity implements ModalReturn{
+
+    //TODO: when writing changelog - rotate did work in 1.14, but lost current page
 	
 	private File f;
 	private int index;
 	private Reader reader;
-	private ReadableArchive temp;
+	private SteppableArchive temp;
 	
 	public static boolean isVisible = false;
 	public static Progress self;
@@ -60,7 +57,7 @@ public class Progress extends SherlockActivity implements ModalReturn{
 		    	if (!parseArchive()){
 		    		reader.clearTempFile();
 		    		decline();
-		    		reader.runOnUiThread(new MessageThread(R.string.archive_read_error, reader));
+		    		//reader.runOnUiThread(new MessageThread(R.string.archive_read_error, reader));
 		        	return;
 		    	}
 	    	}else {
@@ -92,7 +89,7 @@ public class Progress extends SherlockActivity implements ModalReturn{
 	@Override
 	public void onBackPressed() {
 		
-		runOnUiThread(new ToastThread(R.string.loading_progress, this, Toast.LENGTH_SHORT));
+		runOnUiThread(new ToastThread(R.string.loading_progress, this));
 		//TODO: double tap to cancel
 
 	}
@@ -104,7 +101,7 @@ public class Progress extends SherlockActivity implements ModalReturn{
         self = this;
         SettingsManager.setFullScreen(this);
         setContentView(R.layout.progress);
-        this.getSupportActionBar().hide();
+        MainActivity.hideActionBar(this);
 
         Bundle b = getIntent().getExtras();
         int i = b.getInt("index", 0);
@@ -113,9 +110,6 @@ public class Progress extends SherlockActivity implements ModalReturn{
 	        this.index = i;
 	        this.f = new File(b.getString("file"));
 	        reader = Reader.reader;
-
-            Log.d("Progress", "Reading file "+f.getAbsolutePath());
-            Log.d("Progress", "Index of "+i);
 	        
 	        ProgressThread thread = new ProgressThread();
 	        thread.start();
@@ -160,33 +154,18 @@ public class Progress extends SherlockActivity implements ModalReturn{
     	try {
     		
     		this.temp = ArchiveParser.parseArchive(f, reader);
-    		int archiveIndex = reader.getSettings().getArchiveModeIndex(); //0 = do as I please, 1 = Index only, 2 = progressive
     		
     		if (temp == null){
     			reader.runOnUiThread(new MessageThread(reader.getString(R.string.archive_read_error), reader));
     			return true;
     		}
-    		
-    		if (temp instanceof SteppableArchive){
-    			reader.setCache((SteppableArchive) this.temp);
-    		}else if (archiveIndex == 1){
-    			reader.confirm(R.string.file_confirm, R.string.file_deny, 
-    					reader.getString(R.string.archive_index_error) + "\n" + 
-    							reader.getString(R.string.archive_index_error2), this);
-    			return false;
-    		}else{
-    			extract(temp);
-    		}
+
+            reader.setCache(this.temp);
         	
     		reader.setCacheIndex(this.index == -1 ? 0 : this.index);
     		
-		} catch (ZipException e) {
-			e.printStackTrace();
-			return false;
 		} catch (IOException e) {
-			e.printStackTrace();
-			return false;
-		} catch (RarException e) {
+            reader.runOnUiThread(new MessageThread(reader.getString(R.string.archive_read_error), reader));
 			e.printStackTrace();
 			return false;
 		}
@@ -197,7 +176,7 @@ public class Progress extends SherlockActivity implements ModalReturn{
     
     @Override
     public void accept(){
-    	reader.setCache((SteppableArchive) this.temp);
+    	reader.setCache(this.temp);
     	finish();
     }
     
@@ -217,35 +196,6 @@ public class Progress extends SherlockActivity implements ModalReturn{
     
     public void oldFinish(){
     	super.finish();
-    }
-    
-    /**
-     * @param temp Archive to extract
-     * */
-    private void extract(ReadableArchive temp){
-    	
-    	File tmpDir = reader.getCacheDir();
-    	File jTmp = new File(tmpDir + File.separator + "JComic");
-    	if (jTmp.exists()){
-        	File[] files = jTmp.listFiles();
-        	Arrays.sort(files);
-        	for (File f : files){
-        		f.delete();
-        	}
-    	}else{
-    		jTmp.mkdirs();
-    	}
-    	
-    	temp.extractContentsToDisk(jTmp, null);
-    	File[] files = jTmp.listFiles();
-    	Arrays.sort(files);
-    	for (File f : files){
-    		f.deleteOnExit();
-    	}
-    	jTmp.deleteOnExit();
-    	reader.setCache(new FileCache(reader, f.getAbsolutePath()));
-    	parseDir(jTmp, 0);
-    	
     }
 	
 }

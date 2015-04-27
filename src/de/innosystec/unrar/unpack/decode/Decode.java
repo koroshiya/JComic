@@ -23,8 +23,8 @@ package de.innosystec.unrar.unpack.decode;
  * @author $LastChangedBy$
  * @version $LastChangedRevision$
  */
-public class Decode
-{
+public class Decode{
+
 	private int maxNum;
 
 	private final int[] decodeLen = new int[16];
@@ -32,6 +32,16 @@ public class Decode
 	private final int[] decodePos = new int[16];
 
 	protected int[] decodeNum = new int[2];
+
+    public static final int LitDecode = Compress.NC;
+    public static final int DistDecode = Compress.DC;
+    public static final int LowDistDecode = Compress.LDC;
+    public static final int RepDecode = Compress.RC;
+    public static final int BitDecode = Compress.BC;
+
+    public Decode(int code){
+        this.decodeNum = new int[code];
+    }
 
 	/**
 	 * returns the decode Length array

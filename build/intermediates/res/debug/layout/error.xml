@@ -6,7 +6,7 @@
     android:orientation="vertical" >
 <LinearLayout 
     android:layout_width="wrap_content"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:layout_margin="10dp"
     android:orientation="vertical" >
 
@@ -24,16 +24,24 @@
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:maxEms="30"
-        android:text="Medium Text"
+        android:text=""
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <Button
-        android:id="@+id/btnSendError"
+        android:id="@+id/btnSendErrorGit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:layout_margin="5dp"
         android:text="@string/send_error_report" />
+
+    <Button
+        android:id="@+id/btnSendErrorEmail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_margin="5dp"
+        android:text="@string/send_error_report_email" />
 
 </LinearLayout>
 </ScrollView>

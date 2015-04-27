@@ -1,8 +1,10 @@
 package com.japanzai.koroshiya;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
@@ -11,7 +13,6 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.japanzai.koroshiya.reader.MainActivity;
 import com.japanzai.koroshiya.settings.SettingsManager;
 
@@ -20,7 +21,7 @@ import com.japanzai.koroshiya.settings.SettingsManager;
  * Custom error reporting screen.
  * When implementing your own, make sure to change the email variable to your own email.
  * */
-public class ErrorReport extends SherlockFragmentActivity implements OnClickListener{
+public class ErrorReport extends Activity {
 
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -41,18 +42,25 @@ public class ErrorReport extends SherlockFragmentActivity implements OnClickList
 	private void instantiate(){
 		
 		TextView tx = (TextView)findViewById(R.id.errorText);
-		tx.setText("\n" + getString(R.string.error_report_para_1) + "\n\n" + 
-					getString(R.string.error_report_para_2) + "\n\n" + 
-					getString(R.string.error_report_para_3) + "\n");
+		tx.setText("\n" + getString(R.string.error_report) + "\n");
+
+        Button error = (Button)findViewById(R.id.btnSendErrorGit);
+        error.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/koroshiya/JComic/issues/new"));
+                startActivity(browserIntent);
+            }
+        });
+
+        Button errorEmail = (Button)findViewById(R.id.btnSendErrorEmail);
+        errorEmail.setOnClickListener(new OnClickListener(){
+            @Override
+            public void onClick(View v){
+                sendErrorLog();
+            }
+        });
 		
-		Button error = (Button)findViewById(R.id.btnSendError);
-		error.setOnClickListener(this);
-		
-	}
-	
-	@Override
-	public void onClick(View v) {
-		sendErrorLog();
 	}
 	
 	private void sendErrorLog() {
@@ -73,10 +81,7 @@ public class ErrorReport extends SherlockFragmentActivity implements OnClickList
 		}finally{
 			buffer.append("\n");
 		}
-		buffer.append("Android version: ").append(Build.VERSION.RELEASE);
-		buffer.append("\n");
-		buffer.append("Device: ").append(getDeviceName());
-		buffer.append("\n");
+		buffer.append("Android version: ").append(Build.VERSION.RELEASE).append("\n").append("Device: ").append(getDeviceName()).append("\n");
 		
 		i.putExtra(Intent.EXTRA_TEXT, buffer.toString());
 		try {

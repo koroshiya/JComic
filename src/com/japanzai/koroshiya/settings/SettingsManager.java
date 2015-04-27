@@ -10,11 +10,15 @@ import android.content.SharedPreferences.Editor;
 import android.content.pm.ActivityInfo;
 import android.os.Environment;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 
 import com.japanzai.koroshiya.reader.MainActivity;
 import com.japanzai.koroshiya.settings.classes.Recent;
+
+import org.json.JSONArray;
+import org.json.JSONException;
 
 /**
  * Class for managing all user settings.
@@ -24,25 +28,16 @@ import com.japanzai.koroshiya.settings.classes.Recent;
 public class SettingsManager {
 	
 	/*TODO:
-	 * Jump to page
 	 * Other long press/menu options, like zoom
-	 * Separate activity for resume reading; call finish, pass in param if need be
-	
-	 * TODO: Faster image animation. Animation for fling?
-	 * TODO: PRO: Other animations can be selected
-	 * TODO: Check byte[] instead of JBitmapDrawable
-	*Double swipe to go to first/last //setting for this instead of pinch-zoom?
+	 *Double swipe to go to first/last //setting for this instead of pinch-zoom?
 
 		Settings:
 		Default location for reading
 		fit to height/width, scale, etc. - make wide images fit to height
 		Smartscale? (zoom out to certain degree depending on page size)
-		RAR password
-		Setting for number of favorites/recent – on change, flush overflow
 		
 	 * 
-	 * 
-	 * TODO: manga reading mode; zoom, move to the right
+	 *
 	 */
 
     private static final boolean defaultLoopMode = true;
@@ -50,47 +45,42 @@ public class SettingsManager {
 	private static final boolean defaultSaveSession = true;
 	private static final boolean defaultSaveRecent = true;
 	private static final boolean defaultKeepBacklightOn = false;
-	private static final boolean defaultExtractMode = false;
 	private static final boolean defaultCacheSafety = true;
     private static final boolean defaultCacheOnStart = true;
     private static final boolean defaultCacheRarFiles = false;
 	private static final boolean defaultKeepZoomOnPageChange = false;
 	private static final boolean defaultContextMenuEnabled = true;
-	private static final boolean defaultRarPassword = false;
-	private static final int defaultZoomIndex = 0;
+	private static final int defaultZoomIndex = 9;
 	private static final int defaultOrientationIndex = 0;
-	private static final int defaultRamModeIndex = 1;
 	private static final int defaultArchiveModeIndex = 0;
 	private static final int defaultCacheModeIndex = 0;
 	private static final int defaultCacheLevel = 2;
 	private static final int defaultRecursionLevel = 1;
 	private static final int defaultDynamicResizing = 2;
 	private static final int defaultDoubleTapIndex = 0;
-	private final String defaultHomeDir;
+    private final String defaultHomeDir;
 
     private static boolean loopMode;
     private static boolean swipeToNextMode;
 	private static boolean saveSession;
 	private static boolean saveRecent;
 	private static boolean keepBacklightOn;
-	private static boolean extractMode;
 	private static boolean cacheSafety;
 	private static boolean cacheOnStart;
     private static boolean cacheRarFiles;
 	private static boolean keepZoomOnPageChange;
 	private static boolean contextMenuEnabled;
-	private static boolean rarPassword;
 	private static int zoomIndex = -1;
 	private static int orientationIndex = -1;
-	private static int ramModeIndex = -1;
 	private static int archiveModeIndex = -1;
 	private static int cacheModeIndex = -1;
 	private static int cacheLevel = -1;
 	private static int recursionLevel = -1;
 	private static int dynamicResizing = -1;
 	private static int doubleTapIndex = 0;
-	private static File homeDir = null;
+    private static File homeDir = null;
 	private static File lastRead = null;
+    private static long lastDelete = -1;
 	private static int lastReadIndex = -1;
 	private static final ArrayList<Recent> recent = new ArrayList<>();
 	private static final ArrayList<String> favorite = new ArrayList<>();
@@ -128,16 +118,13 @@ public class SettingsManager {
 		saveSession = preferences.getBoolean("saveSession", defaultSaveSession);
 		saveRecent = preferences.getBoolean("saveRecent", defaultSaveRecent);
 		keepBacklightOn = preferences.getBoolean("keepBacklightOn", defaultKeepBacklightOn);
-		extractMode = preferences.getBoolean("extractModeIndex", defaultExtractMode);
 		cacheSafety = preferences.getBoolean("cacheSafety", defaultCacheSafety);
         cacheOnStart = preferences.getBoolean("cacheOnStart", defaultCacheOnStart);
         cacheRarFiles = preferences.getBoolean("cacheRarFiles", defaultCacheRarFiles);
 		keepZoomOnPageChange = preferences.getBoolean("keepZoomOnPageChange", defaultKeepZoomOnPageChange);
 		contextMenuEnabled = preferences.getBoolean("contextMenuEnabled", defaultContextMenuEnabled);
-		rarPassword = preferences.getBoolean("rarPassword", defaultRarPassword);
 		zoomIndex = preferences.getInt("zoomIndex", defaultZoomIndex);
 		orientationIndex = preferences.getInt("orientationIndex", defaultOrientationIndex);
-		ramModeIndex = preferences.getInt("ramModeIndex", defaultRamModeIndex);
 		archiveModeIndex = preferences.getInt("archiveModeIndex", defaultArchiveModeIndex);
 		cacheModeIndex = preferences.getInt("cacheModeIndex", defaultCacheModeIndex);
 		cacheLevel = preferences.getInt("cacheLevel", defaultCacheLevel);
@@ -152,49 +139,81 @@ public class SettingsManager {
 		}
 		
 		lastReadIndex = preferences.getInt("lastReadIndex", -1);
-		fill("recent", "recentPage", recent);
-		fill("favorite", favorite);
+
+        lastDelete = preferences.getLong("lastDelete", -1);
+
+        fillRecentOld(); //For compatibility with old versions
+        fillFavoriteOld();  //For compatibility with old versions
+        fillRecent();
+        fillFavorite();
+
 		this.setBacklightAlwaysOn(keepBacklightOn);
 		
 	}
+
+    private void fillRecent(){
+        String json = preferences.getString("recent", "[]");
+        try {
+            JSONArray js = new JSONArray(json);
+            for (int i = 0; i < js.length(); i++) recent.add(Recent.fromString(js.getString(i)));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void fillFavorite(){
+        String json = preferences.getString("favorite", "[]");
+        try {
+            JSONArray js = new JSONArray(json);
+            for (int i = 0; i < js.length(); i++) favorite.add(js.getString(i));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
 	
-	/**
-	 * @param key Settings key used to link array resources.
-	 * eg. a key of "recent" will look for recent1, recent2, etc.
-	 * @param array Array of Strings to add extracted settings to
-	 * */
-	private void fill(String key, ArrayList<String> array){
-		
-		array.clear();
+	@Deprecated
+	private void fillFavoriteOld(){
+
+		SettingsManager.favorite.clear();
 		String s;
-		
+        Editor editor = preferences.edit();
+
 		for (int i = 1; i <= 10; i++){
-			s = preferences.getString(key + i, "");
+			s = preferences.getString("favorite" + i, "");
+            editor.remove("favorite" + i);
 			if (s.equals("")){
 				break;
 			}
-			array.add(s);
+			SettingsManager.favorite.add(s);
 		}
+
+        editor.commit();
 		
 	}
-	
-	private void fill(String keyName, String keyValue, ArrayList<Recent> array){
+
+    @Deprecated
+	private void fillRecentOld(){
 		
-		array.clear();
+		SettingsManager.recent.clear();
 		String s;
 		int page;
+        Editor editor = preferences.edit();
 		
 		for (int i = 1; i <= 10; i++){
-			s = preferences.getString(keyName + i, "");
+			s = preferences.getString("recent" + i, "");
+            editor.remove("recent" + i);
 			if (s.equals("")){
 				break;
 			}
-			page = preferences.getInt(keyValue + i, -1);
+			page = preferences.getInt("recentPage" + i, -1);
+            editor.remove("recentPage" + i);
 			if (page < 0){
 				break;
 			}
-			array.add(new Recent(s, page));
+			SettingsManager.recent.add(new Recent(s, page));
 		}
+
+        editor.commit();
 		
 	}
 	
@@ -211,15 +230,12 @@ public class SettingsManager {
         setCacheForRar(defaultCacheRarFiles);
 		setKeepZoomOnPageChange(defaultKeepZoomOnPageChange);
 		setContextMenuEnabled(defaultContextMenuEnabled);
-		setRarPasswordEnabled(defaultRarPassword);
 		setZoomIndex(defaultZoomIndex);
 		setOrientationIndex(defaultOrientationIndex);
-		setRamModeIndex(defaultRamModeIndex);
 		setArchiveModeIndex(defaultArchiveModeIndex);
 		setCacheSafety(defaultCacheSafety);
 		setDoubleTapIndex(defaultDoubleTapIndex);
 		setCacheModeIndex(defaultCacheModeIndex);
-		setExtractModeEnabled(defaultExtractMode);
 		setCacheLevel(defaultCacheLevel);
 		setRecursionLevel(defaultRecursionLevel);
 		setDynamicResizing(defaultDynamicResizing);
@@ -302,7 +318,8 @@ public class SettingsManager {
 	}
 	
 	public double getCurrentZoomRatio(){
-		return getZoomRatio(zoomIndex);
+        Log.d("ZoomIndex", Integer.toString(zoomIndex));
+        return getZoomRatio(zoomIndex);
 	}
 	
 	public static double getZoomRatio(int index){
@@ -325,6 +342,7 @@ public class SettingsManager {
 				return SCALE_HEIGHT_SIZE;
 			case 9:
 				return SCALE_WIDTH_SIZE;
+            case 5:
 			default:
 				return FULL_SIZE;
 		}
@@ -379,19 +397,6 @@ public class SettingsManager {
 		
 	}
 	
-	public int getRamModeIndex(){
-		return ramModeIndex;
-	}
-	
-	public void setRamModeIndex(int index){
-		ramModeIndex = index;
-		updateInt("ramModeIndex", index);
-	}
-	
-	public boolean isRamMode(){
-		return ramModeIndex == 0; //TODO: turn RAM mode into cache type; streams, images, etc.
-	}
-	
 	public int getArchiveModeIndex(){
 		return archiveModeIndex;
 	}
@@ -399,15 +404,6 @@ public class SettingsManager {
 	public void setArchiveModeIndex(int index){
 		archiveModeIndex = index;
 		updateInt("archiveModeIndex", index);
-	}
-	
-	public boolean getExtractModeEnabled(){
-		return extractMode;
-	}
-	
-	public void setExtractModeEnabled(boolean enabled){
-		extractMode = enabled;
-		updateBool("extractModeIndex", enabled);
 	}
 
 	public boolean isContextMenuEnabled(){
@@ -417,15 +413,6 @@ public class SettingsManager {
 	public void setContextMenuEnabled(boolean enabled){
 		contextMenuEnabled = enabled;
 		updateBool("contextMenuEnabled", enabled);
-	}
-	
-	public boolean isRarPasswordEnabled(){
-		return rarPassword;
-	}
-	
-	public void setRarPasswordEnabled(boolean enabled){
-		rarPassword = enabled;
-		updateBool("rarPassword", enabled);
 	}
 	
 	public boolean getCacheSafety(){
@@ -476,9 +463,7 @@ public class SettingsManager {
 			}else{
 				MainActivity.mainActivity.getWindow().clearFlags(flag);			
 			}
-		}catch (Exception e){
-			e.printStackTrace();
-		}catch (Error e){
+		}catch (Exception | Error e){
 			e.printStackTrace();
 		}finally{
 			updateBool("keepBacklightOn", alwaysOn);
@@ -524,10 +509,6 @@ public class SettingsManager {
     public int getDynamicResizing(){
         return dynamicResizing;
     }
-
-    public boolean isDynamicResizingEnabled(){
-        return dynamicResizing != 0;
-    }
 	
 	public void setDynamicResizing(int index){
 		dynamicResizing = index;
@@ -545,7 +526,16 @@ public class SettingsManager {
 	
 	public void addRecent(Recent r){
 
-		addList(recent, r);
+        for (int i = 0; i < SettingsManager.recent.size(); i++){
+            if (SettingsManager.recent.get(i).getPath().equals(r.getPath())){
+                SettingsManager.recent.remove(i);
+                break;
+            }
+        }
+
+        SettingsManager.recent.add(0, r);
+
+        saveRecentList();
 		
 	}
 	
@@ -557,10 +547,6 @@ public class SettingsManager {
 
     public ArrayList<Recent> getRecent(){
         return recent;
-    }
-
-    public int getRecentLength(){
-        return recent.size();
     }
 	
 	public void removeRecent(String toRemove){
@@ -574,11 +560,16 @@ public class SettingsManager {
 	}
 	
 	private void saveRecentList(){
-		saveList(recent);
+        JSONArray arr = new JSONArray();
+        for (Recent r : recent){
+            arr.put(r.toString());
+        }
+        updateString("recent", arr.toString());
 	}
 	
 	public void clearRecent(){
-		clear(recent);
+		recent.clear();
+        saveRecentList();
 	}
 	
 	public void addFavorite(String path){
@@ -586,8 +577,17 @@ public class SettingsManager {
 		if (new File(path).isDirectory()){
 			path += "/";
 		}
-		
-		addList(favorite, "favorite", path);
+
+        for (int i = 0; i < SettingsManager.favorite.size(); i++){
+            if (SettingsManager.favorite.get(i).equals(path)){
+                SettingsManager.favorite.remove(i);
+                break;
+            }
+        }
+
+        SettingsManager.favorite.add(0, path);
+
+        saveFavoriteList();
 		
 	}
 	
@@ -603,81 +603,16 @@ public class SettingsManager {
 	}
 	
 	private void saveFavoriteList(){
-		saveList(favorite, "favorite");
+        JSONArray arr = new JSONArray();
+        for (String s : favorite){
+            arr.put(s);
+        }
+        updateString("favorite", arr.toString());
 	}
 	
 	public void clearFavorites(){
-		clear(favorite, "favorite");
-	}
-	
-	private void addList(ArrayList<String> list, String type, String path){
-		
-		for (int i = 0; i < list.size(); i++){
-			if (list.get(i).equals(path)){
-				list.remove(i);
-				break;
-			}
-		}
-		
-		list.add(0, path);
-		if (list.size() > 10){
-			list.remove(list.size() - 1);
-		}
-		
-		saveList(list, type);
-		
-	}
-	
-	private void addList(ArrayList<Recent> list, Recent r){
-		
-		for (int i = 0; i < list.size(); i++){
-			if (list.get(i).getPath().equals(r.getPath())){
-				list.remove(i);
-				break;
-			}
-		}
-		
-		list.add(0, r);
-		if (list.size() > 10){
-			list.remove(list.size() - 1);
-		}
-		
-		saveList(list);
-		
-	}
-	
-	private void saveList(ArrayList<String> list, String type){
-		for (int i = 1; i <= list.size(); i++){
-			updateString(type + i, list.get(i - 1));
-		}
-		if (list.size() + 1 <= 10){
-			for (int i = list.size() + 1; i <= 10; i++){
-				updateString(type + i, "");
-			}
-		}
-	}
-	
-	private void saveList(ArrayList<Recent> list){
-		for (int i = 1; i <= list.size(); i++){
-			updateString("recent" + i, list.get(i - 1).getPath());
-			updateInt("recentPage" + i, list.get(i - 1).getPageNumber());
-		}
-		if (list.size() + 1 <= 10){
-			for (int i = list.size() + 1; i <= 10; i++){
-				updateString("recent" + i, "");
-				updateInt("recentPage" + i, -1);
-			}
-		}
-	}
-	
-	private void clear(ArrayList<String> list, String type){
-		list.clear();
-		saveList(list, type);
-	}
-	
-	private void clear(ArrayList<Recent> list){
-		list.clear();
-		saveList(list);
+		favorite.clear();
+        saveFavoriteList();
 	}
 	
 	public void setLastRead(File last, int lastIndex){
@@ -709,28 +644,58 @@ public class SettingsManager {
 	public int getLastFileReadIndex(){
 		return lastReadIndex;
 	}
-	
-	public void clearLastRead(){
-		lastRead = null;
-		lastReadIndex = -1;
-	}
-	
-	private void updateString(String key, String value){
-		Editor edit = preferences.edit();
-		edit.putString(key, value);
-	    edit.apply();
-	}
-	
-	private void updateInt(String key, int value){
-		Editor edit = preferences.edit();
-		edit.putInt(key, value);
-	    edit.apply();
-	}
+
+    /**
+     * @return True if the warning has never been shown, or it
+     * has been at least one week since BatchDelete was last shown.
+     **/
+    public boolean isShowLastDelete(){
+        long millis = System.currentTimeMillis();
+        long oldLastDelete = lastDelete;
+        lastDelete = millis;
+        updateLong("lastDelete", millis);
+        return Math.abs(millis - oldLastDelete) >= 604800000; //If it's been at least 1 week
+    }
+
+    private void updateString(String key, String value){
+        Editor edit = preferences.edit();
+        edit.putString(key, value);
+        if (android.os.Build.VERSION.SDK_INT < 9){
+            edit.commit();
+        }else{
+            edit.apply();
+        }
+
+    }
+
+    private void updateInt(String key, int value){
+        Editor edit = preferences.edit();
+        edit.putInt(key, value);
+        if (android.os.Build.VERSION.SDK_INT < 9){
+            edit.commit();
+        }else{
+            edit.apply();
+        }
+    }
+
+    private void updateLong(String key, long value){
+        Editor edit = preferences.edit();
+        edit.putLong(key, value);
+        if (android.os.Build.VERSION.SDK_INT < 9){
+            edit.commit();
+        }else{
+            edit.apply();
+        }
+    }
 	
 	private void updateBool(String key, boolean value){
 		Editor edit = preferences.edit();
 		edit.putBoolean(key, value);
-	    edit.apply();
+        if (android.os.Build.VERSION.SDK_INT < 9){
+            edit.commit();
+        }else{
+            edit.apply();
+        }
 	}
 	
 	public static void setFullScreen(Activity act){

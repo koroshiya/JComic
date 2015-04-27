@@ -1,14 +1,15 @@
 package com.japanzai.koroshiya.controls;
 
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.Toast;
 
 import com.japanzai.koroshiya.R;
 import com.japanzai.koroshiya.reader.MainActivity;
@@ -63,26 +64,22 @@ public class JScrollView extends TwoDScrollView {
 	}
 
 	public void up(double x2, double y2) {
-		
-		try {
-			if (pageStartx == getRight() || pageStartx == view.getWidth() - getRight() || getRight() >= view.getWidth()){
-				if ((Math.abs(startx - x2) > Math.abs(starty - y2))) {
-					if (startx > x2){
-						getReader().getCache().next();
-					}else if (pageStartx == getLeft()){ //In case getLeft and getRight are the same (ie. no horizontal scroll)
-						getReader().getCache().previous();
-					}
-				}
-			}else if (pageStartx == getLeft()){
-				if ((Math.abs(startx - x2) > Math.abs(starty - y2)) && startx < x2) {
-					getReader().getCache().previous();
-				}
-			}else{
-				scroll(x2, y2);
-			}
-		} catch (InterruptedException ie) {
-			ie.printStackTrace();
-		}
+
+        if (pageStartx == getRight() || pageStartx == view.getWidth() - getRight() || getRight() >= view.getWidth()){
+            if ((Math.abs(startx - x2) > Math.abs(starty - y2))) {
+                if (startx > x2){
+                    getReader().getCache().next();
+                }else if (pageStartx == getLeft()){ //In case getLeft and getRight are the same (ie. no horizontal scroll)
+                    getReader().getCache().previous();
+                }
+            }
+        }else if (pageStartx == getLeft()){
+            if ((Math.abs(startx - x2) > Math.abs(starty - y2)) && startx < x2) {
+                getReader().getCache().previous();
+            }
+        }else{
+            scroll(x2, y2);
+        }
 		
 	}
 
@@ -94,10 +91,6 @@ public class JScrollView extends TwoDScrollView {
 		
 	}
 
-	public double getZoom() {
-		return view.getZoom();
-	}
-
 	/**
 	 * Sets up JScrollView for use
 	 * */
@@ -107,7 +100,7 @@ public class JScrollView extends TwoDScrollView {
 
 	private class GestureListener extends GestureDetector.SimpleOnGestureListener implements OnTouchListener{
 		
-		private final ScaleGestureDetector sgd = new ScaleGestureDetector(getContext(), new ScaleListener());
+		private final ScaleGestureDetector sgd = android.os.Build.VERSION.SDK_INT >= 8 ? new ScaleGestureDetector(getContext(), new ScaleListener()) : null;
 		
 		private void cycleZoom(MainActivity parent, SettingsManager settings){
 			double defaultZoom = settings.getCurrentZoomRatio();
@@ -132,7 +125,7 @@ public class JScrollView extends TwoDScrollView {
 				message = zooms[0];
 			}
 			
-			parent.runOnUiThread(new ToastThread(message + " " + parent.getString(R.string.string_zoom), parent, Toast.LENGTH_SHORT));
+			parent.runOnUiThread(new ToastThread(message + " " + parent.getString(R.string.string_zoom), parent));
 			view.zoom(newIndex);
 		}
 		
@@ -145,7 +138,7 @@ public class JScrollView extends TwoDScrollView {
 				curZoom = curZoom > 0 ? curZoom - 1 : zooms.length - 1;
 			}
 			String message = zooms[curZoom];
-			parent.runOnUiThread(new ToastThread(message + " " + parent.getString(R.string.string_zoom), parent, Toast.LENGTH_SHORT));
+			parent.runOnUiThread(new ToastThread(message + " " + parent.getString(R.string.string_zoom), parent));
 			view.zoom(SettingsManager.getZoomRatio(curZoom));
 		}
 		
@@ -171,7 +164,7 @@ public class JScrollView extends TwoDScrollView {
 		public boolean onDown(MotionEvent e){
 			if (e.getPointerCount() > 1){
 				lastDown = false;
-				sgd.onTouchEvent(e);
+				if (sgd != null) sgd.onTouchEvent(e);
 			}else{
 				lastDown = true;
 				down(e.getX(), e.getY());
@@ -188,7 +181,7 @@ public class JScrollView extends TwoDScrollView {
 			int action = event.getAction();
 			if (event.getPointerCount() > 1){
 				lastDown = false;
-				sgd.onTouchEvent(event);
+                if (sgd != null) sgd.onTouchEvent(event);
 			}else {
 				
 				if (lastDown){ 
@@ -217,9 +210,10 @@ public class JScrollView extends TwoDScrollView {
 		
 	}
 	
-	private class ScaleListener extends ScaleGestureDetector.SimpleOnScaleGestureListener {
-		
-		@Override
+	@TargetApi(Build.VERSION_CODES.FROYO)
+    private class ScaleListener extends ScaleGestureDetector.SimpleOnScaleGestureListener {
+
+        @Override
 		public boolean onScale(ScaleGestureDetector detector) {
 			
 			view.zoomRatio(detector.getScaleFactor());
@@ -248,13 +242,6 @@ public class JScrollView extends TwoDScrollView {
 
 		return (JBitmapDrawable) this.view.getDrawable();
 
-	}
-
-	/**
-	 * @return JImageView currently displaying an image
-	 * */
-	public JImageView getJImageView() {
-		return this.view;
 	}
 	
 	@SuppressLint("DrawAllocation")

@@ -51,28 +51,14 @@ public class ZipInputStream extends InputStream {
 	
 	/**
 	 * Closes the input stream and releases any resources.
-	 * This method also checks for the CRC of the extracted file.
-	 * If CRC check has to be skipped use close(boolean skipCRCCheck) method
-	 * 
-	 * @throws IOException
-	 */
-	public void close() throws IOException {
-		close(false);
-	}
-	
-	/**
-	 * Closes the input stream and releases any resources.
 	 * If skipCRCCheck flag is set to true, this method skips CRC Check
 	 * of the extracted file
 	 * 
 	 * @throws IOException
 	 */
-	public void close(boolean skipCRCCheck) throws IOException {
+	public void close() throws IOException {
 		try {
 			is.close();
-			if (!skipCRCCheck && is.getUnzipEngine() != null) {
-				is.getUnzipEngine().checkCRC();
-			}
 		} catch (ZipException e) {
 			throw new IOException(e.getMessage());
 		}

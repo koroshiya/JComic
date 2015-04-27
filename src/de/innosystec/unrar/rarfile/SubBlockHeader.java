@@ -18,6 +18,8 @@
  */
 package de.innosystec.unrar.rarfile;
 
+import java.io.IOException;
+
 import de.innosystec.unrar.io.Raw;
 
 public class SubBlockHeader 
@@ -29,15 +31,13 @@ extends BlockHeader
 	private final short subType;
 	private byte level;
 	
-	public SubBlockHeader(SubBlockHeader sb)
-	{
+	public SubBlockHeader(SubBlockHeader sb) throws IOException {
 		super(sb);
 		subType = sb.getSubType().getSubblocktype();
 		level = sb.getLevel();
 	}
 	
-	public SubBlockHeader(BlockHeader bh, byte[] subblock)
-	{
+	public SubBlockHeader(BlockHeader bh, byte[] subblock) throws IOException {
 		super(bh);
 		int position = 0;
 		subType = Raw.readShortLittleEndian(subblock, position);
@@ -45,22 +45,12 @@ extends BlockHeader
 		level |= subblock[position]&0xff;
 	}
 
-	/**
-	 * @return
-	 */
 	public byte getLevel() {
 		return level;
 	}
 
-	/**
-	 * @return
-	 */
 	public SubBlockHeaderType getSubType() {
 		return SubBlockHeaderType.findSubblockHeaderType(subType);
 	}
 
-	public void print()
-	{
-		super.print();
-	}
 }

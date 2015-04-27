@@ -1,21 +1,22 @@
 package com.japanzai.koroshiya.filechooser;
 
 import java.io.File;
-import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.ListView;
+import android.widget.SimpleAdapter;
 
-import com.actionbarsherlock.app.ActionBar;
 import com.japanzai.koroshiya.R;
+import com.japanzai.koroshiya.archive.steppable.SteppableArchive;
 import com.japanzai.koroshiya.interfaces.ModalReturn;
 import com.japanzai.koroshiya.io_utils.ArchiveParser;
 import com.japanzai.koroshiya.io_utils.ImageParser;
@@ -25,20 +26,14 @@ import com.japanzai.koroshiya.reader.ToastThread;
 import com.japanzai.koroshiya.settings.SettingsView;
 import com.japanzai.koroshiya.settings.classes.Recent;
 
-import net.lingala.zip4j.core.ZipFile;
-import net.lingala.zip4j.model.ZipParameters;
-
-import de.innosystec.unrar.exception.RarException;
-
 /**
  * Listener for OnItemClick events pertaining to items listed by the FileChooser tree of classes.
  * ie. It listens for clicks on files displayed for reading, deletion, navigation, etc.
  * */
-public class ItemClickListener implements OnItemClickListener, ModalReturn {
+public class ItemClickListener implements View.OnClickListener, View.OnLongClickListener, ModalReturn {
 
 	private final FileChooser parent;
 	private File tempFile = null;
-	private Thread runningThread = null;
 	
 	public ItemClickListener(FileChooser parent){
 		
@@ -47,20 +42,16 @@ public class ItemClickListener implements OnItemClickListener, ModalReturn {
 	}
 	
 	@Override
-	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+	public void onClick(View arg1) {
+
+		final String location = arg1.getContentDescription().toString();
 		
-		TextView tv = (TextView) arg1.findViewById(R.id.row_text);
-		final String location = tv.getText().toString();
-		
-		if (location.equals(getString(R.string.recent_function_disabled)) ||
-				location.equals(getString(R.string.recent_no_recent_files)))
-		{
+		if (location.equals(getString(R.string.recent_function_disabled)) || location.equals(getString(R.string.recent_no_recent_files))){
 			return;
 		}
-		
-		ActionBar bar = parent.getSupportActionBar();
+
 		boolean processed = false;
-		if (bar.getSelectedTab() == bar.getTabAt(0)){
+		if (parent.getType() == FileChooser.RECENT){
 			File file = new File(location);
 			if (!file.exists()){
 				processItem(false, location);
@@ -76,6 +67,73 @@ public class ItemClickListener implements OnItemClickListener, ModalReturn {
 		if (!processed) processItem(false, location);
 		
 	}
+
+    @Override
+    public boolean onLongClick(View v){
+        final String name = v.getContentDescription().toString();
+
+        if (name.equals(getString(R.string.recent_function_disabled)) ||
+                name.equals(getString(R.string.recent_general_settings)) ||
+                name.equals(getString(R.string.recent_no_recent_files))){
+            Log.d("FileChooser", "Failed to instantiate context menu");
+            return false;
+        }
+
+        final Dialog dialog = new Dialog(parent);
+        dialog.setContentView(R.layout.list);
+        dialog.setCancelable(true);
+
+        if (name.contains("/")){
+            int inx = name.lastIndexOf('/');
+            if (inx == name.length() - 1){
+                String str = name.substring(0, inx);
+                inx = str.contains("/") ? str.lastIndexOf('/') : -1;
+            }
+            dialog.setTitle(name.substring(inx + 1));
+        }else {
+            dialog.setTitle(name);
+        }
+
+
+        int id = processContext(name);
+        if (id == -1){
+            return false; //File has been deleted
+        }
+
+        ArrayList<HashMap<String, String>> map = new ArrayList<>();
+
+        final ArrayList<String> tempCommandList = new ArrayList<>();
+        tempCommandList.addAll(Arrays.asList(v.getResources().getStringArray(id)));
+
+        if (parent.getType() == FileChooser.RECENT){
+            tempCommandList.add(parent.getResources().getString(R.string.file_remove_recent));
+            tempCommandList.add(parent.getResources().getString(R.string.file_clear_recent));
+        } else if (parent.getType() == FileChooser.FAVORITE){
+            tempCommandList.remove(tempCommandList.size() - 1); //removes the add to favorites command
+            tempCommandList.add(parent.getResources().getString(R.string.file_remove_favorite));
+            tempCommandList.add(parent.getResources().getString(R.string.file_clear_favorite));
+        }
+
+        ListView lv = (ListView) dialog.findViewById(R.id.lv);
+        for (int i = 0; i < tempCommandList.size(); i++){
+            HashMap<String, String> hm = new HashMap<>();
+            hm.put("name", tempCommandList.get(i));
+            map.add(hm);
+        }
+
+        SimpleAdapter itemAdapter = new SimpleAdapter(parent, map, R.layout.context_list_item, new String[]{"name"}, new int[]{R.id.row_text});
+        lv.setAdapter(itemAdapter);
+        lv.setOnItemClickListener(new OnItemClickListener(){
+            @Override
+            public void onItemClick(AdapterView av, View v, int i, long l){
+                process(name, tempCommandList.get(i));
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
+        return false;
+    }
 	
 	/**
 	 * @param name String value of the file we want to process
@@ -108,8 +166,6 @@ public class ItemClickListener implements OnItemClickListener, ModalReturn {
 	/**
 	 * @param name String representing the location of a file to process
 	 * @param command Command to perform on the file represented by 'name'
-	 * @throws IOException 
-	 * @throws RarException 
 	 * */
 	public void process(String name, String command) {
 		
@@ -140,14 +196,6 @@ public class ItemClickListener implements OnItemClickListener, ModalReturn {
 		}else if (command.equals(options[5])){ //Favorite
 			
 			favorite(file);
-			
-		}else if (command.equals(options[6])){ //Zip supported images
-			
-			zip(file, false);
-			
-		}else if (command.equals(options[7])){ //Zip and delete
-
-			zip(file, true);
 			
 		}else if (command.equals(getString(R.string.file_remove_favorite))){
 			
@@ -182,8 +230,8 @@ public class ItemClickListener implements OnItemClickListener, ModalReturn {
 		this.tempFile = file;
 		boolean dir = file.isDirectory();
 		String type = getString(dir ? R.string.file_folder_and_contents : R.string.file_file);
-		parent.confirm(R.string.file_confirm, R.string.file_deny, 
-						getString(R.string.file_delete_prompt) + " " + type + "?", this);
+		parent.confirm(
+                getString(R.string.file_delete_prompt) + " " + type + "?", this);
 		
 	}
 	
@@ -309,7 +357,8 @@ public class ItemClickListener implements OnItemClickListener, ModalReturn {
 			}
 		}else if (ArchiveParser.isSupportedArchive(file)){
             try {
-                contents = ArchiveParser.peekAtContents(ArchiveParser.parseArchive(file, null));
+                SteppableArchive arc = ArchiveParser.parseArchive(file, null);
+                if (arc != null) contents = arc.peekAtContents();
             }catch (Exception e){
                 e.printStackTrace();
             }
@@ -321,109 +370,6 @@ public class ItemClickListener implements OnItemClickListener, ModalReturn {
 			parent.runOnUiThread(new MessageThread(contents, parent));
 		}else{
 			parent.runOnUiThread(new MessageThread(R.string.file_no_supported, parent));
-		}
-		
-	}
-
-	private void zip(File dir, boolean delete){
-		
-		if (runningThread == null || !runningThread.isAlive()){
-			runningThread = new ZipThread(dir, delete);
-			runningThread.start();
-		}
-		
-	}
-	
-	private class RefreshThread extends Thread{
-		@Override
-		public void run(){
-			parent.refreshTab();
-		}
-	}
-	
-	private class ZipThread extends Thread{
-		
-		private final File dir;
-		private final boolean delete;
-		private final FileChooser fc;
-		
-		public ZipThread(File dir, boolean delete){
-			this.dir = dir;
-			this.delete = delete;
-			this.fc = parent;
-		}
-		
-		@Override
-		public void run(){
-
-			parent.showNext();
-			ArrayList<File> imagesToZip = new ArrayList<>();
-
-	    	File[] files = dir.listFiles();
-	    	Arrays.sort(files);
-	    	for (File file : files){
-				if (ImageParser.isSupportedImage(file)){
-					imagesToZip.add(file);
-				}
-			}
-			
-			String message;
-			boolean success = false;
-			
-			if (imagesToZip.size() == 0){
-				message = getString(R.string.zip_no_supported_images);
-			}else{
-				File output = new File(dir.getAbsolutePath() + ".zip");
-				if (output.exists()){
-					message = getString(R.string.zip_already_exists);
-				}else{
-					try{
-                        ZipFile zip = new ZipFile(output);
-                        ZipParameters p = new ZipParameters();
-                        p.setReadHiddenFiles(false);
-
-                        if (fc != null){
-                            fc.runOnUiThread(new SetTextThread(fc.getText(R.string.zip_zipping_in_progress).toString(), fc));
-                        }
-
-                        zip.createZipFile(imagesToZip, p);
-						success = true;
-						message = getString(R.string.zip_successfully_created);
-					} catch (IOException e) {
-						e.printStackTrace();
-						message = e.getLocalizedMessage();
-					}
-				}
-			}
-			
-			parent.runOnUiThread(new MessageThread(message, parent));
-			
-			if (success && delete){
-				deleteFile(dir);
-			}
-			
-			parent.showPrevious();
-			parent.runOnUiThread(new RefreshThread());
-			
-		}
-		
-	}
-	
-
-	protected class SetTextThread extends Thread{
-		
-		private final String text;
-		private final FileChooser fc;
-		
-		public SetTextThread(String text, FileChooser fc){
-			this.text = text;
-			this.fc = fc;
-		}
-		
-		@Override
-		public void run(){
-			TextView tv = (TextView)fc.findViewById(R.id.progressText);
-			tv.setText(text);
 		}
 		
 	}
@@ -470,8 +416,10 @@ public class ItemClickListener implements OnItemClickListener, ModalReturn {
 		File file = new File(location);
 		
 		if (!file.exists()){
-    		parent.runOnUiThread(new ToastThread(R.string.cant_go_up, parent, Toast.LENGTH_SHORT));
+            Log.i("ItemClickListener", location + " doesn't exist");
+    		parent.runOnUiThread(new ToastThread(R.string.cant_go_up, parent));
 		}else if (file.isFile() || forceReturn){
+            Log.i("ItemClickListener", "Force return");
 			for (Recent recent : MainActivity.mainActivity.getSettings().getRecent()){
 				if (recent.getPath().equals(location)){
 					parent.returnValue(file, recent.getPageNumber());
@@ -480,7 +428,7 @@ public class ItemClickListener implements OnItemClickListener, ModalReturn {
 			}
 			int i = 0;
             if (!ArchiveParser.isSupportedArchive(file)) {
-                Log.d("ItemClickListener", "Processing item " + file.getName());
+                Log.d("ItemClickListener", "Processing item after " + file.getName());
                 File[] files = file.getParentFile().listFiles();
                 Arrays.sort(files);
                 Log.d("ItemClickListener", "List of files: ");
@@ -496,13 +444,10 @@ public class ItemClickListener implements OnItemClickListener, ModalReturn {
             }
 			parent.returnValue(file, i);
 		}else {
+            Log.i("ItemClickListener", "Reset");
 			parent.reset(file);
 		}
 		
-	}
-	
-	public boolean isThreadRunning(){
-		return 	runningThread != null && runningThread.isAlive();
 	}
 	
 }

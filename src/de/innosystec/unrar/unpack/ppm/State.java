@@ -21,7 +21,7 @@ import de.innosystec.unrar.io.Raw;
 
 /**
  * DOCUMENT ME
- * 
+ *
  * @author $LastChangedBy$
  * @version $LastChangedRevision$
  */
@@ -32,12 +32,6 @@ public class State extends Pointer {
 	public State(byte[] mem) {
 		super(mem);
 	}
-
-    public State init(byte[] mem) {
-		this.mem = mem;
-        pos = 0;
-        return this;
-    }
 
 	public int getSymbol() {
         return mem[pos]&0xff;
@@ -58,7 +52,7 @@ public class State extends Pointer {
     public void incFreq(int dFreq) {
         mem[pos + 1] += dFreq;
     }
-	
+
 	public int getSuccessor() {
         return Raw.readIntLittleEndian(mem, pos+2);
 	}

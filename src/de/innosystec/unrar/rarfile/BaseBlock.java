@@ -18,46 +18,31 @@
  */
 package de.innosystec.unrar.rarfile;
 
+import java.io.IOException;
+
 import de.innosystec.unrar.io.Raw;
 
 
 /**
  * Base class of all rar headers
- *
- * @author $LastChangedBy$
- * @version $LastChangedRevision$
  */
 public class BaseBlock{
 	
 	public static final short BaseBlockSize = 7;
-	
-	//TODO move somewhere else
-	
-	public static final short MHD_VOLUME = 0x0001;
-	public static final short MHD_COMMENT = 0x0002;
-	public static final short MHD_LOCK = 0x0004;
-	public static final short MHD_SOLID = 0x0008;
-	public static final short MHD_NEWNUMBERING = 0x0010;
+
+    public static final short MHD_NEWNUMBERING = 0x0010;
 	public static final short MHD_AV = 0x0020;
-	public static final short MHD_PROTECT = 0x0040;
 	public static final short MHD_PASSWORD = 0x0080;
-	public static final short MHD_FIRSTVOLUME = 0x0100;
-	public static final short MHD_ENCRYPTVER = 0x0200;
-	
-	
-	public static final short LHD_SPLIT_BEFORE =  0x0001;
-	public static final short LHD_SPLIT_AFTER  =  0x0002;
-	public static final short LHD_PASSWORD     =  0x0004;
-	public static final short LHD_SOLID        =  0x0010;
+    public static final short MHD_ENCRYPTVER = 0x0200;
 
-	public static final short LHD_WINDOWMASK   =  0x00e0;
-	public static final short LHD_DIRECTORY    =  0x00e0;
 
-	public static final short LHD_LARGE        =  0x0100;
+    public static final short LHD_SPLIT_AFTER  =  0x0002;
+    public static final short LHD_SOLID        =  0x0010;
+
+    public static final short LHD_LARGE        =  0x0100;
 	public static final short LHD_UNICODE      =  0x0200;
-	public static final short LHD_SALT         =  0x0400;
 
-	public static final short EARC_DATACRC     =  0x0002;
+    public static final short EARC_DATACRC     =  0x0002;
 	public static final short EARC_VOLNUMBER   =  0x0008;
 	
 	
@@ -68,21 +53,26 @@ public class BaseBlock{
 	protected short flags = 0;
 	protected short headerSize = 0 ;
 
-	/**
-	 * 
-	 */
-	public BaseBlock(){
-		
-	}
+    public static final int avHeaderSize = 7;
+    public static final short commentHeaderSize = 6;
+    public static final short signHeaderSize = 8;
+    public static final short MacInfoHeaderSize = 8;
+    public static final short endArcArchiveDataCrcSize = 4;
+    public static final short endArcVolumeNumberSize = 2;
+    public static final short EAHeaderSize = 10;
 	
-	public BaseBlock(BaseBlock bb){
+	public BaseBlock(BaseBlock bb) throws IOException {
 		this.flags = bb.getFlags();
     	this.headCRC = bb.getHeadCRC();
     	this.headerType = bb.getHeaderType().getHeaderByte();
     	this.headerSize = bb.getHeaderSize();
     	this.positionInFile = bb.getPositionInFile();
+
+        if ((this.flags & MHD_PASSWORD)!=0){
+            throw new IOException("Encrypted block");
+        }
 	}
-	public BaseBlock(byte[] baseBlockHeader){
+	public BaseBlock(byte[] baseBlockHeader) throws IOException{
 		
 		int pos = 0;
 		this.headCRC = Raw.readShortLittleEndian(baseBlockHeader, pos);
@@ -92,6 +82,10 @@ public class BaseBlock{
 		this.flags = Raw.readShortLittleEndian(baseBlockHeader, pos);
 		pos+=2;
 		this.headerSize = Raw.readShortLittleEndian(baseBlockHeader, pos);
+
+        if ((this.flags & MHD_PASSWORD)!=0){
+            throw new IOException("Encrypted block");
+        }
 	}
 	
 	
@@ -106,15 +100,8 @@ public class BaseBlock{
 	public boolean hasEncryptVersion(){
 		return (flags & MHD_ENCRYPTVER)!=0;
 	}
-	
-	/**
-	 * @return is it a sub block
-	 */
-	public boolean isSubBlock(){
-		 return UnrarHeadertype.SubHeader.equals(headerType) || UnrarHeadertype.NewSubHeader.equals(headerType) && (flags & LHD_SOLID)!=0;
-	}
 
-	public long getPositionInFile() {
+    public long getPositionInFile() {
 		return positionInFile;
 	}
 

@@ -53,7 +53,7 @@ public class JImageView extends ImageView {
 			
 		}
 		
-		zoom((JBitmapDrawable)drawable);
+		zoom(drawable);
 		
 	}
 	
@@ -65,7 +65,7 @@ public class JImageView extends ImageView {
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 		
 		if (getDrawable() != null){
-			if (currentZoom == SettingsManager.AUTO_SIZE){
+            if (currentZoom == SettingsManager.AUTO_SIZE){
 				double ratio = (double)getReader().getWidth() / (double)originalWidth;
 				if (ratio >= 1){
 					setMeasuredDimension(originalWidth, originalHeight);
@@ -94,16 +94,14 @@ public class JImageView extends ImageView {
 	/**
 	 * Zooms in on the currently displayed image
 	 * @param zoom Degree to which to zoom in
-	 * @param widthMeasureSpec Measured width of the display
-	 * @param heightMeasureSpec Measured height of the display
 	 * */
 	public void zoom(double zoom){
 		
-		zoom(zoom, (JBitmapDrawable)getDrawable());
+		zoom(zoom, getDrawable());
 		
 	}
 	
-	public void zoom(JBitmapDrawable drawable){
+	public void zoom(Drawable drawable){
 		
 		SettingsManager settings = MainActivity.mainActivity.getSettings();
 		double zoom = settings.getCurrentZoomRatio();
@@ -116,7 +114,7 @@ public class JImageView extends ImageView {
 		
 	}
 	
-	public void zoom(double zoom, JBitmapDrawable drawable){
+	public void zoom(double zoom, Drawable drawable){
 		
 		if (drawable != null){
 
@@ -129,7 +127,7 @@ public class JImageView extends ImageView {
 		
 	}
 	
-	public void pseudoZoom(JBitmapDrawable drawable){
+	public void pseudoZoom(Drawable drawable){
 		
 		if (drawable != null){
 
@@ -145,7 +143,7 @@ public class JImageView extends ImageView {
 	
 	public void zoomRatio(double zoom){
 		
-		JBitmapDrawable drawable = (JBitmapDrawable)getDrawable();
+		Drawable drawable = getDrawable();
 		
 		if (drawable != null){
 			super.setImageDrawable(null);

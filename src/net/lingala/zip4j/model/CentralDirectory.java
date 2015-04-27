@@ -21,8 +21,6 @@ import java.util.ArrayList;
 public class CentralDirectory {
 	
 	private ArrayList fileHeaders;
-	
-	private DigitalSignature digitalSignature;
 
 	public ArrayList getFileHeaders() {
 		return fileHeaders;

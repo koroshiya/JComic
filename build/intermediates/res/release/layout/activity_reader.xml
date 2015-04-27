@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<com.japanzai.koroshiya.controls.JImageSwitcher xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/imgPanel"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent" />
-<!-- From: file:/home/mitch/Seafile/Dropbox/dev/Android/JComic/res/layout/activity_reader.xml -->

@@ -17,13 +17,7 @@
  */
 package de.innosystec.unrar.crc;
 
-/**
- * DOCUMENT ME
- * 
- * @author $LastChangedBy$
- * @version $LastChangedRevision$
- */
-public class RarCRC {
+public abstract class RarCRC {
 	
 	private final static int crcTab[];
     static {
@@ -43,75 +37,11 @@ public class RarCRC {
 		}
     }
 
-	private RarCRC() {
-	}
-
-	public static int checkCrc(int startCrc, byte[] data, int offset,
-            int count) {
+	public static int checkCrc(int startCrc, byte[] data, int offset, int count) {
 		int size = Math.min(data.length-offset,count);
-		// #if defined(LITTLE_ENDIAN) && defined(PRESENT_INT32) &&
-		// defined(ALLOW_NOT_ALIGNED_INT)
-		/*
-		for (int i = 0; (0 < size) && i < data.length - 8
-				&& ((data[i + 8] & 7) != 0); i++) {
-			startCrc = crcTab[(short) (startCrc ^ data[i]) & 0x00FF] ^ (startCrc >>> 8);
-			size--;
-		}
 		
-		for (int i = 0; size >= 8; i += 8) {
-			startCrc ^= data[i + 0] << 24;
-			startCrc ^= data[i + 1] << 16;
-			startCrc ^= data[i + 2] << 8;
-			startCrc ^= data[i + 3];
-
-			startCrc = crcTab[(short) startCrc & 0x00FF] ^ (startCrc >>> 8);
-			startCrc = crcTab[(short) startCrc & 0x00FF] ^ (startCrc >>> 8);
-			startCrc = crcTab[(short) startCrc & 0x00FF] ^ (startCrc >>> 8);
-			startCrc = crcTab[(short) startCrc & 0x00FF] ^ (startCrc >>> 8);
-
-			startCrc ^= data[i + 4] << 24;
-			startCrc ^= data[i + 5] << 16;
-			startCrc ^= data[i + 6] << 8;
-			startCrc ^= data[i + 7];
-			startCrc = crcTab[(short) startCrc & 0x00FF] ^ (startCrc >>> 8);
-			startCrc = crcTab[(short) startCrc & 0x00FF] ^ (startCrc >>> 8);
-			startCrc = crcTab[(short) startCrc & 0x00FF] ^ (startCrc >>> 8);
-			startCrc = crcTab[(short) startCrc & 0x00FF] ^ (startCrc >>> 8);
-			size -= 8;
-		}*/
-		
-		for (int i = 0; i < size; i++)
-		{
-/*
-			// (byte)(StartCRC^Data[I])
-			int pos = 0; // pos=0x00000000
-			pos |= startCrc; // pos=ffffffff
-			
-			pos ^= data[i]; // data[0]=0x73=115dec --> pos=140
-			System.out.println(Integer.toHexString(pos));
-			
-			// Only last 8 bit because CRCtab has length 256
-			pos = pos & 0x000000FF;
-			System.out.println("pos:"+pos);
-			//startCrc >>>= 8;
-			
-			
-			//StartCRC>>8
-			int temp =0;
-			temp|=startCrc;
-			temp >>>= 8;
-			System.out.println("temp:"+Integer.toHexString(temp));
-			
-			
-			startCrc = (crcTab[pos]^temp);
-			System.out.println("--"+Integer.toHexString(startCrc));*/
-			
+		for (int i = 0; i < size; i++) {
 			startCrc=(crcTab[((startCrc ^ (int)data[offset+i]))&0xff]^(startCrc>>>8));
-			
-			//System.out.println(Integer.toHexString(startCrc));
-			
-			// Original code:
-			//StartCRC=CRCTab[(byte)(StartCRC^Data[I])]^(StartCRC>>8);
 		}
 		return (startCrc);
 	}
@@ -124,20 +54,5 @@ public class RarCRC {
 		}
 		return (startCrc);
 	}
-
-//	public static void main(String[] args)
-//	{
-//		RarCRC rc = new RarCRC();
-//		//byte[] data = { 0x72, 0x21, 0x1A, 0x07, 0x00};
-//		
-//		byte[] data = {0x73 ,0x00 ,0x00 ,0x0D ,0x00 ,0x00 ,0x00 ,0x00 ,0x00 ,0x00 ,0x00};
-//		
-//		int crc = 0x90CF;
-//		
-//
-//		int result = rc.checkCrc(0xFFFFffff, data,0,data.length);
-//		System.out.println("3: "+Integer.toHexString(~result&0xffff));
-//		
-//	}
 	
 }

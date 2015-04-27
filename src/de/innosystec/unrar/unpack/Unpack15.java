@@ -20,7 +20,6 @@ package de.innosystec.unrar.unpack;
 import java.io.IOException;
 import java.util.Arrays;
 
-import de.innosystec.unrar.exception.RarException;
 import de.innosystec.unrar.unpack.decode.Compress;
 import de.innosystec.unrar.unpack.vm.BitInput;
 
@@ -37,11 +36,7 @@ public abstract class Unpack15 extends BitInput
 	
 	protected boolean suspended;
 
-	protected boolean unpAllBuf;
-
 	protected ComprDataIO unpIO;
-
-	protected boolean unpSomeRead;
 
 	protected int readTop;
 
@@ -140,8 +135,7 @@ public abstract class Unpack15 extends BitInput
 
 	protected abstract void unpInitData(boolean solid);
 
-	protected void unpack15(boolean solid) throws IOException, RarException
-	{
+	protected void unpack15(boolean solid) throws IOException {
 		if (suspended) {
 			unpPtr = wrPtr;
 		} else {
@@ -215,33 +209,32 @@ public abstract class Unpack15 extends BitInput
 
 
 
-	protected boolean unpReadBuf() throws IOException, RarException
-	{
-		  int dataSize=readTop-inAddr;
-		  if (dataSize<0){
-		    return(false);
-		  }
-		  if (inAddr>BitInput.MAX_SIZE/2) {
-		    if (dataSize>0){
-		      //memmove(InBuf,InBuf+InAddr,DataSize);
+	protected boolean unpReadBuf() throws IOException {
+      int dataSize=readTop-inAddr;
+      if (dataSize<0){
+        return(false);
+      }
+      if (inAddr>BitInput.MAX_SIZE/2) {
+        if (dataSize>0){
+          //memmove(InBuf,InBuf+InAddr,DataSize);
 //		    	for (int i = 0; i < dataSize; i++) {
 //					inBuf[i] = inBuf[inAddr + i];
 //				}
-                System.arraycopy(inBuf, inAddr, inBuf, 0, dataSize);
-		    }
-		    inAddr=0;
-		    readTop=dataSize;
-		  }
-		  else{
-		    dataSize=readTop;
-		  }
-		  //int readCode=UnpIO->UnpRead(InBuf+DataSize,(BitInput::MAX_SIZE-DataSize)&~0xf);
-		  int readCode=unpIO.unpRead(inBuf, dataSize, (BitInput.MAX_SIZE-dataSize)&~0xf);
-		  if (readCode>0){
-		    readTop+=readCode;
-		  }
-		  readBorder=readTop-30;
-		  return(readCode!=-1);
+            System.arraycopy(inBuf, inAddr, inBuf, 0, dataSize);
+        }
+        inAddr=0;
+        readTop=dataSize;
+      }
+      else{
+        dataSize=readTop;
+      }
+      //int readCode=UnpIO->UnpRead(InBuf+DataSize,(BitInput::MAX_SIZE-DataSize)&~0xf);
+      int readCode=unpIO.unpRead(inBuf, dataSize, (BitInput.MAX_SIZE-dataSize)&~0xf);
+      if (readCode>0){
+        readTop+=readCode;
+      }
+      readBorder=readTop-30;
+      return(readCode!=-1);
 	}
 
 	private int getShortLen1(int pos)
@@ -606,15 +599,10 @@ public abstract class Unpack15 extends BitInput
 		return (((Num - (I != 0 ? DecTab[I - 1] : 0)) >>> (16 - StartPos)) + PosTab[StartPos]);
 	}
 
-	protected void oldUnpWriteBuf() throws IOException
-	{
-		if (unpPtr != wrPtr) {
-			unpSomeRead = true;
-		}
+	protected void oldUnpWriteBuf() throws IOException{
 		if (unpPtr < wrPtr) {
 			unpIO.unpWrite(window, wrPtr, -wrPtr & Compress.MAXWINMASK);
 			unpIO.unpWrite(window, 0, unpPtr);
-			unpAllBuf = true;
 		} else {
 			unpIO.unpWrite(window, wrPtr, unpPtr - wrPtr);
 		}

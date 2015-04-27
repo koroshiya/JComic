@@ -18,35 +18,13 @@ package net.lingala.zip4j.model;
 
 public class Zip64EndCentralDirRecord {
 	
-	private long signature;
-	
 	private long sizeOfZip64EndCentralDirRec;
-	
-	private int versionMadeBy;
-	
-	private int versionNeededToExtract;
 	
 	private int noOfThisDisk;
 	
-	private int noOfThisDiskStartOfCentralDir;
-	
-	private long totNoOfEntriesInCentralDirOnThisDisk;
-	
 	private long totNoOfEntriesInCentralDir;
-	
-	private long sizeOfCentralDir;
-	
+
 	private long offsetStartCenDirWRTStartDiskNo;
-	
-	private byte[] extensibleDataSector;
-
-	public long getSignature() {
-		return signature;
-	}
-
-	public void setSignature(long signature) {
-		this.signature = signature;
-	}
 
 	public long getSizeOfZip64EndCentralDirRec() {
 		return sizeOfZip64EndCentralDirRec;
@@ -54,22 +32,6 @@ public class Zip64EndCentralDirRecord {
 
 	public void setSizeOfZip64EndCentralDirRec(long sizeOfZip64EndCentralDirRec) {
 		this.sizeOfZip64EndCentralDirRec = sizeOfZip64EndCentralDirRec;
-	}
-
-	public int getVersionMadeBy() {
-		return versionMadeBy;
-	}
-
-	public void setVersionMadeBy(int versionMadeBy) {
-		this.versionMadeBy = versionMadeBy;
-	}
-
-	public int getVersionNeededToExtract() {
-		return versionNeededToExtract;
-	}
-
-	public void setVersionNeededToExtract(int versionNeededToExtract) {
-		this.versionNeededToExtract = versionNeededToExtract;
 	}
 
 	public int getNoOfThisDisk() {
@@ -80,37 +42,12 @@ public class Zip64EndCentralDirRecord {
 		this.noOfThisDisk = noOfThisDisk;
 	}
 
-	public int getNoOfThisDiskStartOfCentralDir() {
-		return noOfThisDiskStartOfCentralDir;
-	}
-
-	public void setNoOfThisDiskStartOfCentralDir(int noOfThisDiskStartOfCentralDir) {
-		this.noOfThisDiskStartOfCentralDir = noOfThisDiskStartOfCentralDir;
-	}
-
-	public long getTotNoOfEntriesInCentralDirOnThisDisk() {
-		return totNoOfEntriesInCentralDirOnThisDisk;
-	}
-
-	public void setTotNoOfEntriesInCentralDirOnThisDisk(
-			long totNoOfEntriesInCentralDirOnThisDisk) {
-		this.totNoOfEntriesInCentralDirOnThisDisk = totNoOfEntriesInCentralDirOnThisDisk;
-	}
-
 	public long getTotNoOfEntriesInCentralDir() {
 		return totNoOfEntriesInCentralDir;
 	}
 
 	public void setTotNoOfEntriesInCentralDir(long totNoOfEntriesInCentralDir) {
 		this.totNoOfEntriesInCentralDir = totNoOfEntriesInCentralDir;
-	}
-
-	public long getSizeOfCentralDir() {
-		return sizeOfCentralDir;
-	}
-
-	public void setSizeOfCentralDir(long sizeOfCentralDir) {
-		this.sizeOfCentralDir = sizeOfCentralDir;
 	}
 
 	public long getOffsetStartCenDirWRTStartDiskNo() {
@@ -120,14 +57,6 @@ public class Zip64EndCentralDirRecord {
 	public void setOffsetStartCenDirWRTStartDiskNo(
 			long offsetStartCenDirWRTStartDiskNo) {
 		this.offsetStartCenDirWRTStartDiskNo = offsetStartCenDirWRTStartDiskNo;
-	}
-
-	public byte[] getExtensibleDataSector() {
-		return extensibleDataSector;
-	}
-
-	public void setExtensibleDataSector(byte[] extensibleDataSector) {
-		this.extensibleDataSector = extensibleDataSector;
 	}
 	
 	

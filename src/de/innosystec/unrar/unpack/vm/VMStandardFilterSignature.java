@@ -17,18 +17,12 @@
  */
 package de.innosystec.unrar.unpack.vm;
 
-/**
- * DOCUMENT ME
- * 
- * @author $LastChangedBy$
- * @version $LastChangedRevision$
- */
 public class VMStandardFilterSignature {
-	private int length;
+	private final int length;
 
-	private int CRC;
+	private final int CRC;
 
-	private VMStandardFilters type;
+	private final VMStandardFilters type;
 
 	public VMStandardFilterSignature(int length, int crc, VMStandardFilters type) {
 		super();
@@ -41,24 +35,12 @@ public class VMStandardFilterSignature {
 		return CRC;
 	}
 
-	public void setCRC(int crc) {
-		CRC = crc;
-	}
-
 	public int getLength() {
 		return length;
 	}
 
-	public void setLength(int length) {
-		this.length = length;
-	}
-
 	public VMStandardFilters getType() {
 		return type;
-	}
-
-	public void setType(VMStandardFilters type) {
-		this.type = type;
 	}
 
 }

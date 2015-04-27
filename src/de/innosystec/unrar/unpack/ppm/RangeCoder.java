@@ -19,7 +19,6 @@ package de.innosystec.unrar.unpack.ppm;
 
 import java.io.IOException;
 
-import de.innosystec.unrar.exception.RarException;
 import de.innosystec.unrar.unpack.Unpack;
 
 /**
@@ -48,8 +47,7 @@ public class RangeCoder
 		return subRange;
 	}
 
-	public void initDecoder(Unpack unpackRead) throws IOException, RarException
-	{
+	public void initDecoder(Unpack unpackRead) throws IOException {
 		this.unpackRead = unpackRead;
 
 		low = code = 0L;
@@ -65,9 +63,9 @@ public class RangeCoder
 		return (int)((code - low) / (range));
 	}
 
-	public long getCurrentShiftCount(int SHIFT)
+	public long getCurrentShiftCount()
 	{
-		range = range >>>SHIFT;
+		range = range >>> ModelPPM.TOT_BITS;
 		return ((code - low) / (range))&uintMask;
 	}
 
@@ -77,21 +75,11 @@ public class RangeCoder
 		range = (range * (subRange.getHighCount() - subRange.getLowCount()))&uintMask;
 	}
 
-    private int getChar() throws IOException, RarException
-	{
+    private int getChar() throws IOException {
 		return (unpackRead.getChar());
 	}
 
-	public void ariDecNormalize() throws IOException, RarException
-	{
-//		while ((low ^ (low + range)) < TOP || range < BOT && ((range = -low & (BOT - 1)) != 0 ? true : true)) 
-//		{
-//			code = ((code << 8) | unpackRead.getChar()&0xff)&uintMask;
-//			range = (range << 8)&uintMask;
-//			low = (low << 8)&uintMask;
-//		}
-
-        // Rewrote for clarity
+	public void ariDecNormalize() throws IOException {
         boolean c2 = false;
 		while ((low ^ (low + range)) < TOP || (c2 = range < BOT)) {
             if (c2) {
@@ -106,16 +94,7 @@ public class RangeCoder
 
     // Debug
     public String toString() {
-        return "RangeCoder["+
-        "\n  low="+
-        low+
-        "\n  code="+
-        code+
-        "\n  range="+
-        range+
-        "\n  subrange="+
-        subRange+
-        "]";
+        return "RangeCoder[\n  low="+low+"\n  code="+code+"\n  range="+range+"\n  subrange="+subRange+"]";
     }
 
 	public static class SubRange
@@ -159,14 +138,7 @@ public class RangeCoder
         
         // Debug
         public String toString() {
-            return "SubRange["+
-            "\n  lowCount="+
-            lowCount+
-            "\n  highCount="+
-            highCount+
-            "\n  scale="+
-            scale+
-            "]";
+            return "SubRange[\n  lowCount="+lowCount+"\n  highCount="+highCount+"\n  scale="+scale+"]";
         }
 	}
 }

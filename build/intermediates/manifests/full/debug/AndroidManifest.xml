@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.japanzai.koroshiya"
-    android:versionCode="36"
-    android:versionName="1.14.0" >
+    android:versionCode="37"
+    android:versionName="2.0.0" >
 
     <uses-sdk
-        android:minSdkVersion="10"
-        android:targetSdkVersion="21" />
+        android:minSdkVersion="7"
+        android:targetSdkVersion="22" />
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
@@ -15,25 +15,17 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:largeHeap="true"
-        android:theme="@style/Theme.Sherlock" >
-        <activity
-            android:name="com.japanzai.koroshiya.reader.MainActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/app_name"
-            android:screenOrientation="user" >
+        android:theme="@style/AppTheme" >
+        <activity android:name="com.japanzai.koroshiya.reader.MainActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name="com.japanzai.koroshiya.filechooser.FileChooser"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/app_name" />
-        <activity
-            android:name="com.japanzai.koroshiya.settings.SettingsView"
-            android:configChanges="orientation|keyboardHidden|screenSize" />
+        <activity android:name="com.japanzai.koroshiya.filechooser.FileChooser" />
+        <activity android:name="com.japanzai.koroshiya.filechooser.BulkDelete" />
+        <activity android:name="com.japanzai.koroshiya.settings.SettingsView" />
         <activity android:name="com.japanzai.koroshiya.reader.Reader" />
         <activity android:name="com.japanzai.koroshiya.reader.Progress" />
         <activity android:name="com.japanzai.koroshiya.About" />

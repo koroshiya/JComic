@@ -24,7 +24,6 @@ package de.innosystec.unrar.unpack.decode;
  * @version $LastChangedRevision$
  */
 public class Compress {
-	public static final int CODEBUFSIZE   		= 0x4000;
 	public static final int MAXWINSIZE    		= 0x400000;
 	public static final int MAXWINMASK      	= (MAXWINSIZE-1);
 

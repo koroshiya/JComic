@@ -24,22 +24,19 @@ import java.util.zip.Inflater;
 
 import net.lingala.zip4j.unzip.UnzipEngine;
 import net.lingala.zip4j.util.InternalZipConstants;
-import net.lingala.zip4j.util.Zip4jConstants;
 
 public class InflaterInputStream extends PartInputStream {
 	
 	private final Inflater inflater;
 	private final byte[] buff;
 	private final byte[] oneByteBuff = new byte[1];
-	private final UnzipEngine unzipEngine;
 	private long bytesWritten;
 	private final long uncompressedSize;
 	
-	public InflaterInputStream(RandomAccessFile raf, long start, long len, UnzipEngine unzipEngine) {
+	public InflaterInputStream(RandomAccessFile raf, long len, UnzipEngine unzipEngine) {
 		super(raf, len, unzipEngine);
 		this.inflater = new Inflater(true);
 		this.buff = new byte[InternalZipConstants.BUFF_SIZE];
-		this.unzipEngine = unzipEngine;
 		bytesWritten = 0;
 		uncompressedSize = unzipEngine.getFileHeader().getUncompressedSize();
 	}
@@ -88,12 +85,7 @@ public class InflaterInputStream extends PartInputStream {
 		    if (e.getMessage() != null) {
 		    	s = e.getMessage();
 		    }
-		    if (unzipEngine != null) {
-		    	if (unzipEngine.getLocalFileHeader().isEncrypted() && 
-		    			unzipEngine.getLocalFileHeader().getEncryptionMethod() == Zip4jConstants.ENC_METHOD_STANDARD) {
-		    		s += " - Wrong Password?";
-		    	}
-		    }
+
 		    throw new IOException(s);
 		}
 	}
@@ -102,10 +94,10 @@ public class InflaterInputStream extends PartInputStream {
 		//In some cases, compelte data is not read even though inflater is complete
 		//make sure to read complete data before returning -1
 		byte[] b = new byte[1024];
-		while (super.read(b, 0, 1024) != -1) {
-			//read all data
-		}
-		checkAndReadAESMacBytes();
+        int val;
+        do{
+            val = super.read(b, 0, 1024);
+        }while (val != -1);
 	}
 	
 	private void fill() throws IOException {
@@ -144,11 +136,6 @@ public class InflaterInputStream extends PartInputStream {
 		return total;
     }
 	
-	
-	public void seek(long pos) throws IOException {
-		super.seek(pos);
-	}
-	
 	/**
      * Returns 0 after EOF has been reached, otherwise always return 1.
      * <p>
@@ -156,7 +143,6 @@ public class InflaterInputStream extends PartInputStream {
      * of bytes that could be read without blocking.
      *
      * @return     1 before EOF and 0 after EOF.
-     * @exception  IOException  if an I/O error occurs.
      * 
      */
 	public int available() {
@@ -166,9 +152,5 @@ public class InflaterInputStream extends PartInputStream {
 	public void close() throws IOException {
 		inflater.end();
 		super.close();
-	}
-	
-	public UnzipEngine getUnzipEngine() {
-		return super.getUnzipEngine();
 	}
 }

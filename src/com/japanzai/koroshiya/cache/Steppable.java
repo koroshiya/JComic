@@ -1,7 +1,6 @@
 package com.japanzai.koroshiya.cache;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -10,14 +9,11 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.japanzai.koroshiya.R;
 import com.japanzai.koroshiya.archive.steppable.JImage;
 import com.japanzai.koroshiya.archive.steppable.JRarArchive;
 import com.japanzai.koroshiya.controls.JBitmapDrawable;
-import com.japanzai.koroshiya.interfaces.Cacheable;
-import com.japanzai.koroshiya.interfaces.StepThread;
 import com.japanzai.koroshiya.io_utils.ArchiveParser;
 import com.japanzai.koroshiya.io_utils.ImageParser;
 import com.japanzai.koroshiya.reader.MainActivity;
@@ -30,7 +26,7 @@ import com.japanzai.koroshiya.settings.SettingsManager;
  * Purpose: Provides methods for moving through a list of image files.
  * 			Intended for moving through directories, archives, etc.
  * */
-public abstract class Steppable implements Cacheable{
+public abstract class Steppable {
 
 	private final ArrayList<JImage> images;
 	
@@ -42,8 +38,8 @@ public abstract class Steppable implements Cacheable{
 	private JBitmapDrawable cachePrimary = null;
 	private JBitmapDrawable cacheSecondary = null;
 
-	private StepThread primary = null; //Thread for caching the next image
-	private StepThread secondary = null; //Thread for caching the previous image
+    protected StepThread primary = null; //Thread for caching the next image
+    protected StepThread secondary = null; //Thread for caching the previous image
 	private ParseCurrentImageThread pcit = null;
 	
 	protected final Reader parent;
@@ -56,23 +52,30 @@ public abstract class Steppable implements Cacheable{
 	
 	/**
 	 * Purpose: Parse the image file at the current index
-	 * @throws IOException 
 	 * */
-	public abstract void parseCurrent() throws IOException;
-    
-	/**
-	 * Purpose: Adds an image or image reference to the arraylist
-	 * @param image Displayable image, String reference, etc. to
-	 * 				be added to the image arraylist.
-	 * */
-	public void addImage(JImage image){
-		this.images.add(image);
-		this.max++;
-	}
+	public void parseCurrent() {
+        getParent().setImage(parseImage(getIndex()));
+
+        SettingsManager settings = parent.getSettings();
+        if (settings.isCacheOnStart()){
+            cache(settings.getCacheModeIndex() != 2);
+        }
+    }
+
+    /**
+     * Purpose: Caches an image and/or its filepath
+     * @param name String name of file. Used for sorting.
+     * */
+    public void addImageToCache(Object absoluteFilePath, String name) {
+
+        JImage j = new JImage(absoluteFilePath, name);
+        this.images.add(j);
+        this.max++;
+
+    }
 	
     /**
      * Purpose: Moves to the next valid index.
-     * @throws InterruptedException Passed up from parse(boolean)
      * */
 	public synchronized void next() {
     	
@@ -83,7 +86,7 @@ public abstract class Steppable implements Cacheable{
     		if (index < max - 1){
     			index++;
     		}else if (parent.getSettings().isLoopModeEnabled()){
-                index = 0;
+                setIndex(0);
     		}else {
                 nextChapter();
     			return;
@@ -137,10 +140,10 @@ public abstract class Steppable implements Cacheable{
                 }
             }
             if (replacement == null || replacement.getName().equals(curFile.getName())) {
-                parent.runOnUiThread(new ToastThread(R.string.no_more_chapters_found, parent, Toast.LENGTH_SHORT));
+                parent.runOnUiThread(new ToastThread(R.string.no_more_chapters_found, parent));
             } else {
                 this.parent.finish(); //TODO: look at replacing instead of finishing and restarting
-                MainActivity.mainActivity.runOnUiThread(new ToastThread(forward ? R.string.chapter_next : R.string.chapter_previous, parent, Toast.LENGTH_SHORT));
+                MainActivity.mainActivity.runOnUiThread(new ToastThread(forward ? R.string.chapter_next : R.string.chapter_previous, parent));
 
                 Intent intent = new Intent(MainActivity.mainActivity, Reader.class);
                 Bundle b = new Bundle();
@@ -151,7 +154,7 @@ public abstract class Steppable implements Cacheable{
                 MainActivity.mainActivity.startActivity(intent);
             }
         }else {
-            parent.runOnUiThread(new ToastThread(forward ? R.string.end_of_chapter : R.string.start_of_chapter, parent, Toast.LENGTH_SHORT));
+            parent.runOnUiThread(new ToastThread(forward ? R.string.end_of_chapter : R.string.start_of_chapter, parent));
             //TODO: context menu entry
         }
     }
@@ -181,7 +184,6 @@ public abstract class Steppable implements Cacheable{
 
     /**
      * Purpose: Moves to the previous valid index.
-     * @throws InterruptedException Passed up from parse(boolean)
      * */
 	public synchronized void previous() {
     	
@@ -192,10 +194,10 @@ public abstract class Steppable implements Cacheable{
     		if (index > 0){
     			index--;
     		}else if (parent.getSettings().isLoopModeEnabled()){
-    			index = (max - 1);
+                setIndex(max - 1);
     		}else {
                 previousChapter();
-        		parent.runOnUiThread(new ToastThread(R.string.start_of_chapter, parent, Toast.LENGTH_SHORT));
+        		parent.runOnUiThread(new ToastThread(R.string.start_of_chapter, parent));
     			return;
     		}
     		
@@ -216,35 +218,29 @@ public abstract class Steppable implements Cacheable{
     	
     	if (i >= 0 && i < max){
     		this.index = i;
-    		if (parent != null) parent.getSettings().setLastReadIndex(i); //For test archives; not used with real Steppables
+    		if (parent != null) parent.getSettings().setLastReadIndex(i);
     	}else{
             Log.d("Steppable", "Index " + i + " is < 0 or > " + max);
         }
     	
     }
     
-	/**
-     * @param i Maximum index allowed for this Steppable object.
-     * */
-	public void setMax(int i){
-    	this.max = i;
+	/**  */
+	public void setMax(){
+    	this.max = 0;
     }
     
-	/**
-     * @param i Minimum index allowed for this Steppable object.
-     * 			This value is almost always 0.
-     * */
-	public void setMin(int i){
-    	this.min = i;
+	/**  */
+	public void setMin(){
+    	this.min = 0;
     }
     
 	/**
 	 * Purpose: Extracts and parses the file at the specified index.
 	 * @param findex The index of the item to extract
 	 * @return Returns a displayable image file
-	 * @throws IOException if the File could not be read from disk
 	 * */
-	public abstract JBitmapDrawable parseImage(int findex) throws IOException;
+	public abstract JBitmapDrawable parseImage(int findex);
 	
 	/**
 	 * Sorts the JImage objects held by this class.
@@ -257,19 +253,17 @@ public abstract class Steppable implements Cacheable{
 		
 		@Override
 		public void run(){
-			JBitmapDrawable temp;
+
 			clear();
-			try {
-				temp = parseImage(index);
-	    		parent.setImage(temp);
-	    		cache(parent.getSettings().getCacheModeIndex() != 2);
-			} catch (IOException e) {
-				e.printStackTrace();
-			} finally {
-				if (Progress.isVisible && Progress.self != null){
-					Progress.self.oldFinish();
-				}
-			}
+
+            JBitmapDrawable temp = parseImage(index);
+            if (temp != null) {
+                parent.setImage(temp);
+                cache(parent.getSettings().getCacheModeIndex() != 2);
+            }
+            if (Progress.isVisible && Progress.self != null){
+                Progress.self.oldFinish();
+            }
 		}
 		
 	}
@@ -314,11 +308,9 @@ public abstract class Steppable implements Cacheable{
 			System.gc();
 			pcit = new ParseCurrentImageThread();
 	    	pcit.start();
-		} catch (IOException e) {
-			e.printStackTrace();
 		}
-		
-		return true;
+
+        return true;
 		
 	}
 	
@@ -342,9 +334,8 @@ public abstract class Steppable implements Cacheable{
 	 * type and level of the cache settings.
 	 * @param forward If true, the user is moving forward through the list.
 	 * Otherwise, they're moving backward through it.
-	 * @exception IOException if the image at the current index couldn't be parsed.
 	 * */
-	private void cacheHandler(boolean forward) throws IOException{
+	private void cacheHandler(boolean forward) {
 		
 		int cacheLevel = parent.getSettings().getCacheLevel();
 		
@@ -374,8 +365,8 @@ public abstract class Steppable implements Cacheable{
                 ((this instanceof JRarArchive && parent.getSettings().isCacheForRar()) ||
                 !(this instanceof JRarArchive))){
 			cachePrimary = null;
-			primary = forward ? getNextThread(true) : getPreviousThread(true);
-	    	((Thread) primary).start();
+			primary = getThread(true, forward);
+            primary.start();
 		}
 	}
 	
@@ -389,7 +380,7 @@ public abstract class Steppable implements Cacheable{
 	private void cacheIndex(int index){
 		cacheSecondary = null;
 		secondary = getImageThread(index);
-    	((Thread) secondary).start();   
+        secondary.start();
 	}
 	
 	/**
@@ -405,14 +396,14 @@ public abstract class Steppable implements Cacheable{
 			cacheSecondary = (cacheLevel == 2 && cachePrimary != null) ? parent.getImage() : null;
 	    	parent.setImage(cachePrimary);
 	    	cachePrimary = null;
-			primary = getNextThread(true);
-	    	((Thread) primary).start(); 
+			primary = getThread(true, true);
+            primary.start();
 		}else{
 			cachePrimary = (cacheLevel == 2 && cacheSecondary != null) ? parent.getImage() : null;
 	    	parent.setImage(cacheSecondary);
 	    	cacheSecondary = null;
-			secondary = getPreviousThread(false);
-	    	((Thread) secondary).start(); 
+			secondary = getThread(false, false);
+            secondary.start();
 		}
 		
 	}
@@ -425,9 +416,8 @@ public abstract class Steppable implements Cacheable{
 	 * @param forward Represents the direction the cache is moving in.
 	 * If true, the user is moving forward. If false, they're moving backward.
 	 * @param level Integer representing the level (aggression) of caching to perform.
-	 * @exception IOException if the image at the current index couldn't be parsed
 	 * */
-	private void cache(boolean directionSetting, boolean forward, int level) throws IOException {
+	private void cache(boolean directionSetting, boolean forward, int level) {
 		
 		if (level == 1){
 			if (directionSetting == forward){
@@ -529,7 +519,7 @@ public abstract class Steppable implements Cacheable{
 			
 			if (isThreadAlive(secondary)){
 				if (isThreadAlive(primary)){
-					((Thread) primary).interrupt();
+                    primary.interrupt();
 					primary = null;
 					cachePrimary = null;
 				}
@@ -541,14 +531,14 @@ public abstract class Steppable implements Cacheable{
 			if (cacheModeIndex != 2 == forward){
 				if (isThreadAlive(primary)){
 					if (isThreadAlive(secondary)){
-						((Thread) secondary).interrupt();
+                        secondary.interrupt();
 						secondary = null;
 						cacheSecondary = null;
 					}
 					return true;
 				}
 			}else if (isThreadAlive(primary)){
-				((Thread) primary).interrupt();
+                primary.interrupt();
 				primary = null;
 				cachePrimary = null;
 				return true;
@@ -561,7 +551,7 @@ public abstract class Steppable implements Cacheable{
 	}
 	
 	private boolean isThreadAlive(StepThread thread){
-		 return thread != null && ((Thread)thread).isAlive();
+		 return thread != null && thread.isAlive();
 	}
 	
 	private boolean bitmapExists(JBitmapDrawable bitmap){
@@ -585,15 +575,12 @@ public abstract class Steppable implements Cacheable{
 		}
 		
 	}
-	
-	/**
-	 * Purpose: Generates a thread to replace the used-up thread preceding it.
-	 * @param primary Boolean indicating whether the thread to be retrieved will
-	 * 			be a primary thread or not.
-	 * @return Returns a Thread for caching the next image in a Steppable object.
-	 * 			eg. NextRarThread, NextZipThread, etc.
-	 * */
-	public abstract StepThread getNextThread(boolean primary);
+
+    /**
+     * Purpose: Generates a thread to replace the used-up thread preceding it.
+     * @return Returns a Thread for caching the next/previous image in a Steppable object.
+     * */
+    public abstract StepThread getThread(boolean primary, boolean forward);
 	
 	/**
 	 * Purpose: Generates a thread to replace the used-up thread preceding it.
@@ -601,15 +588,6 @@ public abstract class Steppable implements Cacheable{
 	 * 			the specified index.
 	 * */
 	public abstract StepThread getImageThread(int index);
-	
-	/**
-	 * Purpose: Generates a thread to replace the used-up thread preceding it.
-	 * @param primary Boolean indicating whether the thread to be retrieved will
-	 * 			be a primary thread or not.
-	 * @return Returns a Thread for caching the previous image in a Steppable object.
-	 * 			eg. PreviousRarThread, PreviousZipThread, etc.
-	 * */
-	public abstract StepThread getPreviousThread(boolean primary);
 	
     /**
      * Purpose: Caches the jBitmapDrawable for the next index
@@ -625,7 +603,7 @@ public abstract class Steppable implements Cacheable{
      * @param previous The JBitmapDrawable object to be cached
      * */
 	public synchronized void setCacheSecondary(JBitmapDrawable previous){
-		Log.w("cacheSecondary", "setCacheSecondary");
+		Log.w("cacheSecondary", "setCacheSecondary"); //TODO: UI of credits and about/report page; see tablet for guide
     	this.cacheSecondary = previous;
     }
 
@@ -638,20 +616,6 @@ public abstract class Steppable implements Cacheable{
      * */
     public Reader getParent(){
     	return this.parent;
-    }
-    
-    /**
-     * @return Returns the stored primary Thread
-     * */
-    public StepThread getPrimary(){
-    	return this.primary;
-    }
-    
-    /**
-     * @return Returns the stored secondary Thread
-     * */
-    public StepThread getSecondary(){
-    	return this.secondary;
     }
 
     /**
@@ -680,14 +644,6 @@ public abstract class Steppable implements Cacheable{
      * */
     public int getMax() {		
 		return this.max;		
-	}
-	
-	/**
-     * @return Minimum index of the Steppable object.
-     * 			This value should almost always be 0
-     * */
-    public int getMin(){
-		return this.min;
 	}
 	
 	/**

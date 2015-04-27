@@ -27,8 +27,6 @@
         <item>Propriétés</item>
         <item>Scanner</item>
         <item>Choisir comme favoris</item>
-        <item>Compresser un dossier d\'images en Zip</item>
-        <item>Compresser en Zip, supprime le dossier original</item>
     </string-array>
     <string-array name="array_context_file_r">
         <item>Lecture</item>
@@ -88,30 +86,49 @@
         <item>Activé</item>
         <item>Seulement si l\'image est trop grande</item>
     </string-array>
+    <!-- From: file:/home/mitch/Seafile/Dropbox/dev/Android/JComic/build/intermediates/exploded-aar/com.android.support/appcompat-v7/22.0.0/res/values-fr/values.xml -->
+    <eat-comment/>
+    <string msgid="4600421777120114993" name="abc_action_bar_home_description">"Revenir à l\'accueil"</string>
+    <string msgid="1397052879051804371" name="abc_action_bar_home_description_format">"%1$s, %2$s"</string>
+    <string msgid="6623331958280229229" name="abc_action_bar_home_subtitle_description_format">"%1$s, %2$s, %3$s"</string>
+    <string msgid="1594238315039666878" name="abc_action_bar_up_description">"Revenir en haut de la page"</string>
+    <string msgid="3588849162933574182" name="abc_action_menu_overflow_description">"Plus d\'options"</string>
+    <string msgid="4076576682505996667" name="abc_action_mode_done">"OK"</string>
+    <string msgid="7468859129482906941" name="abc_activity_chooser_view_see_all">"Tout afficher"</string>
+    <string msgid="2031811694353399454" name="abc_activitychooserview_choose_application">"Sélectionner une application"</string>
+    <string msgid="3691816814315814921" name="abc_searchview_description_clear">"Effacer la requête"</string>
+    <string msgid="2550479030709304392" name="abc_searchview_description_query">"Requête de recherche"</string>
+    <string msgid="8264924765203268293" name="abc_searchview_description_search">"Rechercher"</string>
+    <string msgid="8928215447528550784" name="abc_searchview_description_submit">"Envoyer la requête"</string>
+    <string msgid="893419373245838918" name="abc_searchview_description_voice">"Recherche vocale"</string>
+    <string msgid="3421042268587513524" name="abc_shareactionprovider_share_with">"Partager avec"</string>
+    <string msgid="7165123711973476752" name="abc_shareactionprovider_share_with_application">"Partager avec %s"</string>
+    <string msgid="1603543279005712093" name="abc_toolbar_collapse_description">"Réduire"</string>
+    <!-- From: file:/home/mitch/Seafile/Dropbox/dev/Android/JComic/res/values-fr/strings.xml -->
+    <eat-comment/>
     <string name="advanced_cache_safety">Permettre cache sécurité</string>
     <string name="advanced_setting_cache_level">Niveau de cache</string>
     <string name="advanced_setting_recursion_level">Recerche récursive</string>
     <string name="app_name">JComic</string>
-    <string name="archive_index_error">Cette archive peut pas être indexé.</string>
-    <string name="archive_index_error2">Extraire plutôt?</string>
     <string name="archive_read_error">d’archive ne peut être lu</string>
     <string name="author">Auteur:</string>
-    <string name="cancel_selection">Annuler</string>
+    <string name="back">Précédent</string>
+    <string name="bulk_delete_btn">Suppression en masse</string>
+    <string name="bulk_delete_prompt1">Tapez sur un fichier pour le supprimer.</string>
+    <string name="bulk_delete_prompt2">Tapez sur "Précédent" une fois terminé.</string>
     <string name="cant_go_up">Vous ne pouvez pas aller plus loin</string>
     <string name="chapter_next">Prochain chapitre</string>
     <string name="chapter_previous">Précédant chapitre</string>
-    <string name="contributions">Contributions de tierces parties:</string>
-    <string name="credit_by">par</string>
+    <string name="contributions">Contributions de tierces parties</string>
     <string name="description_credits">Crédits</string>
     <string name="description_help">Aide</string>
     <string name="description_read">Lecture</string>
+    <string name="description_resume">Continuez\nà lire</string>
     <string name="description_settings">Réglages</string>
+    <string name="drawer_menu">Menu</string>
     <string name="end_of_chapter">Fin du chapitre</string>
     <string name="error_button">Signaler une erreur</string>
-    <string name="error_report_para_1">Si vous avez remarqué un problème mais n\'avait pas pu la signaler à ce moment-là (ou voulez donner un complément d\'information à son sujet), vous pouvez me contacter par mail directement en cliquant sur le lien ci-dessous.</string>
-    <string name="error_report_para_2">Je lirai tous les rapports d\'erreur d\'erreur que je recevrai, je vous prie donc de détailler autant que possible. Par exemple, si vous avez eu un problème lors de la lecture d\'une image/archive, m\'envoyer des infos sur la taille de l\'image, son format (.jpg, .png…) ou directement l\'image en question m\'aiderait considérablement.</string>
-    <string name="error_report_para_3">JComic m\'enverra automatiquement le modèle de l\'Android que vous utilisez, ainsi que la version de JComic que vous utilisez. Vous pouvez effacer ces informations si vous le souhaitez mais elles me sont très utiles, en particulier pour le débuggage de l\'application.</string>
-    <string name="favorite_no_favorites">Vous n\'avez pas encore de favoris.</string>
+    <string name="error_report">Les rapports d\'erreur peuvent être envoyé par Github, Google Play (via crash reports), ou email.\n\nLe rapport d\'accident est l\'option préférée, suivie par Github et puis l\'email.\n\nLes commentaires sur Google Play ne sont pas lus, si il y a une issue avec JComic, merci de la reporter en cliquant sur l\'un des boutons ci-dessous.</string>
     <string name="file_clear_favorite">Effacer les favoris</string>
     <string name="file_clear_recent">Effacer les éléments récents</string>
     <string name="file_confirm">Oui</string>
@@ -119,7 +136,6 @@
     <string name="file_delete_prompt">Êtes vous sure de vouloir supprimer ceci</string>
     <string name="file_delete_successful">Fichier(s) supprimés avec succès</string>
     <string name="file_deny">Non</string>
-    <string name="file_does_not_exist">Ce fichier n\'existe plus ou ne peut être lu.</string>
     <string name="file_file">fichiers</string>
     <string name="file_file_delete_fail">Le fichier n\'a pas pu être supprimé</string>
     <string name="file_folder_and_contents">dossier et contenus</string>
@@ -145,8 +161,8 @@
     <string name="recent_no_recent_files">Pas de fichier récent</string>
     <string name="refresh">Rafraîchir</string>
     <string name="send_error_report">Envoyer un rapport d\'erreur.</string>
+    <string name="send_error_report_email">rapport d\' email</string>
     <string name="setting_archive">Mode archive</string>
-    <string name="setting_back_to_file_chooser">Retourner à la liste de fichiers à la fin du comic </string>
     <string name="setting_backlight">Conserver l\'écran pendant la lecture</string>
     <string name="setting_cache">Mode cache</string>
     <string name="setting_cache_on_startup">Cache au démarrage</string>
@@ -155,19 +171,16 @@
     <string name="setting_context_menu">Activer le menu de contexte</string>
     <string name="setting_context_menu_head">Commandes</string>
     <string name="setting_context_menu_heading">Choisir une page</string>
-    <string name="setting_disk">Mode Disque</string>
     <string name="setting_double_tap">Double tap:</string>
-    <string name="setting_extract_mode">Extraction d’archive progressive</string>
     <string name="setting_general">Général</string>
     <string name="setting_keep_zoom_page_change">Conserver l\'agrandissement lors du changement de page</string>
-    <string name="setting_location">Origine par défaut du comic</string>
     <string name="setting_loop">Mode répétition</string>
     <string name="setting_orientation">Orientation:</string>
     <string name="setting_performance">Performance</string>
     <string name="setting_pro">Avancé</string>
-    <string name="setting_ram">Mode RAM</string>
     <string name="setting_recent">Sauvegarder la liste dans les fichiers récents</string>
-    <string name="setting_reset">Réglages par défaut</string>
+    <string name="setting_reset">Réglages</string>
+    <string name="setting_reset_prompt">Réglages par défaut?</string>
     <string name="setting_resize">Redimensionnement dynamique</string>
     <string name="setting_session">Sauvegarder les sessions précédentes</string>
     <string name="setting_swipe_next">Balayer pour le prochain/précédant chapitre</string>
@@ -180,14 +193,4 @@
     <string name="unsupported_file">Fichier non supporté:</string>
     <string name="up_directory">Remonter</string>
     <string name="version">Version:</string>
-    <string name="zip_already_exists">Une archive du même nom existe déjà</string>
-    <string name="zip_directory_creation_failed">Un fichier du même nom existe déjà</string>
-    <string name="zip_extract_failed">Erreur lors de l\'extraction de l\'archive</string>
-    <string name="zip_extract_in_progress">Extraction de</string>
-    <string name="zip_no_supported_archive">Archive non prise en charge</string>
-    <string name="zip_no_supported_images">Images non convertibles en .zip</string>
-    <string name="zip_operation_running">Extraction/Création de l\'archive en cours</string>
-    <string name="zip_successfully_created">L\'archive a été créée</string>
-    <string name="zip_successfully_extracted">Extraction de l\'archive réussie</string>
-    <string name="zip_zipping_in_progress">Compression de</string>
 </resources>

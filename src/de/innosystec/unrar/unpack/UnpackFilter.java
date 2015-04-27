@@ -39,7 +39,7 @@ public class UnpackFilter {
 	// in PrgStack array. Not defined for filters in Filters array.
 	private int ParentFilter;
 
-	private VMPreparedProgram Prg  = new VMPreparedProgram();
+	private final VMPreparedProgram Prg  = new VMPreparedProgram();
 
 	public int getBlockLength() {
 		return BlockLength;
@@ -83,10 +83,6 @@ public class UnpackFilter {
 
 	public VMPreparedProgram getPrg() {
 		return Prg;
-	}
-
-	public void setPrg(VMPreparedProgram prg) {
-		Prg = prg;
 	}
 
 	

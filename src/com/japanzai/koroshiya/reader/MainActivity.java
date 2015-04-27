@@ -4,51 +4,35 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.widget.ImageButton;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.GridView;
+import android.widget.TextView;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.japanzai.koroshiya.R;
 import com.japanzai.koroshiya.settings.SettingsManager;
 
-public class MainActivity extends SherlockFragmentActivity {
+public class MainActivity extends Activity {
 
 	public static MainActivity mainActivity;
 	private SettingsManager settings;
 	
 	public File tempDir;
-	
-	@SuppressLint("NewApi")
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		//this.setTheme(com.actionbarsherlock.R.style.Theme_Sherlock);
 		super.onCreate(savedInstanceState);
-		
-		try{
-			this.getSupportActionBar().show();
-		}catch(NoClassDefFoundError ncdfe){
-			Log.e("main", ncdfe.getLocalizedMessage());
-		}
+
 		// requestWindowFeature(Window.FEATURE_NO_TITLE);
         SettingsManager.setFullScreen(this);
 		instantiate();
 
-	}
-
-	/**
-	 * Called when the "ResumeReading" option is enabled, and a file to resume
-	 * reading has been saved.
-	 * */
-	private void enableResumeReading() {
-		File savedFile = settings.getLastFileRead();
-		boolean enabled = savedFile != null && savedFile.exists() && settings.saveSession();
-		ImageButton imgBtn = (ImageButton) findViewById(R.id.btnResumeReading);
-		// imgBtn.setVisibility(enabled ? View.VISIBLE : View.GONE);
-		imgBtn.setEnabled(enabled);
 	}
 
 	public void instantiate() {
@@ -59,12 +43,89 @@ public class MainActivity extends SherlockFragmentActivity {
 
 		setContentView(R.layout.activity_main);
 
-		int[] ids = {R.id.btnInitiate, R.id.btnSettings, R.id.btnHelp, R.id.btnCredits, R.id.btnResumeReading, R.id.btnErrorReporting};
-		for (int id : ids){
-			findViewById(id).setOnClickListener(new MainClickListener(this));
-		}
+        GridView grid = (GridView) findViewById(R.id.FileChooserPane);
+
+        MainItem[] items = new MainItem[]{
+                new MainItem(R.string.description_read, R.drawable.ic_read),
+                new MainItem(R.string.description_resume, R.drawable.ic_saved),
+                new MainItem(R.string.description_settings, R.drawable.ic_gear),
+                new MainItem(R.string.description_help, R.drawable.ic_help),
+                new MainItem(R.string.description_credits, R.drawable.ic_credit),
+                new MainItem(R.string.error_button, R.drawable.ic_error_report)
+        };
+
+        grid.setAdapter(new MainAdapter(this, items));
 
 	}
+
+    public class MainItem{
+
+        private final int str;
+        private final int draw;
+
+        public MainItem(int str, int draw){
+            this.str = str;
+            this.draw = draw;
+        }
+
+        public int getStringResource(){
+            return str;
+        }
+
+        public int getDrawableResource(){
+            return draw;
+        }
+    }
+
+    public class MainAdapter extends BaseAdapter {
+
+        final MainItem[] items;
+        final MainActivity c;
+
+        public MainAdapter(MainActivity c, MainItem[] items) {
+            this.c = c;
+            this.items = items;
+        }
+
+        public long getItemId(int position) {
+            return 0;
+        }
+
+        public MainItem getItem(int position) {
+            return items[position];
+        }
+
+        public int getCount() {
+            return items.length;
+        }
+
+        @Override
+        public TextView getView(int position, View v, ViewGroup parent) {
+
+            TextView tv;
+
+            if (v == null){
+                tv = (TextView)LayoutInflater.from(c).inflate(R.layout.list_item, null);
+            }else{
+                tv = (TextView) v;
+            }
+
+            MainItem p = getItem(position);
+            tv.setCompoundDrawablesWithIntrinsicBounds(0, p.getDrawableResource(), 0, 0);
+            tv.setText(p.getStringResource());
+            tv.setOnClickListener(new MainClickListener(c));
+            tv.setHeight(275);
+
+            if (p.getStringResource() == R.string.description_resume) {
+                File savedFile = settings.getLastFileRead();
+                boolean enabled = savedFile != null && savedFile.exists() && settings.saveSession();
+                tv.setEnabled(enabled);
+            }
+
+            return tv;
+
+        }
+    }
 
 	/**
 	 * Called when the "ResumeReading" option is invoked. Gets the last file
@@ -91,7 +152,7 @@ public class MainActivity extends SherlockFragmentActivity {
 	public void onResume() {
 		super.onResume();
 		settings.forceOrientation(this);
-		enableResumeReading();
+        instantiate();
 	}
 
 	/**
@@ -123,5 +184,11 @@ public class MainActivity extends SherlockFragmentActivity {
 		fmtDate.applyPattern(pattern);
 		return fmtDate.format(timeMillis);
 	}
+
+    public static void hideActionBar(Activity act){
+        if (android.os.Build.VERSION.SDK_INT >= 11)
+            if (act.getActionBar() != null)
+                act.getActionBar().hide();
+    }
 	
 }

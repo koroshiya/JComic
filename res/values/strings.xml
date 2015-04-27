@@ -2,10 +2,9 @@
 
     <string name="app_name">JComic</string>
     <string name="author">Author:</string>
-    <string name="contributions">Third-party contributions:</string>
+    <string name="contributions">Third-party contributions</string>
     <string name="loading_progress">Loading - Please wait until processing is complete</string>
     <string name="cant_go_up">Can\'t go up any further</string>
-    <string name="cancel_selection">Cancel</string>
     <string name="up_directory">Up</string>
     <string name="home_directory">Home</string>
     <string name="refresh">Refresh</string>
@@ -17,7 +16,6 @@
     <string name="setting_orientation">Orientation: </string>
     <string name="setting_session">Save previous session</string>
     <string name="setting_recent">Save list of recently viewed files</string>
-    <string name="setting_location">Default comic location</string>
     <string name="setting_backlight">Keep screen on while reading</string>
     <string name="setting_general">General</string>
     <string name="setting_performance">Performance</string>
@@ -26,10 +24,7 @@
     <string name="setting_cache">Cache mode</string>
     <string name="setting_resize">Dynamic resizing</string>
     <string name="setting_loop">Loop mode</string>
-    <string name="setting_ram">RAM Mode</string>
-    <string name="setting_disk">Disk Mode</string>
-    <string name="setting_reset">Reset default settings</string>
-    <string name="setting_extract_mode">Progressive archive extraction</string>
+    <string name="setting_reset">Reset</string>
     <string name="advanced_setting_cache_level">Cache level</string>
     <string name="advanced_setting_recursion_level">Recursion level</string>
     <string name="version">Version:</string>
@@ -43,8 +38,6 @@
     <string name="recent_no_recent_files">No recently viewed files</string>
     <string name="recent_function_disabled">You have disabled this feature.</string>
     <string name="recent_general_settings">It can be re-enabled in General Settings.</string>
-    <string name="favorite_no_favorites">You do not currently have any favorites saved.</string>
-    <string name="file_does_not_exist">File no longer exists or could not be read.</string>
     <string name="file_folder_and_contents">folder and its contents</string>
     <string name="file_file">file</string>
     <string name="file_confirm">Yes</string>
@@ -65,25 +58,12 @@
     <string name="file_size_kilobytes">KB</string>
     <string name="file_size_megabytes">MB</string>
     <string name="file_size_gigabytes">GB</string>
-    <string name="credit_by">by</string>
     <string name="string_zoom">zoom</string>
     <string name="archive_read_error">Archive could not be read</string>
-    <string name="archive_index_error">This archive cannot be indexed.</string>
-    <string name="archive_index_error2">Extract instead?</string>
     <string name="advanced_cache_safety">Enable cache safety</string>
     <string name="setting_double_tap">Double tap:</string>
     <string name="setting_cache_on_startup">Cache on startup</string>
     <string name="setting_keep_zoom_page_change">Keep zoom on page change</string>
-    <string name="zip_no_supported_images">No supported images to zip</string>
-    <string name="zip_no_supported_archive">Not a supported archive</string>
-    <string name="zip_already_exists">Zip archive already exists</string>
-    <string name="zip_successfully_created">Archive created successfully</string>
-    <string name="zip_directory_creation_failed">Conflicting file exists; couldn\'t create folder</string>
-    <string name="zip_successfully_extracted">Archive extracted successfully</string>
-    <string name="zip_extract_failed">Archive extraction failed</string>
-    <string name="zip_operation_running">Archive operation in progress</string>
-    <string name="zip_extract_in_progress">Extracting</string>
-    <string name="zip_zipping_in_progress">Zipping</string>
     <string name="rating">Enjoying this app? Let me know what you think by rating and/or reviewing JComic.</string>
     <string name="rating_problem">Encountered problems? Please send an error report instead and help me improve JComic.</string>
     <string name="rating_button">Rate/Review</string>
@@ -91,15 +71,13 @@
     <string name="send_error_report">Send report</string>
     <string name="setting_context_menu">Enable context menu</string>
     <string name="setting_context_menu_head">Commands</string>
-    <string name="setting_back_to_file_chooser">Always return from comic to file chooser</string>
     <string name="setting_context_menu_heading">Select Page</string>
     <string name="setting_cache_rar">Cache RAR files*</string>
     <string name="setting_cache_rar_warning">*Warning: attempting to cache some RAR files can cause lock-ups.</string>
     <string name="setting_swipe_next">Swipe to next/previous chapter</string>
     <string name="no_more_chapters_found">No more chapters found</string>
-    <string name="error_report_para_1">If you have encountered an error, but weren\'t able to report the error at the time (or you simply want to add a personal note on the matter), you can send me an email directly by clicking the link below.</string>
-    <string name="error_report_para_2">I will read any error reports I receive, so please enter as many details as you can. eg. If you encountered a problem while reading an image/archive, sending me information about the file, such as its size, format, etc. (or the file itself) would help tremendously.</string>
-    <string name="error_report_para_3">By default, JComic will include the make and model of your device, the version of Android you are running, and the version of JComic you are using. You are free to remove these details if you don\'t want to include them, but the Android and JComic versions in particular are very useful when debugging.</string>
+    <string name="error_report">Error reports can be sent through GitHub, Google Play (via crash reports), or email.\n\nCrash reports are the preferred option, followed by GitHub, then Email.\n\nComments on Google Play will never be read, so if there\'s something wrong with JComic, please report the issue by clicking on one of the buttons below.</string>
+    <string name="drawer_menu">Menu</string>
     <string-array name="general_setting_default_zoom">
         <item>Auto</item>
         <item>25%</item>
@@ -163,8 +141,6 @@
         <item>Properties</item>
         <item>Scan</item>
         <item>Set as Favorite</item>
-        <item>Zip supported images</item>
-        <item>Zip and delete</item>
     </string-array>
     <string-array name="array_context_dir_r">
         <item>Open</item>
@@ -188,5 +164,12 @@
     </string-array>
     <string name="chapter_next">Next Chapter</string>
     <string name="chapter_previous">Previous Chapter</string>
+    <string name="setting_reset_prompt">Are you sure you want to reset all settings?</string>
+    <string name="description_resume">Continue\nReading</string>
+    <string name="send_error_report_email">Email report</string>
+    <string name="back">Back</string>
+    <string name="bulk_delete_btn">Bulk Delete</string>
+    <string name="bulk_delete_prompt1">Tap on a file or folder to delete it.</string>
+    <string name="bulk_delete_prompt2">Tap on "Back" when you\'re done.</string>
 
 </resources>
