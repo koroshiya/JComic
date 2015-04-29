@@ -17,18 +17,18 @@ ADDED from AndroidManifest.xml:8:5
 		ADDED from AndroidManifest.xml:8:22
 uses-sdk
 ADDED from AndroidManifest.xml:9:5
-MERGED from com.android.support:support-v4:22.0.0:20:5
-MERGED from com.android.support:appcompat-v7:22.0.0:20:5
-MERGED from com.android.support:support-v4:22.0.0:20:5
+MERGED from com.android.support:support-v4:22.1.1:20:5
+MERGED from com.android.support:appcompat-v7:22.1.1:20:5
+MERGED from com.android.support:support-v4:22.1.1:20:5
 	android:targetSdkVersion
 		ADDED from AndroidManifest.xml:9:41
 	android:minSdkVersion
 		ADDED from AndroidManifest.xml:9:15
 application
 ADDED from AndroidManifest.xml:11:5
-MERGED from com.android.support:support-v4:22.0.0:22:5
-MERGED from com.android.support:appcompat-v7:22.0.0:22:5
-MERGED from com.android.support:support-v4:22.0.0:22:5
+MERGED from com.android.support:support-v4:22.1.1:22:5
+MERGED from com.android.support:appcompat-v7:22.1.1:22:5
+MERGED from com.android.support:support-v4:22.1.1:22:5
 	android:label
 		ADDED from AndroidManifest.xml:13:9
 	android:allowBackup
