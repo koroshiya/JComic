@@ -28,6 +28,7 @@ public class Progress extends Activity implements ModalReturn{
 	private int index;
 	private Reader reader;
 	private SteppableArchive temp;
+	private ProgressThread thread = null;
 	
 	public static boolean isVisible = false;
 	public static Progress self;
@@ -88,8 +89,19 @@ public class Progress extends Activity implements ModalReturn{
 
 	@Override
 	public void onBackPressed() {
+
+		if (thread != null){
+			try {
+				thread.stop();
+				thread.interrupt();
+			}catch (Exception e){
+				e.printStackTrace();
+			}
+		}
+
+		super.onBackPressed();
 		
-		runOnUiThread(new ToastThread(R.string.loading_progress, this));
+		//runOnUiThread(new ToastThread(R.string.loading_progress, this));
 		//TODO: double tap to cancel
 
 	}
@@ -111,7 +123,7 @@ public class Progress extends Activity implements ModalReturn{
 	        this.f = new File(b.getString("file"));
 	        reader = Reader.reader;
 	        
-	        ProgressThread thread = new ProgressThread();
+	        thread = new ProgressThread();
 	        thread.start();
         }
         

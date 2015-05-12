@@ -2,6 +2,7 @@ package com.japanzai.koroshiya.dialog;
 
 import com.japanzai.koroshiya.interfaces.ModalReturn;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -12,16 +13,13 @@ import android.support.v4.app.DialogFragment;
 /**
  * Displays a prompt to the user in the form of a dialog.
  * */
+@SuppressLint("ValidFragment")
 public class ConfirmDialog extends DialogFragment implements OnClickListener{
 	
 	private final String confirm;
 	private final String deny;
 	private final String message;
 	private final ModalReturn modal;
-
-    public ConfirmDialog(){
-        this("", "", "", null);
-    }
 	
 	/**
 	 * @param confirm Text for confirmation button

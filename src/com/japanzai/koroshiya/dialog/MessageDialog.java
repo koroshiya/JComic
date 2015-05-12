@@ -1,5 +1,6 @@
 package com.japanzai.koroshiya.dialog;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import java.util.ArrayList;
 /**
  * Displays a message to the user in the form of a dialog.
  * */
+@SuppressLint("ValidFragment")
 public class MessageDialog extends DialogFragment {
 	
 	private final String message;
