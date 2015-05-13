@@ -202,7 +202,7 @@ public class Progress extends Activity implements ModalReturn{
      * Has the parent process the temp file already sent to it.
      * */
     public void finish(){
-    	reader.clearTempFile();
+		if (reader != null) reader.clearTempFile();
     	super.finish();
     }
     
