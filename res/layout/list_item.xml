@@ -10,4 +10,7 @@
     android:text=""
     android:textAppearance="?android:attr/textAppearanceMedium"
     android:gravity="center_horizontal"
-    android:maxHeight="95sp" />
+    android:maxHeight="95sp"
+    android:maxLines="1"
+    android:minLines="1"
+    android:ellipsize="end" />

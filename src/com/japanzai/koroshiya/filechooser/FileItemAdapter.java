@@ -54,17 +54,14 @@ public class FileItemAdapter extends BaseAdapter {
         String t = p.getText();
         tv.setContentDescription(t);
 
-        if (t.length() > 25){
-            if (t.startsWith("/")){
-                int last = t.lastIndexOf('/');
-                int sLast = t.substring(0, last).lastIndexOf('/');
-                String lStr = t.substring(last);
-                String sStr = t.substring(sLast, last);
-                t = ellipsize(sStr) + ellipsize(lStr);
-            }else{
-                t = ellipsize(t);
-            }
+        if (t.startsWith("/")){
+            int last = t.lastIndexOf('/');
+            int sLast = t.substring(0, last).lastIndexOf('/');
+            String lStr = t.substring(last);
+            String sStr = t.substring(sLast, last);
+            t = sStr + lStr;
         }
+
         tv.setText(t);
 
 
@@ -73,9 +70,5 @@ public class FileItemAdapter extends BaseAdapter {
 
         return tv;
 
-    }
-
-    private String ellipsize(String str){
-        return str.length() <= 25 ? str : str.substring(0, 23) + "...";
     }
 }
