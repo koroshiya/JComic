@@ -620,9 +620,8 @@ public class SettingsManager {
 		if (saveSession){
 		
 			lastRead = last;
-			lastReadIndex = lastIndex;
 			updateString("lastRead", lastRead.getAbsolutePath());
-			updateInt("lastReadIndex", lastReadIndex);
+			setLastReadIndex(lastIndex);
 		
 		}
 		

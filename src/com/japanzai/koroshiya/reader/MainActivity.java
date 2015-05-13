@@ -132,19 +132,22 @@ public class MainActivity extends Activity {
 	 * read and the page number the reader was on.
 	 * */
 	public void resumeReading(){
-		startReading(settings.getLastFileRead().getAbsolutePath(), settings.getLastFileReadIndex(), this);		
+		startReading(settings.getLastFileRead().getAbsolutePath(), settings.getLastFileReadIndex());
 	}
 	
-	public static void startReading(String path, int index, Activity act){
+	public void startReading(String path, int index){
 		
 		if (!(new File(path).exists())) return;
+
+        if (index < 0) index = 0;
 		
-		Intent intent = new Intent(act, Reader.class);
+		Intent intent = new Intent(this, Reader.class);
 		Bundle b = new Bundle();
 		b.putString("file", path);
-		b.putInt("index", index < 0 ? 0 : index);
-		intent.putExtras(b);
-		act.startActivity(intent);
+        b.putInt("index", index);
+        intent.putExtras(b);
+        //settings.setLastRead(new File(path), index);
+		startActivity(intent);
 		
 	}
 

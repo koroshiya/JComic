@@ -144,14 +144,7 @@ public abstract class Steppable {
             } else {
                 this.parent.finish(); //TODO: look at replacing instead of finishing and restarting
                 MainActivity.mainActivity.runOnUiThread(new ToastThread(forward ? R.string.chapter_next : R.string.chapter_previous, parent));
-
-                Intent intent = new Intent(MainActivity.mainActivity, Reader.class);
-                Bundle b = new Bundle();
-                b.putString("file", replacement.getAbsolutePath());
-                b.putInt("index", 0);
-                Log.d("SteppableArchive", "Starting at index: 0");
-                intent.putExtras(b);
-                MainActivity.mainActivity.startActivity(intent);
+				MainActivity.mainActivity.startReading(replacement.getAbsolutePath(), 0);
             }
         }else {
             parent.runOnUiThread(new ToastThread(forward ? R.string.end_of_chapter : R.string.start_of_chapter, parent));
