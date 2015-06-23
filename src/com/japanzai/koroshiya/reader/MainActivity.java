@@ -12,9 +12,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
-import android.widget.TextView;
 
 import com.japanzai.koroshiya.R;
+import com.japanzai.koroshiya.controls.EllipsizingTextView;
 import com.japanzai.koroshiya.settings.SettingsManager;
 
 public class MainActivity extends Activity {
@@ -100,21 +100,22 @@ public class MainActivity extends Activity {
         }
 
         @Override
-        public TextView getView(int position, View v, ViewGroup parent) {
+        public EllipsizingTextView getView(int position, View v, ViewGroup parent) {
 
-            TextView tv;
+            EllipsizingTextView tv;
 
             if (v == null){
-                tv = (TextView)LayoutInflater.from(c).inflate(R.layout.list_item, null);
+                tv = (EllipsizingTextView)LayoutInflater.from(c).inflate(R.layout.list_item, null);
             }else{
-                tv = (TextView) v;
+                tv = (EllipsizingTextView) v;
             }
+            tv.setMaxLines(2);
+            tv.setMinLines(2);
 
             MainItem p = getItem(position);
             tv.setCompoundDrawablesWithIntrinsicBounds(0, p.getDrawableResource(), 0, 0);
             tv.setText(p.getStringResource());
             tv.setOnClickListener(new MainClickListener(c));
-            tv.setHeight(275);
 
             if (p.getStringResource() == R.string.description_resume) {
                 File savedFile = settings.getLastFileRead();
