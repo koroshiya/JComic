@@ -8,6 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.japanzai.koroshiya.R;
+import com.japanzai.koroshiya.controls.EllipsizingTextView;
 
 import java.util.ArrayList;
 
@@ -38,14 +39,14 @@ public class FileItemAdapter extends BaseAdapter {
     }
 
     @Override
-    public TextView getView(int position, View v, ViewGroup parent) {
+    public EllipsizingTextView getView(int position, View v, ViewGroup parent) { //TODO: also look at replacing Menu button panels with listviews
 
-        TextView tv;
+        EllipsizingTextView tv;
 
         if (v == null){
-            tv = (TextView) LayoutInflater.from(c).inflate(R.layout.list_item, null);
+            tv = (EllipsizingTextView) LayoutInflater.from(c).inflate(R.layout.list_item, null);
         }else{
-            tv = (TextView) v;
+            tv = (EllipsizingTextView) v;
         }
 
         FileItem p = getItem(position);
