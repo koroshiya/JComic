@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.GridView;
 
@@ -146,7 +145,6 @@ public class FileChooser extends DrawerActivity {
                 break;
         }
         setAdapter(type);
-        mDrawerLayout.closeDrawer(android.os.Build.VERSION.SDK_INT >= 14 ? Gravity.START : Gravity.LEFT);
 
     }
 
@@ -331,14 +329,14 @@ public class FileChooser extends DrawerActivity {
     public File getHomeAsFile(){
     	return home;
     }
-	    
+
     /**
      * @param message Actual prompt/question to be displayed
      * @param target ModalReturn to target with the prompt created  */
 	public void confirm(String message, ModalReturn target){
 		ConfirmDialog confirm = new ConfirmDialog(getString(R.string.file_confirm),
 				getString(R.string.file_deny),
-				message, 
+				message,
 				target);
 		confirm.show(getSupportFragmentManager(), "MainActivity");
     }

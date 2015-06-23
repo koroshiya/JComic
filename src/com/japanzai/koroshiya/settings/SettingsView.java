@@ -17,10 +17,7 @@ import android.view.Gravity;
 import android.view.Surface;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 
 /**
@@ -133,18 +130,6 @@ public class SettingsView extends DrawerActivity implements ModalReturn {
         };
 
         instantiateDrawer(items);
-
-        ListView mDrawerList = (ListView) findViewById(R.id.left_drawer);
-
-        // Set the adapter for the list view
-        mDrawerList.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, items));
-        // Set the list's click listener
-        mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                drawerClick(i);
-            }
-        });
 
         final ModalReturn mr = this;
 
@@ -441,7 +426,6 @@ public class SettingsView extends DrawerActivity implements ModalReturn {
                 break;
         }
         reinstantiate();
-        mDrawerLayout.closeDrawer(android.os.Build.VERSION.SDK_INT >= 14 ? Gravity.START : Gravity.LEFT);
     }
 	
 }

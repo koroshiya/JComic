@@ -1,38 +1,34 @@
 package com.japanzai.koroshiya;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.widget.DrawerLayout;
-import android.view.Gravity;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.internal.view.ContextThemeWrapper;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 
 public abstract class DrawerActivity extends FragmentActivity {
 
-    protected DrawerLayout mDrawerLayout;
-
     public abstract void drawerClick(int i);
 
-    public void instantiateDrawer(String[] items){
+    public void instantiateDrawer(final String[] items){
 
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        final Context context = this;
 
         findViewById(R.id.btn_toggle).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mDrawerLayout.openDrawer(Gravity.START);
+                new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.Theme_AppCompat_Dialog))
+                        .setItems(items,
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int whichButton) {
+                                        drawerClick(whichButton);
+                                    }
+                                })
+                        .show();
             }
         });
 
-        ListView mDrawerList = (ListView) findViewById(R.id.left_drawer);
-        mDrawerList.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, items));
-        mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                drawerClick(i);
-            }
-        });
     }
 
 }
