@@ -98,7 +98,9 @@ public abstract class Steppable {
     			parent.getSettings().setLastReadIndex(index);
     		}
     		
-    	}
+    	}else if (!parent.getSettings().isLoopModeEnabled()){
+			nextChapter();
+		}
     	
     }
 
@@ -190,7 +192,6 @@ public abstract class Steppable {
                 setIndex(max - 1);
     		}else {
                 previousChapter();
-        		parent.runOnUiThread(new ToastThread(R.string.start_of_chapter, parent));
     			return;
     		}
     		
@@ -200,7 +201,9 @@ public abstract class Steppable {
 				parent.getSettings().setLastReadIndex(index);
 			}
     		
-    	}
+    	}else if (!parent.getSettings().isLoopModeEnabled()){
+			previousChapter();
+		}
     	
     }
     
