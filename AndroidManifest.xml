@@ -2,13 +2,8 @@
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.japanzai.koroshiya"
-<<<<<<< HEAD
     android:versionCode="43"
     android:versionName="2.0.6" >
-=======
-    android:versionCode="42"
-    android:versionName="2.0.5" >
->>>>>>> b222c898f259e1dddaf8a70f3980f3ef5010c7a9
     
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-sdk android:minSdkVersion="7" android:targetSdkVersion="22"/>

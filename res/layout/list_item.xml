@@ -11,10 +11,5 @@
     android:textAppearance="?android:attr/textAppearanceMedium"
     android:gravity="center_horizontal"
     android:maxLines="3"
-<<<<<<< HEAD
     android:minLines="1"
     android:ellipsize="end" />
-=======
-    android:minLines="3"
-    android:ellipsize="middle" />
->>>>>>> b222c898f259e1dddaf8a70f3980f3ef5010c7a9

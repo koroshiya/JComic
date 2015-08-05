@@ -39,11 +39,7 @@ public class FileItemAdapter extends BaseAdapter {
     }
 
     @Override
-<<<<<<< HEAD
     public TextView getView(int position, View v, ViewGroup parent) { //TODO: also look at replacing Menu button panels with listviews
-=======
-    public EllipsizingTextView getView(int position, View v, ViewGroup parent) { //TODO: also look at replacing Menu button panels with listviews
->>>>>>> b222c898f259e1dddaf8a70f3980f3ef5010c7a9
 
         EllipsizingTextView tv;
 

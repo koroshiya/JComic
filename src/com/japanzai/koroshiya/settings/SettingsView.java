@@ -17,7 +17,10 @@ import android.util.Log;
 import android.view.Surface;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 
 /**
@@ -129,7 +132,6 @@ public class SettingsView extends DrawerActivity implements ModalReturn {
                 getString(R.string.setting_pro)
         };
 
-<<<<<<< HEAD
         final ModalReturn mr = this;
 
         (findViewById(R.id.btn_reset)).setOnClickListener(new View.OnClickListener() {
@@ -140,13 +142,6 @@ public class SettingsView extends DrawerActivity implements ModalReturn {
         });
 
         findViewById(R.id.btn_toggle).setOnClickListener(new View.OnClickListener() {
-=======
-        instantiateDrawer(items);
-
-        final ModalReturn mr = this;
-
-        (findViewById(R.id.btn_reset)).setOnClickListener(new View.OnClickListener() {
->>>>>>> b222c898f259e1dddaf8a70f3980f3ef5010c7a9
             @Override
             public void onClick(View view) {
                 instantiateDrawer(items);
@@ -439,10 +434,7 @@ public class SettingsView extends DrawerActivity implements ModalReturn {
                 break;
         }
         reinstantiate();
-<<<<<<< HEAD
         //mDrawerLayout.closeDrawer(android.os.Build.VERSION.SDK_INT >= 14 ? Gravity.START : Gravity.LEFT);
-=======
->>>>>>> b222c898f259e1dddaf8a70f3980f3ef5010c7a9
     }
 	
 }

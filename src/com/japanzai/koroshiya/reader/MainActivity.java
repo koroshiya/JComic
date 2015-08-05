@@ -11,17 +11,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-<<<<<<< HEAD
 
 import com.japanzai.koroshiya.R;
 import com.japanzai.koroshiya.controls.EllipsizingTextView;
 import com.japanzai.koroshiya.controls.ResizingGridView;
-=======
-import android.widget.GridView;
-
-import com.japanzai.koroshiya.R;
-import com.japanzai.koroshiya.controls.EllipsizingTextView;
->>>>>>> b222c898f259e1dddaf8a70f3980f3ef5010c7a9
 import com.japanzai.koroshiya.settings.SettingsManager;
 
 public class MainActivity extends Activity {
@@ -117,8 +110,6 @@ public class MainActivity extends Activity {
             }else{
                 tv = (EllipsizingTextView) v;
             }
-            tv.setMaxLines(2);
-            tv.setMinLines(2);
 
             MainItem p = getItem(position);
             tv.setCompoundDrawablesWithIntrinsicBounds(0, p.getDrawableResource(), 0, 0);
