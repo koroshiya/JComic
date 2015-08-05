@@ -47,13 +47,13 @@ public class Credits extends Activity {
 		try{
 			versionName = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
 		} catch (NameNotFoundException e) {
-			versionName = "N/A"; // This should never happen anyway. Handling added just in case,
+			versionName = "N/A"; // This should never happen anyway. Handling added just in case.
 		}
 		setText(R.id.txtVersion, R.string.version, " " + versionName);
 		
 		setText(R.id.txtAuthor, R.string.author, " Koro" + "\n");
 		
-		setText(R.id.txtContributions, R.string.contributions, "\n" + "http://jcomic.japanzai.com/index.php?sub=license" + "\n" +
+		setText(R.id.txtContributions, R.string.contributions, "\n" + "https://github.com/koroshiya/JComic/blob/master/LICENSE.md" + "\n" +
 										"Source: https://github.com/koroshiya/JComic" + "\n");
 		
 		setText(R.id.txtRating, R.string.rating, "\n" + getString(R.string.rating_problem) + "\n");

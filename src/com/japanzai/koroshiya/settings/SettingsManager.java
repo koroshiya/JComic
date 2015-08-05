@@ -40,8 +40,8 @@ public class SettingsManager {
 	 *
 	 */
 
-    private static final boolean defaultLoopMode = true;
-    private static final boolean defaultSwipeToNextMode = false;
+    private static final boolean defaultLoopMode = false;
+    private static final boolean defaultSwipeToNextMode = true;
 	private static final boolean defaultSaveSession = true;
 	private static final boolean defaultSaveRecent = true;
 	private static final boolean defaultKeepBacklightOn = false;

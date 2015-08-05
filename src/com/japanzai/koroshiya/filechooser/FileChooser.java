@@ -334,14 +334,14 @@ public class FileChooser extends DrawerActivity {
     public File getHomeAsFile(){
     	return home;
     }
-	    
+
     /**
      * @param message Actual prompt/question to be displayed
      * @param target ModalReturn to target with the prompt created  */
 	public void confirm(String message, ModalReturn target){
 		ConfirmDialog confirm = new ConfirmDialog(getString(R.string.file_confirm),
 				getString(R.string.file_deny),
-				message, 
+				message,
 				target);
 		confirm.show(getSupportFragmentManager(), "MainActivity");
     }
