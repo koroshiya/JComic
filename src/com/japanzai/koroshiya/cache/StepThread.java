@@ -1,5 +1,8 @@
 package com.japanzai.koroshiya.cache;
 
+import android.os.Handler;
+import android.os.Looper;
+
 import com.japanzai.koroshiya.controls.JBitmapDrawable;
 
 /**
@@ -40,6 +43,24 @@ public class StepThread extends Thread {
 
     @Override
     public void run() {
+        final Thread th = this;
+        new Thread(new Runnable() {
+            public void run() {
+                Looper.prepare();
+                new Handler().postDelayed(new Runnable() {
+                    public void run() {
+                        try {
+                            th.interrupt();
+                            th.stop();
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
+                    }
+                }, 60000);
+                Looper.loop();
+            }
+        }).start();
+
         JBitmapDrawable jbd = forward ? nextBitmap() : previousBitmap();
         if (primary){
             entry.setCachePrimary(jbd);

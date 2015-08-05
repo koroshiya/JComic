@@ -8,12 +8,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
-import android.widget.GridView;
 
 import com.japanzai.koroshiya.DrawerActivity;
 import com.japanzai.koroshiya.R;
+import com.japanzai.koroshiya.controls.ResizingGridView;
 import com.japanzai.koroshiya.dialog.ConfirmDialog;
 import com.japanzai.koroshiya.interfaces.ModalReturn;
 import com.japanzai.koroshiya.io_utils.ArchiveParser;
@@ -34,7 +33,7 @@ public class FileChooser extends DrawerActivity {
 	private File home = null;
 	private final ItemClickListener icl = new ItemClickListener(this);
 	private final MainActivity parent = MainActivity.mainActivity;
-	protected GridView v;
+	protected ResizingGridView v;
 
     public final static int FILES = 100;
     public final static int FAVORITE = 200;
@@ -68,7 +67,7 @@ public class FileChooser extends DrawerActivity {
         parent.getSettings().keepBacklightOn(this.getWindow());
         SettingsManager.setFullScreen(this);
         setContentView(R.layout.activity_file_chooser);
-        v = (GridView) findViewById(R.id.FileChooserPane);
+        v = (ResizingGridView) findViewById(R.id.FileChooserPane);
         instantiateParent();
         instantiate();
 
@@ -91,20 +90,18 @@ public class FileChooser extends DrawerActivity {
      * */
     public void instantiateParent(){
 
-        String[] items = new String[]{
+        final String[] items = new String[]{
                 getString(R.string.back),
                 getString(R.string.tab_recent),
                 getString(R.string.tab_files),
                 getString(R.string.tab_favorite)
         };
 
-        instantiateDrawer(items);
-
         findViewById(R.id.btn_home).setOnClickListener(new View.OnClickListener() {
-			public void onClick(View v) {
-				icl.processItemAfter(Environment.getExternalStorageDirectory().getAbsolutePath(), false);
-			}
-		});
+            public void onClick(View v) {
+                icl.processItemAfter(Environment.getExternalStorageDirectory().getAbsolutePath(), false);
+            }
+        });
         findViewById(R.id.btn_up).setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				icl.processItemAfter(getHome().equals("/") ? "/" : getHomeAsFile().getParent(), false);
@@ -119,6 +116,13 @@ public class FileChooser extends DrawerActivity {
         findViewById(R.id.btn_bulk_delete).setOnClickListener(new View.OnClickListener(){
             public void onClick(View v) {
                 startActivity(new Intent(parent, BulkDelete.class));
+            }
+        });
+
+        findViewById(R.id.btn_toggle).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                instantiateDrawer(items);
             }
         });
         
@@ -146,7 +150,6 @@ public class FileChooser extends DrawerActivity {
                 break;
         }
         setAdapter(type);
-        mDrawerLayout.closeDrawer(android.os.Build.VERSION.SDK_INT >= 14 ? Gravity.START : Gravity.LEFT);
 
     }
 

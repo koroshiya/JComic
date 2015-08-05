@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TextView
+<com.japanzai.koroshiya.controls.EllipsizingTextView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/row_text"
     android:layout_width="wrap_content"
@@ -10,7 +10,6 @@
     android:text=""
     android:textAppearance="?android:attr/textAppearanceMedium"
     android:gravity="center_horizontal"
-    android:maxHeight="95sp"
-    android:maxLines="1"
+    android:maxLines="3"
     android:minLines="1"
     android:ellipsize="end" />

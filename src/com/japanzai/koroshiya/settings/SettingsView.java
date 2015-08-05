@@ -11,9 +11,9 @@ import com.japanzai.koroshiya.settings.controls.SpinnerSetting;
 import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.Surface;
 import android.view.View;
 import android.view.WindowManager;
@@ -125,26 +125,12 @@ public class SettingsView extends DrawerActivity implements ModalReturn {
 
         lLayout = (LinearLayout) this.findViewById(R.id.tabGeneralSettings);
 
-        String[] items = new String[]{
+        final String[] items = new String[]{
                 getString(R.string.back),
                 getString(R.string.setting_general),
                 getString(R.string.setting_performance),
                 getString(R.string.setting_pro)
         };
-
-        instantiateDrawer(items);
-
-        ListView mDrawerList = (ListView) findViewById(R.id.left_drawer);
-
-        // Set the adapter for the list view
-        mDrawerList.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, items));
-        // Set the list's click listener
-        mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                drawerClick(i);
-            }
-        });
 
         final ModalReturn mr = this;
 
@@ -152,6 +138,13 @@ public class SettingsView extends DrawerActivity implements ModalReturn {
             @Override
             public void onClick(View view) {
                 confirm(getString(R.string.setting_reset_prompt), mr);
+            }
+        });
+
+        findViewById(R.id.btn_toggle).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                instantiateDrawer(items);
             }
         });
     	        
@@ -441,7 +434,7 @@ public class SettingsView extends DrawerActivity implements ModalReturn {
                 break;
         }
         reinstantiate();
-        mDrawerLayout.closeDrawer(android.os.Build.VERSION.SDK_INT >= 14 ? Gravity.START : Gravity.LEFT);
+        //mDrawerLayout.closeDrawer(android.os.Build.VERSION.SDK_INT >= 14 ? Gravity.START : Gravity.LEFT);
     }
 	
 }

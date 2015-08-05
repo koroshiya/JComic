@@ -25,7 +25,7 @@
 
     </LinearLayout>
 
-    <GridView
+    <com.japanzai.koroshiya.controls.ResizingGridView
         android:id="@+id/FileChooserPane"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

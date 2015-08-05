@@ -1,103 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.DrawerLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_below="@+id/my_awesome_toolbar">
+    android:orientation="vertical" >
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical" >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="10dp"
+        android:background="@color/blue_grey_800">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginBottom="10dp"
-                android:background="@color/blue_grey_800">
+        <TextView
+            android:id="@+id/btn_toggle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableTop="@drawable/menu"
+            android:gravity="center_horizontal"
+            android:minWidth="55dp"
+            android:text="@string/drawer_menu"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:clickable="true"
+            android:textColor="#FFFFFF" />
 
-                <TextView
-                    android:id="@+id/btn_toggle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:drawableTop="@drawable/menu"
-                    android:gravity="center_horizontal"
-                    android:minWidth="55dp"
-                    android:text="@string/drawer_menu"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:clickable="true"
-                    android:textColor="#FFFFFF" />
+        <TextView
+            android:id="@+id/btn_up"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableTop="@drawable/up"
+            android:gravity="center_horizontal"
+            android:minWidth="55dp"
+            android:text="@string/up_directory"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:clickable="true"
+            android:textColor="#FFFFFF" />
 
-                <TextView
-                    android:id="@+id/btn_up"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:drawableTop="@drawable/up"
-                    android:gravity="center_horizontal"
-                    android:minWidth="55dp"
-                    android:text="@string/up_directory"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:clickable="true"
-                    android:textColor="#FFFFFF" />
+        <TextView
+            android:id="@+id/btn_home"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableTop="@drawable/home"
+            android:gravity="center_horizontal"
+            android:minWidth="55dp"
+            android:text="@string/home_directory"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:clickable="true"
+            android:textColor="#FFFFFF" />
 
-                <TextView
-                    android:id="@+id/btn_home"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:drawableTop="@drawable/home"
-                    android:gravity="center_horizontal"
-                    android:minWidth="55dp"
-                    android:text="@string/home_directory"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:clickable="true"
-                    android:textColor="#FFFFFF" />
+        <TextView
+            android:id="@+id/btn_bulk_delete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableTop="@drawable/delete"
+            android:gravity="center_horizontal"
+            android:minWidth="55dp"
+            android:text="@string/bulk_delete_btn"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:clickable="true"
+            android:textColor="#FFFFFF" />
 
-                <TextView
-                    android:id="@+id/btn_bulk_delete"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:drawableTop="@drawable/delete"
-                    android:gravity="center_horizontal"
-                    android:minWidth="55dp"
-                    android:text="@string/bulk_delete_btn"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:clickable="true"
-                    android:textColor="#FFFFFF" />
+        <TextView
+            android:id="@+id/btn_refresh"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableTop="@drawable/refresh"
+            android:gravity="center_horizontal"
+            android:minWidth="55dp"
+            android:text="@string/refresh"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:clickable="true"
+            android:textColor="#FFFFFF" />
 
-                <TextView
-                    android:id="@+id/btn_refresh"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:drawableTop="@drawable/refresh"
-                    android:gravity="center_horizontal"
-                    android:minWidth="55dp"
-                    android:text="@string/refresh"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:clickable="true"
-                    android:textColor="#FFFFFF" />
+    </LinearLayout>
 
-            </LinearLayout>
-
-            <GridView
-                android:id="@+id/FileChooserPane"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:numColumns="auto_fit"
-                android:columnWidth="150sp" />
-
-        </LinearLayout>
-
-    <!-- The navigation drawer -->
-    <ListView android:id="@+id/left_drawer"
-        android:layout_width="240dp"
+    <com.japanzai.koroshiya.controls.ResizingGridView
+        android:id="@+id/FileChooserPane"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="start"
-        android:choiceMode="singleChoice"
-        android:divider="@android:color/transparent"
-        android:dividerHeight="0dp"
-        android:background="#111"
-        tools:listitem="@android:layout/simple_list_item_2" />
-</android.support.v4.widget.DrawerLayout>
+        android:numColumns="auto_fit"
+        android:columnWidth="150sp" />
+
+</LinearLayout>

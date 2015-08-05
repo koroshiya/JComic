@@ -4,9 +4,9 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
-import android.widget.GridView;
 
 import com.japanzai.koroshiya.R;
+import com.japanzai.koroshiya.controls.ResizingGridView;
 import com.japanzai.koroshiya.dialog.MessageDialog;
 import com.japanzai.koroshiya.reader.MainActivity;
 import com.japanzai.koroshiya.settings.SettingsManager;
@@ -17,7 +17,7 @@ import java.util.Arrays;
 
 public class BulkDelete extends FragmentActivity {
 
-    protected GridView v;
+    protected ResizingGridView v;
     File home;
 
     @Override
@@ -26,7 +26,7 @@ public class BulkDelete extends FragmentActivity {
         super.onCreate(savedInstanceState);
         SettingsManager.setFullScreen(this);
         setContentView(R.layout.activity_bulk_delete);
-        v = (GridView) findViewById(R.id.FileChooserPane);
+        v = (ResizingGridView) findViewById(R.id.FileChooserPane);
 
         findViewById(R.id.btn_cancel).setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
