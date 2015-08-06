@@ -19,7 +19,13 @@ License: <a href="http://www.apache.org/licenses/LICENSE-2.0.html">Apache v2.0</
 <a href="https://github.com/triposo/barone">EllipsizingTextView</a> by Micah Hainline, Triposo
 License: <a href="http://www.apache.org/licenses/LICENSE-2.0.html">Apache v2.0</a>
 
+<a href="https://github.com/triposo/barone">EllipsizedTextView</a> by Google Inc.
+License: <a href="http://www.apache.org/licenses/LICENSE-2.0.html">Apache v2.0</a>
+
 English to French translations were provided courtesy of Lucas Marot.
 
-Icons were made by Peter Hull.
+Most icons were made by Peter Hull.
 His services can be accessed at http://leftalive.deviantart.com/
+
+Reset & refresh icons by VisualPharm: http://www.visualpharm.com/
+Other icons by Oxygen Team: http://www.oxygen-icons.org/
