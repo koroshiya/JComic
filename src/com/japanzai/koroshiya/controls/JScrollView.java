@@ -145,7 +145,7 @@ public class JScrollView extends TwoDScrollView {
 		@Override
 		public boolean onDoubleTap(MotionEvent e) {
 			
-			MainActivity parent = MainActivity.mainActivity;
+			MainActivity parent = MainActivity.getMainActivity();
 			SettingsManager settings = parent.getSettings();
 			int doubleTapIndex = settings.getDoubleTapIndex();
 			

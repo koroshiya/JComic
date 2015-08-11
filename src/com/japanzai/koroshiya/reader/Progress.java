@@ -147,7 +147,7 @@ public class Progress extends Activity implements ModalReturn{
      * @param dir Directory to process the contents of
      * */
     public void parseDir(File dir, int curLevel){
-    	SettingsManager settings = MainActivity.mainActivity.getSettings();
+    	SettingsManager settings = MainActivity.getMainActivity().getSettings();
     	File[] files = dir.listFiles();
     	Arrays.sort(files);
     	for (File f : files){

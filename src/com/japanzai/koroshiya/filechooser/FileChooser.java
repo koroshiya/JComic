@@ -32,7 +32,7 @@ public class FileChooser extends DrawerActivity {
 
 	private File home = null;
 	private final ItemClickListener icl = new ItemClickListener(this);
-	private final MainActivity parent = MainActivity.mainActivity;
+	private final MainActivity parent = MainActivity.getMainActivity();
 	protected ResizingGridView v;
 
     public final static int FILES = 100;
@@ -79,7 +79,7 @@ public class FileChooser extends DrawerActivity {
     	if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
     		this.setRequestedOrientation(SettingsView.get2pointxScreenOrientation(getWindowManager()));
     	} else {
-    		MainActivity.mainActivity.getSettings().forceOrientation(this);
+    		parent.getSettings().forceOrientation(this);
     	}
         instantiate();
     }
@@ -218,7 +218,7 @@ public class FileChooser extends DrawerActivity {
 
     public void instantiate(){
         if (this.type == FILES){
-            File smHome = MainActivity.mainActivity.getSettings().getHomeDir();
+            File smHome = parent.getSettings().getHomeDir();
 
             if (smHome != null && smHome.exists() && smHome.isDirectory()){
                 setHome(smHome);
@@ -245,7 +245,7 @@ public class FileChooser extends DrawerActivity {
 
     public void setAdapter(int type){
 
-        SettingsManager settings = MainActivity.mainActivity.getSettings();
+        SettingsManager settings = parent.getSettings();
         ArrayList<String> listItems = new ArrayList<>();
         FileItemAdapter aList;
 

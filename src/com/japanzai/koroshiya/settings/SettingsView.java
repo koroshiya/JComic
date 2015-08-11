@@ -65,8 +65,8 @@ public class SettingsView extends DrawerActivity implements ModalReturn {
 	    super.onCreate(savedInstanceState);
 	    SettingsManager.setFullScreen(this);
 	    setContentView(R.layout.general_settings);
-	    MainActivity.mainActivity.getSettings().keepBacklightOn(getWindow());
-        this.settings = MainActivity.mainActivity.getSettings();
+	    MainActivity.getMainActivity().getSettings().keepBacklightOn(getWindow());
+        this.settings = MainActivity.getMainActivity().getSettings();
         instantiateParent();
         instantiate();
     }
@@ -75,7 +75,7 @@ public class SettingsView extends DrawerActivity implements ModalReturn {
     public void onResume(){
         load();
     	super.onResume();
-        MainActivity.mainActivity.getSettings().forceOrientation(this);
+        MainActivity.getMainActivity().getSettings().forceOrientation(this);
     }
     
     /**
@@ -164,7 +164,7 @@ public class SettingsView extends DrawerActivity implements ModalReturn {
 
     @Override
     public void accept(){
-        MainActivity.mainActivity.getSettings().restoreDefaultSettings();
+        MainActivity.getMainActivity().getSettings().restoreDefaultSettings();
         load();
     }
 

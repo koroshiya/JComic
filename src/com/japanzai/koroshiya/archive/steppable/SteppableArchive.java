@@ -33,7 +33,7 @@ public abstract class SteppableArchive extends Steppable {
             tempDir = null;
         }
 
-		int mode = MainActivity.mainActivity.getSettings().getCacheModeIndex();
+		int mode = MainActivity.getMainActivity().getSettings().getCacheModeIndex();
 		if (this instanceof JRarArchive){
 			this.progressive = (mode == 0 || mode == 2);
 		}else{

@@ -23,11 +23,9 @@ public class JImageView extends ImageView {
 	
 	public JImageView(Context context) {
 		super(context);
-		
-		if (MainActivity.mainActivity != null){ //Removes null pointer warning (and maybe an obscure crash?) from layouts embedding this as an ImageView
-			SettingsManager settings = MainActivity.mainActivity.getSettings();
-			this.currentZoom = settings.keepZoomOnPageChange() ? inheritedZoom : settings.getCurrentZoomRatio();
-		}
+
+		SettingsManager settings = MainActivity.getMainActivity().getSettings();
+		this.currentZoom = settings.keepZoomOnPageChange() ? inheritedZoom : settings.getCurrentZoomRatio();
 		 
 	}
 	
@@ -46,7 +44,7 @@ public class JImageView extends ImageView {
 				originalHeight = drawable.getIntrinsicHeight();
 			}
 			
-			if (currentWidth == -1 || !MainActivity.mainActivity.getSettings().keepZoomOnPageChange()){
+			if (currentWidth == -1 || !MainActivity.getMainActivity().getSettings().keepZoomOnPageChange()){
 				currentWidth = originalWidth;
 				currentHeight = originalHeight;
 			}
@@ -103,7 +101,7 @@ public class JImageView extends ImageView {
 	
 	public void zoom(Drawable drawable){
 		
-		SettingsManager settings = MainActivity.mainActivity.getSettings();
+		SettingsManager settings = MainActivity.getMainActivity().getSettings();
 		double zoom = settings.getCurrentZoomRatio();
 		if (settings.keepZoomOnPageChange()){
 			pseudoZoom(drawable);

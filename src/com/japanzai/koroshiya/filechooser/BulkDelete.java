@@ -36,7 +36,7 @@ public class BulkDelete extends FragmentActivity {
 
         instantiate();
 
-        if (MainActivity.mainActivity.getSettings().isShowLastDelete()) {
+        if (MainActivity.getMainActivity().getSettings().isShowLastDelete()) {
             ArrayList<String> arr = new ArrayList<>();
             arr.add(getString(R.string.bulk_delete_prompt1));
             arr.add(getString(R.string.bulk_delete_prompt2));
@@ -47,7 +47,7 @@ public class BulkDelete extends FragmentActivity {
     }
 
     public void instantiate(){
-        File smHome = MainActivity.mainActivity.getSettings().getHomeDir();
+        File smHome = MainActivity.getMainActivity().getSettings().getHomeDir();
 
         if (smHome != null && smHome.exists() && smHome.isDirectory()){
             this.home = smHome;

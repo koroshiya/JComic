@@ -19,7 +19,7 @@ import com.japanzai.koroshiya.settings.SettingsManager;
 
 public class MainActivity extends Activity {
 
-	public static MainActivity mainActivity;
+	private static MainActivity mainActivity;
 	private SettingsManager settings;
 	
 	public File tempDir;
@@ -34,6 +34,14 @@ public class MainActivity extends Activity {
 		instantiate();
 
 	}
+
+    public static MainActivity getMainActivity(){
+        if (MainActivity.mainActivity == null){
+            MainActivity.mainActivity = new MainActivity();
+            MainActivity.mainActivity.settings = new SettingsManager(MainActivity.mainActivity);
+        }
+        return MainActivity.mainActivity;
+    }
 
 	public void instantiate() {
 

@@ -145,8 +145,8 @@ public abstract class Steppable {
                 parent.runOnUiThread(new ToastThread(R.string.no_more_chapters_found, parent));
             } else {
                 this.parent.finish(); //TODO: look at replacing instead of finishing and restarting
-                MainActivity.mainActivity.runOnUiThread(new ToastThread(forward ? R.string.chapter_next : R.string.chapter_previous, parent));
-				MainActivity.mainActivity.startReading(replacement.getAbsolutePath(), 0);
+                MainActivity.getMainActivity().runOnUiThread(new ToastThread(forward ? R.string.chapter_next : R.string.chapter_previous, parent));
+				MainActivity.getMainActivity().startReading(replacement.getAbsolutePath(), 0);
             }
         }else {
             parent.runOnUiThread(new ToastThread(forward ? R.string.end_of_chapter : R.string.start_of_chapter, parent));
@@ -449,7 +449,7 @@ public abstract class Steppable {
 			}else if (!forward && index > min){
 				tmpIndex = index - 1;
 			}else{
-				if (MainActivity.mainActivity.getSettings().isLoopModeEnabled()){
+				if (MainActivity.getMainActivity().getSettings().isLoopModeEnabled()){
 					tmpIndex = forward ? min : max;
 				}else{
 					return;

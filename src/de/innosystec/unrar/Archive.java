@@ -469,7 +469,7 @@ public class Archive implements Closeable {
             FileHeader h = this.getFileHeaders().get(0);
             File f = null;
             try {
-                f = File.createTempFile(h.getFileNameString(), null, MainActivity.mainActivity.getTempDir());
+                f = File.createTempFile(h.getFileNameString(), null, MainActivity.getMainActivity().getTempDir());
                 extractFile(h, new FileOutputStream(f));
                 f.delete();
             } catch (Exception e) {

@@ -75,7 +75,7 @@ public class Reader extends FragmentActivity {
         ba.putInt("index", index);
 
         //if (this.tempFile.isFile()) this.tempFile = this.tempFile.getParentFile();
-        MainActivity.mainActivity.tempDir = this.tempFile.getParentFile();
+        MainActivity.getMainActivity().tempDir = this.tempFile.getParentFile();
 
 		if (settings.saveRecent()) settings.addRecent(tempFile.getAbsolutePath(), index);
 		if (settings.saveSession()) settings.setLastRead(tempFile, index);

@@ -32,7 +32,7 @@ public class About extends Activity {
     @Override
     public void onResume(){
     	super.onResume();
-    	MainActivity.mainActivity.getSettings().forceOrientation(this);
+    	MainActivity.getMainActivity().getSettings().forceOrientation(this);
     }
 	
 	private void instantiate(){

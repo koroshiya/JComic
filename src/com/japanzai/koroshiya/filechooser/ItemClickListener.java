@@ -57,7 +57,7 @@ public class ItemClickListener implements View.OnClickListener, View.OnLongClick
 				processItem(false, location);
 				processed = true;
 			}
-			for (Recent recent : MainActivity.mainActivity.getSettings().getRecent()){
+			for (Recent recent : MainActivity.getMainActivity().getSettings().getRecent()){
 				if (recent.getPath().equals(location)){
 					parent.returnValue(file, recent.getPageNumber());
 					return;
@@ -199,22 +199,22 @@ public class ItemClickListener implements View.OnClickListener, View.OnLongClick
 			
 		}else if (command.equals(getString(R.string.file_remove_favorite))){
 			
-			MainActivity.mainActivity.getSettings().removeFavorite(name);
+			MainActivity.getMainActivity().getSettings().removeFavorite(name);
 			parent.refreshTab();
 			
 		}else if (command.equals(getString(R.string.file_remove_recent))){
 			
-			MainActivity.mainActivity.getSettings().removeRecent(name);
+			MainActivity.getMainActivity().getSettings().removeRecent(name);
 			parent.refreshTab();
 			
 		}else if (command.equals(getString(R.string.file_clear_favorite))){
 			
-			MainActivity.mainActivity.getSettings().clearFavorites();
+			MainActivity.getMainActivity().getSettings().clearFavorites();
 			parent.refreshTab();
 			
 		}else if (command.equals(getString(R.string.file_clear_recent))){
 			
-			MainActivity.mainActivity.getSettings().clearRecent();
+			MainActivity.getMainActivity().getSettings().clearRecent();
 			parent.refreshTab();
 			
 		}
@@ -262,7 +262,7 @@ public class ItemClickListener implements View.OnClickListener, View.OnLongClick
 	 * @param f File to add to favorites
 	 * */
 	private void favorite(File f){
-		MainActivity.mainActivity.getSettings().addFavorite(f.getAbsolutePath());
+		MainActivity.getMainActivity().getSettings().addFavorite(f.getAbsolutePath());
 	}
 	
 	/**
@@ -420,7 +420,7 @@ public class ItemClickListener implements View.OnClickListener, View.OnLongClick
     		parent.runOnUiThread(new ToastThread(R.string.cant_go_up, parent));
 		}else if (file.isFile() || forceReturn){
             Log.i("ItemClickListener", "Force return");
-			for (Recent recent : MainActivity.mainActivity.getSettings().getRecent()){
+			for (Recent recent : MainActivity.getMainActivity().getSettings().getRecent()){
 				if (recent.getPath().equals(location)){
 					parent.returnValue(file, recent.getPageNumber());
 					return;

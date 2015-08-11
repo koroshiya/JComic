@@ -459,9 +459,9 @@ public class SettingsManager {
 			keepBacklightOn = alwaysOn;
 			int flag = android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
 			if (alwaysOn){
-				MainActivity.mainActivity.getWindow().addFlags(flag);			
+				MainActivity.getMainActivity().getWindow().addFlags(flag);
 			}else{
-				MainActivity.mainActivity.getWindow().clearFlags(flag);			
+				MainActivity.getMainActivity().getWindow().clearFlags(flag);
 			}
 		}catch (Exception | Error e){
 			e.printStackTrace();
