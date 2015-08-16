@@ -192,7 +192,6 @@ public class SettingsView extends DrawerActivity implements ModalReturn {
 
         //Advanced settings
         if (recursion != null){settings.setRecursionLevel(recursion.getState());}
-        if (cacheSafety != null){settings.setCacheSafety(cacheSafety.getState() == 1);}
 
     }
 
@@ -220,7 +219,6 @@ public class SettingsView extends DrawerActivity implements ModalReturn {
 
         //Advanced settings
         if (recursion != null){recursion.setState(settings.getRecursionLevel());}
-        if (cacheSafety != null){cacheSafety.setState(settings.getCacheSafety() ? 1 : 0);}
 
     }
 
@@ -363,13 +361,6 @@ public class SettingsView extends DrawerActivity implements ModalReturn {
         }catch (Resources.NotFoundException nfe){
             nfe.printStackTrace();
             resizeMode = null;
-        }
-
-        try{
-            cacheSafety = new CheckSetting(getString(R.string.advanced_cache_safety), settings.getCacheSafety(), this);
-        }catch (Resources.NotFoundException nfe){
-            nfe.printStackTrace();
-            cacheSafety = null;
         }
 
         try{

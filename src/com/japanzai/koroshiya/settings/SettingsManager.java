@@ -65,7 +65,6 @@ public class SettingsManager {
 	private static boolean saveSession;
 	private static boolean saveRecent;
 	private static boolean keepBacklightOn;
-	private static boolean cacheSafety;
 	private static boolean cacheOnStart;
     private static boolean cacheRarFiles;
 	private static boolean keepZoomOnPageChange;
@@ -118,7 +117,6 @@ public class SettingsManager {
 		saveSession = preferences.getBoolean("saveSession", defaultSaveSession);
 		saveRecent = preferences.getBoolean("saveRecent", defaultSaveRecent);
 		keepBacklightOn = preferences.getBoolean("keepBacklightOn", defaultKeepBacklightOn);
-		cacheSafety = preferences.getBoolean("cacheSafety", defaultCacheSafety);
         cacheOnStart = preferences.getBoolean("cacheOnStart", defaultCacheOnStart);
         cacheRarFiles = preferences.getBoolean("cacheRarFiles", defaultCacheRarFiles);
 		keepZoomOnPageChange = preferences.getBoolean("keepZoomOnPageChange", defaultKeepZoomOnPageChange);
@@ -233,7 +231,6 @@ public class SettingsManager {
 		setZoomIndex(defaultZoomIndex);
 		setOrientationIndex(defaultOrientationIndex);
 		setArchiveModeIndex(defaultArchiveModeIndex);
-		setCacheSafety(defaultCacheSafety);
 		setDoubleTapIndex(defaultDoubleTapIndex);
 		setCacheModeIndex(defaultCacheModeIndex);
 		setCacheLevel(defaultCacheLevel);
@@ -414,15 +411,7 @@ public class SettingsManager {
 		contextMenuEnabled = enabled;
 		updateBool("contextMenuEnabled", enabled);
 	}
-	
-	public boolean getCacheSafety(){
-		return cacheSafety;
-	}
-	
-	public void setCacheSafety(boolean safe){
-		cacheSafety = safe;
-	}
-	
+
 	public int getCacheModeIndex(){
 		return cacheModeIndex;
 	}
