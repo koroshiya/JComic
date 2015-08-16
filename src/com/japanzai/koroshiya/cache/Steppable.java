@@ -245,10 +245,12 @@ public abstract class Steppable {
 		Collections.sort(images);
 	}
 	
-	private class ParseCurrentImageThread extends Thread{
+	private class ParseCurrentImageThread extends TimedThread{
 		
 		@Override
 		public void run(){
+
+			super.run();
 
 			clear();
 
@@ -257,6 +259,7 @@ public abstract class Steppable {
                 parent.setImage(temp);
                 cache(parent.getSettings().getCacheModeIndex() != 2);
             }
+			this.isFinished = true;
             if (Progress.isVisible && Progress.self != null){
                 Progress.self.oldFinish();
             }
@@ -504,12 +507,7 @@ public abstract class Steppable {
 	 * */
 	private boolean threadAlive(boolean forward){
 		
-		SettingsManager sm = parent.getSettings();
-		if (sm.getCacheSafety()){
-			return (isThreadAlive(primary) || isThreadAlive(secondary));
-		}
-		
-		int cacheModeIndex = sm.getCacheModeIndex();
+		int cacheModeIndex = parent.getSettings().getCacheModeIndex();
 		
 		if (cacheModeIndex == 0 && !forward){
 			
@@ -547,7 +545,7 @@ public abstract class Steppable {
 	}
 	
 	private boolean isThreadAlive(StepThread thread){
-		 return thread != null && thread.isAlive();
+		 return thread != null && thread.isAlive() && !thread.isFinished && !thread.isInterrupted();
 	}
 	
 	private boolean bitmapExists(JBitmapDrawable bitmap){

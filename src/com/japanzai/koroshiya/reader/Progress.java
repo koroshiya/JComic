@@ -11,6 +11,7 @@ import android.util.Log;
 import com.japanzai.koroshiya.R;
 import com.japanzai.koroshiya.archive.steppable.SteppableArchive;
 import com.japanzai.koroshiya.cache.FileCache;
+import com.japanzai.koroshiya.cache.TimedThread;
 import com.japanzai.koroshiya.interfaces.ModalReturn;
 import com.japanzai.koroshiya.io_utils.ArchiveParser;
 import com.japanzai.koroshiya.io_utils.ImageParser;
@@ -45,10 +46,12 @@ public class Progress extends Activity implements ModalReturn{
 		isVisible = true;
 	}
 	
-	private class ProgressThread extends Thread{
+	private class ProgressThread extends TimedThread {
 		
 		@Override
 		public void run(){
+
+			super.run();
 			
 	    	if (f.isDirectory()) { 
 	    		reader.setCache(new FileCache(reader, f.getAbsolutePath()));
@@ -58,6 +61,7 @@ public class Progress extends Activity implements ModalReturn{
 		    	if (!parseArchive()){
 		    		reader.clearTempFile();
 		    		decline();
+					this.isFinished = true;
 		    		//reader.runOnUiThread(new MessageThread(R.string.archive_read_error, reader));
 		        	return;
 		    	}
@@ -78,6 +82,7 @@ public class Progress extends Activity implements ModalReturn{
 	    			}
 	    		}
 	    	}
+			this.isFinished = true;
 	    	if (reader.getCache().getMax() > 0){
 	    		finish();
 	    	}else{

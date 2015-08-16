@@ -19,6 +19,7 @@ import android.widget.NumberPicker;
 
 import com.japanzai.koroshiya.R;
 import com.japanzai.koroshiya.cache.Steppable;
+import com.japanzai.koroshiya.cache.TimedThread;
 import com.japanzai.koroshiya.controls.JBitmapDrawable;
 import com.japanzai.koroshiya.controls.JImageSwitcher;
 import com.japanzai.koroshiya.settings.SettingsManager;
@@ -291,7 +292,7 @@ public class Reader extends FragmentActivity {
 	 * Used so that the image can be changed from another thread. Useful when
 	 * processing an image in the background before displaying it
 	 * */
-	private class SetImageThread extends Thread {
+	private class SetImageThread extends TimedThread {
 
 		private final JBitmapDrawable d;
 
@@ -301,10 +302,15 @@ public class Reader extends FragmentActivity {
 
 		@Override
 		public void run() {
+
+            super.run();
+
 			if (imgPanel.getImageDrawable() != null){
 				imgPanel.setImageDrawable(null);
 			}
 			imgPanel.setImageDrawable(d);
+
+            this.isFinished = true;
 		}
 
 	}

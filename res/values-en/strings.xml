@@ -171,5 +171,6 @@
     <string name="bulk_delete_prompt1">Tap on a file or folder to delete it.</string>
     <string name="bulk_delete_prompt2">Tap on "Back" when you\'re done.</string>
     <string name="error_report">Error reports can be sent through GitHub, Google Play (via crash reports), or email.\n\nCrash reports are the preferred option, followed by GitHub, then Email.\n\nComments on Google Play will never be read, so if there\'s something wrong with JComic, please report the issue by clicking on one of the buttons below.</string>
+    <string name="image_read_error">Image could not be read</string>
 
 </resources>

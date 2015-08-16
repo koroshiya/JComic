@@ -60,6 +60,7 @@
     <string name="file_size_gigabytes">GB</string>
     <string name="string_zoom">zoom</string>
     <string name="archive_read_error">Archive could not be read</string>
+    <string name="image_read_error">Image could not be read</string>
     <string name="advanced_cache_safety">Enable cache safety</string>
     <string name="setting_double_tap">Double tap:</string>
     <string name="setting_cache_on_startup">Cache on startup</string>

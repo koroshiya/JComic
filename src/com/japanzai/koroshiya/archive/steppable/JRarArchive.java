@@ -40,7 +40,7 @@ public class JRarArchive extends SteppableArchive{
 		for (int i = 0; i < heads.size(); i++){
 			
 			header = heads.get(i);
-			if (ImageParser.isSupportedImage(header.getFileNameString())){
+			if (ImageParser.isSupportedImage(header.getFileNameString())){ //TODO: implement CRC check, like with zip file
 				if (header.getFullUnpackSize() > 0) addImageToCache(i, header.getFileNameString());
 			}
 			

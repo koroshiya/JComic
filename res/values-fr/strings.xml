@@ -171,5 +171,6 @@
     <string name="bulk_delete_prompt1">Tapez sur un fichier pour le supprimer.</string>
     <string name="bulk_delete_prompt2">Tapez sur "Précédent" une fois terminé.</string>
     <string name="error_report">Les rapports d\'erreur peuvent être envoyé par Github, Google Play (via crash reports), ou email.\n\nLe rapport d\'accident est l\'option préférée, suivie par Github et puis l\'email.\n\nLes commentaires sur Google Play ne sont pas lus, si il y a une issue avec JComic, merci de la reporter en cliquant sur l\'un des boutons ci-dessous.</string>
+    <string name="image_read_error">Image ne peut être lu</string>
 
 </resources>

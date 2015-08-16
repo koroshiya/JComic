@@ -190,5 +190,5 @@ public class ImageParser {
         opts.inTempStorage = new byte[32768]; //32kb
         return opts;
     }
-	
+
 }
