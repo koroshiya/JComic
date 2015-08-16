@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.zip.CRC32;
 
 import android.graphics.Point;
 import android.util.Log;
@@ -32,23 +33,20 @@ public class JZipArchive extends SteppableArchive{
 		
 		super(parent, path);
 		
-		setPrimary(new StepThread(this, true, true));
-		setSecondary(new StepThread(this, true, false));
-		
 		zip = new ZipFile(path);
 
         if (!zip.isValidZipFile()) throw new IOException();
 
-        String name;
         FileHeader zipEntry;
+        String name;
 
         for (Object o : zip.getFileHeaders()) {
 
             zipEntry = (FileHeader) o;
             name = zipEntry.getFileName();
 
-            if (ImageParser.isSupportedImage(name) && zipEntry.getCompressedSize() > 0) {
-                addImageToCache(zipEntry, name);
+            if (ImageParser.isSupportedImage(name) && zipEntry.getCompressedSize() > 0 && isValidEntry(zip, zipEntry)) {
+                addImageToCache(zipEntry, zipEntry.getFileName());
             }
 
         }
@@ -56,6 +54,9 @@ public class JZipArchive extends SteppableArchive{
         super.sort();
 		
 		if (getMax() > 0){
+            setPrimary(new StepThread(this, true, true));
+            setSecondary(new StepThread(this, true, false));
+
 			setIndex(0);
 			setMin();
 		}else {
@@ -63,6 +64,33 @@ public class JZipArchive extends SteppableArchive{
 		}
 		
 	}
+
+    private boolean isValidEntry(ZipFile zip, FileHeader entry){
+        InputStream inputStream = null;
+        try {
+            inputStream = zip.getInputStream(entry);
+
+            byte[] buff = new byte[4096];
+            int readLen;
+            CRC32 crc32 = new CRC32();
+
+            while ((readLen = inputStream.read(buff)) != -1) {
+                crc32.update(buff, 0, readLen);
+            }
+
+            return crc32.getValue() == entry.getCrc32();
+        } catch (Exception e) {
+            return false;
+        } finally {
+            if (inputStream != null) {
+                try {
+                    inputStream.close();
+                } catch (IOException e) {
+                    return false;
+                }
+            }
+        }
+    }
 	
 	@Override
 	public JBitmapDrawable parseImage(int i){
