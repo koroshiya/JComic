@@ -41,6 +41,7 @@ public class Reader extends FragmentActivity {
 	public boolean parsed = false;
 	
 	private SettingsManager settings;
+	private AlertDialog alert;
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -137,9 +138,13 @@ public class Reader extends FragmentActivity {
                 }
 		    }
 		});
-		AlertDialog alert = builder.create();
+		alert = builder.create();
 		alert.show();
 	}
+
+    public boolean isAlertShowing(){
+        return alert != null && alert.isShowing();
+    }
 
 	public void show(){
 		

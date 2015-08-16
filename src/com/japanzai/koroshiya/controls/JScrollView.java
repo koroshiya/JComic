@@ -65,21 +65,23 @@ public class JScrollView extends TwoDScrollView {
 
 	public void up(double x2, double y2) {
 
-        if (pageStartx == getRight() || pageStartx == view.getWidth() - getRight() || getRight() >= view.getWidth()){
-            if ((Math.abs(startx - x2) > Math.abs(starty - y2))) {
-                if (startx > x2){
-                    getReader().getCache().next();
-                }else if (pageStartx == getLeft()){ //In case getLeft and getRight are the same (ie. no horizontal scroll)
-                    getReader().getCache().previous();
-                }
-            }
-        }else if (pageStartx == getLeft()){
-            if ((Math.abs(startx - x2) > Math.abs(starty - y2)) && startx < x2) {
-                getReader().getCache().previous();
-            }
-        }else{
-            scroll(x2, y2);
-        }
+		if (!getReader().isAlertShowing()) {
+			if (pageStartx == getRight() || pageStartx == view.getWidth() - getRight() || getRight() >= view.getWidth()) {
+				if ((Math.abs(startx - x2) > Math.abs(starty - y2))) {
+					if (startx > x2) {
+						getReader().getCache().next();
+					} else if (pageStartx == getLeft()) { //In case getLeft and getRight are the same (ie. no horizontal scroll)
+						getReader().getCache().previous();
+					}
+				}
+			} else if (pageStartx == getLeft()) {
+				if ((Math.abs(startx - x2) > Math.abs(starty - y2)) && startx < x2) {
+					getReader().getCache().previous();
+				}
+			} else {
+				scroll(x2, y2);
+			}
+		}
 		
 	}
 
@@ -177,7 +179,7 @@ public class JScrollView extends TwoDScrollView {
 		
 		@Override
 		public boolean onTouch(View v, MotionEvent event) {
-			
+
 			int action = event.getAction();
 			if (event.getPointerCount() > 1){
 				lastDown = false;
