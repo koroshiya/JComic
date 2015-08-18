@@ -122,10 +122,7 @@ public class RarVM extends BitInput {
 	}
 
 	public void execute(VMPreparedProgram prg) {
-		for (int i = 0; i < prg.getInitR().length; i++) // memcpy(R,Prg->InitR,sizeof(Prg->InitR));
-		{
-			R[i] = prg.getInitR()[i];
-		}
+		System.arraycopy(prg.getInitR(), 0, R, 0, prg.getInitR().length);
 
 		long globalSize = Math.min(prg.getGlobalData().size(), VM_GLOBALMEMSIZE);
 		if (globalSize != 0) {
