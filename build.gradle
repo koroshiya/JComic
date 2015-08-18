@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 22
+    compileSdkVersion 23
     buildToolsVersion "22.0.1"
 
     sourceSets {
@@ -26,6 +26,14 @@ android {
         // by a similar customization.
         debug.setRoot('build-types/debug')
         release.setRoot('build-types/release')
+    }
+
+    defaultConfig {
+        applicationId "com.japanzai.koroshiya"
+        minSdkVersion 7
+        targetSdkVersion 22
+        versionCode 48
+        versionName "2.0.10"
     }
 }
 
