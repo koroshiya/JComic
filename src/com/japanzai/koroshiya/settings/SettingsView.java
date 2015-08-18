@@ -54,8 +54,7 @@ public class SettingsView extends DrawerActivity implements ModalReturn {
 
     //Advanced settings
     private SpinnerSetting recursion;
-    private CheckSetting cacheSafety;
-	
+
 	@Override
     public void onCreate(Bundle savedInstanceState) {
 	    super.onCreate(savedInstanceState);
@@ -385,7 +384,6 @@ public class SettingsView extends DrawerActivity implements ModalReturn {
             lLayout.addView(cacheLevel);
             lLayout.addView(resizeMode);
         }else if (type == ADVANCED) {
-            lLayout.addView(cacheSafety);
             lLayout.addView(recursion);
         }else{
             lLayout.addView(loop);
