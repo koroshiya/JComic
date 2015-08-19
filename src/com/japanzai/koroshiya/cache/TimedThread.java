@@ -23,7 +23,6 @@ public class TimedThread extends Thread {
                         if (!isFinished && isAlive()) {
                             try {
                                 th.interrupt();
-                                th.stop();
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }

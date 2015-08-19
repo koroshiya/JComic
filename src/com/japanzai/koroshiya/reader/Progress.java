@@ -95,7 +95,6 @@ public class Progress extends Activity implements ModalReturn{
 
 		if (thread != null){
 			try {
-				thread.stop();
 				thread.interrupt();
 			}catch (Exception e){
 				e.printStackTrace();

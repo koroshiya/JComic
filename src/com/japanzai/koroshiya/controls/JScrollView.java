@@ -100,9 +100,14 @@ public class JScrollView extends TwoDScrollView {
 		setOnTouchListener(gestureListener);
 	}
 
+    @SuppressLint("NewApi")
 	private class GestureListener extends GestureDetector.SimpleOnGestureListener implements OnTouchListener{
-		
-		private final ScaleGestureDetector sgd = android.os.Build.VERSION.SDK_INT >= 8 ? new ScaleGestureDetector(getContext(), new ScaleListener()) : null;
+
+		private final ScaleGestureDetector sgd = sgdSupported() ? new ScaleGestureDetector(getContext(), new ScaleListener()) : null;
+
+		private boolean sgdSupported(){
+			return android.os.Build.VERSION.SDK_INT >= 8;
+		}
 		
 		private void cycleZoom(MainActivity parent, SettingsManager settings){
 			double defaultZoom = settings.getCurrentZoomRatio();
@@ -162,11 +167,12 @@ public class JScrollView extends TwoDScrollView {
 			return false;
 		}
 
+        @SuppressLint("NewApi")
 		@Override
 		public boolean onDown(MotionEvent e){
 			if (e.getPointerCount() > 1){
 				lastDown = false;
-				if (sgd != null) sgd.onTouchEvent(e);
+				if (sgdSupported()) sgd.onTouchEvent(e);
 			}else{
 				lastDown = true;
 				down(e.getX(), e.getY());
@@ -177,13 +183,14 @@ public class JScrollView extends TwoDScrollView {
 			return true;
 		}
 		
-		@Override
+		@SuppressLint("NewApi")
+        @Override
 		public boolean onTouch(View v, MotionEvent event) {
 
 			int action = event.getAction();
 			if (event.getPointerCount() > 1){
 				lastDown = false;
-                if (sgd != null) sgd.onTouchEvent(event);
+                if (sgdSupported()) sgd.onTouchEvent(event);
 			}else {
 				
 				if (lastDown){ 

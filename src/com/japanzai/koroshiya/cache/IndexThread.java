@@ -26,7 +26,6 @@ public class IndexThread extends StepThread {
                     public void run() {
                         try {
                             th.interrupt();
-                            th.stop();
                         }catch (Exception e){
                             e.printStackTrace();
                         }

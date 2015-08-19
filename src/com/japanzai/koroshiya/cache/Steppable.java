@@ -260,7 +260,7 @@ public abstract class Steppable {
                 cache(parent.getSettings().getCacheModeIndex() != 2);
             }
 			this.isFinished = true;
-            if (Progress.isVisible && Progress.self != null){
+            if (Progress.self != null && Progress.self.isVisible){
                 Progress.self.oldFinish();
             }
 		}

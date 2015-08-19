@@ -10,7 +10,6 @@ import android.content.SharedPreferences.Editor;
 import android.content.pm.ActivityInfo;
 import android.os.Environment;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -315,7 +314,6 @@ public class SettingsManager {
 	}
 	
 	public double getCurrentZoomRatio(){
-        Log.d("ZoomIndex", Integer.toString(zoomIndex));
         return getZoomRatio(zoomIndex);
 	}
 	
