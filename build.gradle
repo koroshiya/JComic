@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 23
-    buildToolsVersion "22.0.1"
+    buildToolsVersion "23.0.0"
 
     sourceSets {
         main {
@@ -31,13 +31,13 @@ android {
     defaultConfig {
         applicationId "com.japanzai.koroshiya"
         minSdkVersion 7
-        targetSdkVersion 22
-        versionCode 48
-        versionName "2.0.10"
+        targetSdkVersion 23
+        versionCode 49
+        versionName "2.0.11"
     }
 }
 
 dependencies {
-    compile 'com.android.support:support-v4:22.2.1'
-    compile 'com.android.support:appcompat-v7:22.2.1'
+    compile 'com.android.support:support-v4:23.0.0'
+    compile 'com.android.support:appcompat-v7:23.0.0'
 }
