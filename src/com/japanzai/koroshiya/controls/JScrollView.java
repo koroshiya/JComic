@@ -193,7 +193,7 @@ public class JScrollView extends TwoDScrollView {
                 if (sgdSupported()) sgd.onTouchEvent(event);
 			}else {
 				
-				if (lastDown){ 
+				if (lastDown){
 					if (action == MotionEvent.ACTION_MOVE) {
 						move(event.getX(), event.getY());
 					} else if (action == MotionEvent.ACTION_UP) {

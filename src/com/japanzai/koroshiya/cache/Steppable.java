@@ -170,11 +170,21 @@ public abstract class Steppable {
 	}
 
     public synchronized void last(){
-    	if (max > 1) goToPage(max - 1);
+        if (index == max - 1){
+            Log.i("Steppable", "Already on last page");
+        }else if (max > 1){
+			goToPage(max - 1);
+		}else{
+			Log.i("Steppable", "One-page chapter");
+		}
     }
 
     public synchronized void first(){
-    	goToPage(0);
+    	if (index != 0){
+            goToPage(0);
+        }else{
+            Log.i("Steppable", "Already on first page");
+        }
     }
 
     /**
