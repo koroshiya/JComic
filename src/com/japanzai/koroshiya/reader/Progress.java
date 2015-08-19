@@ -22,8 +22,6 @@ import com.japanzai.koroshiya.settings.SettingsManager;
  * 			Essentially initializes the main activity's cache.
  * */
 public class Progress extends Activity implements ModalReturn{
-
-    //TODO: when writing changelog - rotate did work in 1.14, but lost current page
 	
 	private File f;
 	private int index;
@@ -31,7 +29,7 @@ public class Progress extends Activity implements ModalReturn{
 	private SteppableArchive temp;
 	private ProgressThread thread = null;
 	
-	public static boolean isVisible = false;
+	public boolean isVisible = false;
 	public static Progress self;
 	
 	@Override
