@@ -9,6 +9,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 
 import com.japanzai.koroshiya.R;
 import com.japanzai.koroshiya.archive.steppable.JImage;
@@ -254,28 +255,30 @@ public abstract class Steppable {
 	public void sort(){
 		Collections.sort(images);
 	}
-	
-	private class ParseCurrentImageThread extends TimedThread{
-		
-		@Override
-		public void run(){
 
-			super.run();
+    private class ParseCurrentImageThread extends TimedThread{
 
-			clear();
+        @Override
+        public void run(){
+
+            super.run();
+
+            clear();
 
             JBitmapDrawable temp = parseImage(index);
             if (temp != null) {
                 parent.setImage(temp);
-                cache(parent.getSettings().getCacheModeIndex() != 2);
             }
-			this.isFinished = true;
-            if (Progress.self != null && Progress.self.isVisible){
-                Progress.self.oldFinish();
-            }
-		}
-		
-	}
+            this.isFinished = true;
+            parent.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    parent.findViewById(R.id.progress).setVisibility(View.GONE);
+                }
+            });
+        }
+
+    }
 	
 	/**
 	 * Purpose: Parses the next or previous reference in the Steppable object.
@@ -504,10 +507,10 @@ public abstract class Steppable {
 			cont.startActivity(intent);
 		}
 	}
-	
-	private void showProgressUi(Activity cont){
-		cont.runOnUiThread(new ProgressThread(cont));
-	}
+
+    private void showProgressUi(Activity cont){
+        cont.findViewById(R.id.progress).setVisibility(View.VISIBLE);
+    }
 	
 	/**
 	 * Purpose: Checks if an image parsing thread is currently running.

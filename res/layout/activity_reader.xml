@@ -1,5 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.japanzai.koroshiya.controls.JImageSwitcher xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/imgPanel"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent" />
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+    <com.japanzai.koroshiya.controls.JImageSwitcher xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/imgPanel"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <FrameLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ProgressBar xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/progress"
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="gone" />
+    </FrameLayout>
+
+</RelativeLayout>

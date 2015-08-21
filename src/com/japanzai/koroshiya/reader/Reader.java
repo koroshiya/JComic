@@ -38,7 +38,6 @@ public class Reader extends FragmentActivity {
 	private int width;
 	private int height;
 
-	private boolean reading = false;
 	public boolean parsed = false;
 	
 	private SettingsManager settings;
@@ -102,14 +101,11 @@ public class Reader extends FragmentActivity {
     public void onResume(){
 
 		super.onResume();
-		
-    	if (!reading && parsed){
+
+    	if (parsed){
     		if (cache != null && cache.getMax() != 0) {
     			this.cache.sort();
-
                 cache.parseCurrent();
-                reading = true;
-                // vf.showNext();
     		} else {
     			runOnUiThread(new ToastThread(R.string.no_images, this));
     			finish();
@@ -338,18 +334,21 @@ public class Reader extends FragmentActivity {
 		return this.height;
 	}
 
-	@Override
-	public void onBackPressed() {
-		
-		if (settings.saveRecent()) settings.addRecent(cache.getPath(), cache.getIndex());
-		if (settings.saveSession()) settings.setLastRead(new File(cache.getPath()), cache.getIndex());
-		cache.emptyCache();
-		cache.clear();
-		cache.close();
-		cache = null;
-		
-		super.onBackPressed();
+    @Override
+    public void onPause(){
+        super.onPause();
+        if (cache != null) cache.clear();
+    }
 
-	}
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        if (settings.saveRecent()) settings.addRecent(cache.getPath(), cache.getIndex());
+        if (settings.saveSession()) settings.setLastRead(new File(cache.getPath()), cache.getIndex());
+        cache.emptyCache();
+        cache.clear();
+        cache.close();
+        cache = null;
+    }
 	
 }
