@@ -55,7 +55,7 @@ public abstract class ArchiveParser {
     	String fPath = f.getAbsolutePath();
     	
     	if (s.endsWith(".zip") || s.endsWith(".cbz")){
-            return new JZipArchive(fPath, r);
+            return new JZipArchive(r, fPath);
     	}else if (s.endsWith(".rar") || s.endsWith(".cbr")){ //hybrid disk mode
     		JRarArchive arch = new JRarArchive(fPath, r);
     		if (arch.getArchive().isPasswordProtected()){

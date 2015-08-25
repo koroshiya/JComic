@@ -2,9 +2,11 @@ package com.japanzai.koroshiya.controls;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.util.AttributeSet;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
@@ -22,7 +24,7 @@ import com.japanzai.koroshiya.settings.SettingsManager;
  * */
 public class JScrollView extends TwoDScrollView {
 
-	private final JImageView view;
+	private JImageView view;
 	private final GestureDetector gestureDetector;
 	private final GestureListener gestureListener;
 	private float currentx, currenty;
@@ -30,17 +32,47 @@ public class JScrollView extends TwoDScrollView {
 	private int pageStartx;
 	
 	private boolean lastDown = true;
+    private final Context context;
 
-	public JScrollView(Context context) {
-		super(context);
-		view = new JImageView(context);
-		gestureListener = new GestureListener();
-		gestureDetector = new GestureDetector(context, gestureListener);
-		//gestureDetector.setOnLongClickListener(gestureListener);
-		this.addView(view);
-		initialize();
-		
-	}
+    public JScrollView(Context context) {
+        super(context);
+        this.context = context;
+        view = new JImageView(context);
+        gestureListener = new GestureListener();
+        gestureDetector = new GestureDetector(context, gestureListener);
+        this.addView(view);
+        initialize();
+    }
+
+    public JScrollView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        this.context = context;
+        view = new JImageView(context);
+        gestureListener = new GestureListener();
+        gestureDetector = new GestureDetector(context, gestureListener);
+        this.addView(view);
+        initialize();
+    }
+
+    public JScrollView(Context context, AttributeSet attrs, int val1) {
+        super(context, attrs, val1);
+        this.context = context;
+        view = new JImageView(context);
+        gestureListener = new GestureListener();
+        gestureDetector = new GestureDetector(context, gestureListener);
+        this.addView(view);
+        initialize();
+    }
+
+    public JScrollView(Context context, AttributeSet attrs, int val1, int val2) {
+        super(context, attrs, val1, val2);
+        this.context = context;
+        view = new JImageView(context);
+        gestureListener = new GestureListener();
+        gestureDetector = new GestureDetector(context, gestureListener);
+        this.addView(view);
+        initialize();
+    }
 	
 	
 	public GestureDetector getGestureDetector(){
@@ -69,14 +101,14 @@ public class JScrollView extends TwoDScrollView {
 			if (pageStartx == getRight() || pageStartx == view.getWidth() - getRight() || getRight() >= view.getWidth()) {
 				if ((Math.abs(startx - x2) > Math.abs(starty - y2))) {
 					if (startx > x2) {
-						getReader().getCache().next();
+						getReader().getCache().next(getReader());
 					} else if (pageStartx == getLeft()) { //In case getLeft and getRight are the same (ie. no horizontal scroll)
-						getReader().getCache().previous();
+						getReader().getCache().previous(getReader());
 					}
 				}
 			} else if (pageStartx == getLeft()) {
 				if ((Math.abs(startx - x2) > Math.abs(starty - y2)) && startx < x2) {
-					getReader().getCache().previous();
+					getReader().getCache().previous(getReader());
 				}
 			} else {
 				scroll(x2, y2);
@@ -237,10 +269,10 @@ public class JScrollView extends TwoDScrollView {
 	 * @param drawable
 	 *            Object to display on the JImageView this object contains
 	 * */
-	public void setImageDrawable(Drawable drawable) {
-		
-		view.setImageDrawable(drawable);
-		this.scrollTo(0, 0);
+	public void setImageDrawable(final Drawable drawable) {
+
+        view.setImageDrawable(drawable);
+        scrollTo(0, 0);
 		
 	}
 
@@ -269,8 +301,24 @@ public class JScrollView extends TwoDScrollView {
         params.topMargin = (scrollHeight > viewHeight) ? (scrollHeight - viewHeight) / 2 : 0;
 
         view.setLayoutParams(params);
-			
 
+	}
+
+	public void clearCache(Activity act){
+		/*if (view.getDrawable() != null){
+            view.getDrawable().setCallback(null);
+            ((JBitmapDrawable)view.getDrawable()).getBitmap().recycle();
+        }*/
+		view.setImageDrawable(null);
+        /*act.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                removeView(view);
+                view.destroyDrawingCache();
+                view = new JImageView(context);
+                addView(view);
+            }
+        });*/
 	}
 	
 }

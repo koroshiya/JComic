@@ -1,6 +1,11 @@
 package com.japanzai.koroshiya.reader;
 
 import java.io.File;
+import java.lang.ref.SoftReference;
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -18,10 +23,16 @@ import android.widget.Button;
 import android.widget.NumberPicker;
 
 import com.japanzai.koroshiya.R;
+import com.japanzai.koroshiya.archive.steppable.JImage;
+import com.japanzai.koroshiya.archive.steppable.JRarArchive;
+import com.japanzai.koroshiya.cache.FileCache;
+import com.japanzai.koroshiya.cache.StepThread;
 import com.japanzai.koroshiya.cache.Steppable;
 import com.japanzai.koroshiya.cache.TimedThread;
 import com.japanzai.koroshiya.controls.JBitmapDrawable;
-import com.japanzai.koroshiya.controls.JImageSwitcher;
+import com.japanzai.koroshiya.controls.JScrollView;
+import com.japanzai.koroshiya.io_utils.ArchiveParser;
+import com.japanzai.koroshiya.io_utils.ImageParser;
 import com.japanzai.koroshiya.settings.SettingsManager;
 
 /**
@@ -30,8 +41,7 @@ import com.japanzai.koroshiya.settings.SettingsManager;
 public class Reader extends FragmentActivity {
 	
 	private Steppable cache = null;
-	private JImageSwitcher imgPanel;
-	protected static Reader reader;
+	private JScrollView imgPanel;
 
 	private File tempFile;
 
@@ -49,19 +59,14 @@ public class Reader extends FragmentActivity {
         super.onCreate(savedInstanceState);
         SettingsManager.setFullScreen(this);
         setContentView(R.layout.activity_reader);
+        //findViewById(R.id.progress).setVisibility(View.VISIBLE);
         MainActivity.hideActionBar(this);
-        
-        reader = this;
         
         Bundle b = getIntent().getExtras();
         this.tempFile = new File(b.getString("file"));
 
         settings = new SettingsManager(this);
         settings.setHomeDir(tempFile.getParent());
-
-        Intent intent = new Intent(this, Progress.class);
-        Bundle ba = new Bundle();
-        ba.putString("file", this.tempFile.getAbsolutePath());
 
         int index;
         if (settings.getLastFileRead() != null && settings.getLastFileRead().equals(this.tempFile)){
@@ -73,7 +78,7 @@ public class Reader extends FragmentActivity {
             Log.d("Reader", "Starting from index " + index);
         }
 
-        ba.putInt("index", index);
+        Progress p = new Progress(this, this.tempFile, index);
 
         //if (this.tempFile.isFile()) this.tempFile = this.tempFile.getParentFile();
         MainActivity.getMainActivity().tempDir = this.tempFile.getParentFile();
@@ -81,11 +86,10 @@ public class Reader extends FragmentActivity {
 		if (settings.saveRecent()) settings.addRecent(tempFile.getAbsolutePath(), index);
 		if (settings.saveSession()) settings.setLastRead(tempFile, index);
 
-		imgPanel = (JImageSwitcher) findViewById(R.id.imgPanel);
+		imgPanel = (JScrollView) findViewById(R.id.imgPanel);
 
         Log.d("Reader", "Starting at index " + index);
-		intent.putExtras(ba);
-		startActivity(intent);
+        p.execute();
 
     }
 
@@ -102,36 +106,41 @@ public class Reader extends FragmentActivity {
 
 		super.onResume();
 
-    	if (parsed){
-    		if (cache != null && cache.getMax() != 0) {
-    			this.cache.sort();
-                cache.parseCurrent();
-    		} else {
-    			runOnUiThread(new ToastThread(R.string.no_images, this));
-    			finish();
-    		}
-    	}else{
-    		settings.forceOrientation(this);
-    	}
+        try {
+            if (parsed) {
+                if (cache != null && cache.getMax() != 0) {
+                    this.cache.sort();
+                    parseCurrent();
+                } else {
+                    runOnUiThread(new ToastThread(R.string.no_images, this));
+                    finish();
+                }
+            } else {
+                settings.forceOrientation(this);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 	
 	public void showContextMenu(){
 		String[] items = getResources().getStringArray(R.array.array_context_menu);
+        final Reader reader = this;
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setTitle(R.string.setting_context_menu_head);
 		builder.setItems(items, new DialogInterface.OnClickListener() {
 		    public void onClick(DialogInterface dialog, int id) {
 			    if (id == 0){
-			    	cache.first();
+			    	cache.first(reader);
 			    }else if(id == 1){
-			    	cache.last();
+			    	cache.last(reader);
 			    }else if (id == 2){
 			    	show();
 			    }else if (id == 3){
-                    cache.nextChapter();
+                    cache.nextChapter(reader);
                 }else if (id == 4){
-                    cache.previousChapter();
+                    cache.previousChapter(reader);
                 }
 		    }
 		});
@@ -148,6 +157,7 @@ public class Reader extends FragmentActivity {
 		if (android.os.Build.VERSION.SDK_INT >= 11){
 			try{
 				final Dialog d = new Dialog(this);
+                final Reader reader = this;
 		        d.setTitle(R.string.setting_context_menu_heading);
 		        d.setContentView(R.layout.dialog);
 		        Button b1 = (Button) d.findViewById(R.id.button1);
@@ -160,9 +170,9 @@ public class Reader extends FragmentActivity {
 		        b1.setOnClickListener(new OnClickListener(){
 		          @Override
 		          public void onClick(View v) {
-		              cache.goToPage(np.getValue() - 1);
+		              cache.goToPage(np.getValue() - 1, reader);
 		              d.dismiss();
-		           }    
+		           }
 		          });
 		         b2.setOnClickListener(new OnClickListener(){
 		          @Override
@@ -180,12 +190,13 @@ public class Reader extends FragmentActivity {
 			for(int i = 1; i <= cache.getMax(); i++){
 				items[i-1] = (Integer.toString(i));
 			}
+            final Reader reader = this;
 
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
 			builder.setTitle(R.string.setting_context_menu_heading);
 			builder.setItems(items, new DialogInterface.OnClickListener() {
 			    public void onClick(DialogInterface dialog, int id) {
-			    	cache.goToPage(id);
+			    	cache.goToPage(id, reader);
 			    }
 			});
 			AlertDialog alert = builder.create();
@@ -210,7 +221,7 @@ public class Reader extends FragmentActivity {
 	 * Purpose: Clears this class's temporary file and gets this Activity ready
 	 * to begin reading
 	 * */
-	public void clearTempFile() {
+	public void clearTempFile(Activity act) {
 
 		Point size = getScreenDimensions(this);
 		width = size.x;
@@ -219,12 +230,12 @@ public class Reader extends FragmentActivity {
 		this.parsed = true;
 		
 		this.tempFile = null;
-		imgPanel.clear();
+		imgPanel.clearCache(act);
 		
 		if (cache != null && cache.getMax() != 0) {
 			this.cache.sort();
 
-            cache.parseCurrent();
+            parseCurrent();
             // vf.showNext();
 		} else {
 			runOnUiThread(new ToastThread(R.string.no_images, this));
@@ -254,7 +265,7 @@ public class Reader extends FragmentActivity {
 	public void setCacheIndex(int i) {
 		
 		if (this.cache != null){
-			this.cache.setIndex(i);
+			this.cache.setIndex(i, this);
 		}else{
             Log.e("Reader", "Cache is null");
         }
@@ -268,7 +279,7 @@ public class Reader extends FragmentActivity {
 	 *            Name of the file to add to cache
 	 * */
 	public void addImageToCache(Object absoluteFilePath, String name) {
-		this.cache.addImageToCache(absoluteFilePath, name);
+		cache.addImageToCache(absoluteFilePath, name);
 		Log.d("Reader", "Adding to cache image: "+name);
 	}
 
@@ -276,7 +287,7 @@ public class Reader extends FragmentActivity {
 	 * @param d
 	 *            Image for this Activity to display
 	 * */
-	public void setImage(JBitmapDrawable d) {
+	public void setImage(SoftReference<JBitmapDrawable> d) {
 
 		if ((cache != null)) {
 			runOnUiThread(new SetImageThread(d));
@@ -290,9 +301,9 @@ public class Reader extends FragmentActivity {
 	 * */
 	private class SetImageThread extends TimedThread {
 
-		private final JBitmapDrawable d;
+		private final SoftReference<JBitmapDrawable> d;
 
-		public SetImageThread(JBitmapDrawable d) {
+		public SetImageThread(SoftReference<JBitmapDrawable> d) {
 			this.d = d;
 		}
 
@@ -301,10 +312,9 @@ public class Reader extends FragmentActivity {
 
             super.run();
 
-			if (imgPanel.getImageDrawable() != null){
-				imgPanel.setImageDrawable(null);
-			}
-			imgPanel.setImageDrawable(d);
+            if (d.get() == null) Log.e("Reader", "Setting null image");
+
+			imgPanel.setImageDrawable(d.get());
 
             this.isFinished = true;
 		}
@@ -350,5 +360,16 @@ public class Reader extends FragmentActivity {
         cache.close();
         cache = null;
     }
-	
+
+    /**
+     * Purpose: Parse the image file at the current index
+     * */
+    public void parseCurrent() {
+        setImage(cache.parseImage(cache.getIndex(), getWidth(), getSettings().getDynamicResizing()));
+
+        if (settings.isCacheOnStart()){
+            cache.cacheBidirectional();
+        }
+    }
+
 }

@@ -81,15 +81,14 @@ public class ImageParser {
 	 * @param inHeight Height at which to extract the image
 	 * @return Return a JBitmapDrawable object to be displayed.
 	 * */
-    public static JBitmapDrawable parseImageFromDisk(InputStream is, int inWidth, int inHeight, Reader r){
+    public static JBitmapDrawable parseImageFromDisk(InputStream is, int inWidth, int inHeight, int width, int resize){
 
         BitmapFactory.Options opts = getRealOpts();
 
         try{
 
-            int resize = r.getSettings().getDynamicResizing();
             if (resize != 0){
-                int width = inWidth / r.getWidth();
+                width = inWidth / width;
                 if (!(resize == 2 && width < 1)){
                     opts.inSampleSize = width;
                 }
@@ -113,15 +112,14 @@ public class ImageParser {
 
     }
 
-	public static JBitmapDrawable parseImageFromDisk(File image, Reader r){
+	public static JBitmapDrawable parseImageFromDisk(File image, int width, int resize){
 		
 		BitmapFactory.Options opts = getRealOpts();
-		
+
 		try{
-			int resize = r.getSettings().getDynamicResizing();
 			if (resize != 0){
 				Point p = getImageSize(new FileInputStream(image));
-				int width = p.x / r.getWidth();
+				width = p.x / width;
 				if (!(resize == 2 && width < 1)){
 					opts.inSampleSize = width;
 				}

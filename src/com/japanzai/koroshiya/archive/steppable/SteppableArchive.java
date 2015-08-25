@@ -1,6 +1,7 @@
 package com.japanzai.koroshiya.archive.steppable;
 
 import java.io.File;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 import com.japanzai.koroshiya.cache.IndexThread;
@@ -17,13 +18,17 @@ public abstract class SteppableArchive extends Steppable {
 	
 	protected final File tempDir;
 	protected final boolean progressive;
+    protected final int width;
+    protected final int extractMode;
 	
-	public SteppableArchive(Reader parent, String path){
+	public SteppableArchive(Reader reader, String path){
 		
-		super(parent, path);
-        if (parent != null) {
-            File tmp = parent.getCacheDir();
-            this.tempDir = new File(tmp + "/JComic/");
+		super(path);
+
+        if (reader != null) {
+            this.tempDir = new File(reader.getCacheDir() + "/JComic/");
+            this.width = reader.getWidth();
+            this.extractMode = reader.getSettings().getDynamicResizing();
 
             if (this.tempDir.exists() && this.tempDir.isDirectory()) {
                 deleteFile(this.tempDir);
@@ -31,6 +36,8 @@ public abstract class SteppableArchive extends Steppable {
             this.tempDir.mkdirs();
         }else{
             tempDir = null;
+            this.width = 1;
+            this.extractMode = 0;
         }
 
 		int mode = MainActivity.getMainActivity().getSettings().getCacheModeIndex();
@@ -71,13 +78,8 @@ public abstract class SteppableArchive extends Steppable {
     public abstract ArrayList<String> peekAtContents();
 
     @Override
-    public StepThread getImageThread(int index) {
-        return new IndexThread(this, index);
-    }
-
-    @Override
     public StepThread getThread(boolean primary, boolean forward) {
-        return new StepThread(this, primary, forward);
+        return new StepThread(this, primary, forward, width, extractMode);
     }
 	
 }

@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.ref.SoftReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,7 +31,7 @@ public class JRarArchive extends SteppableArchive{
 		
 		super(parent, path);
 		
-		setPrimary(new StepThread(this, true, true));
+		setPrimary(new StepThread(this, true, true, width, extractMode));
 		//setSecondary(new ArchiveThread(this, true, false));
 
 		FileHeader header;
@@ -49,7 +50,7 @@ public class JRarArchive extends SteppableArchive{
         super.sort();
 		
 		if (getMax() > 0){
-			setIndex(0);
+			setIndex(0, parent);
 			setMin();
 		}else {
 			throw new IOException();
@@ -58,7 +59,7 @@ public class JRarArchive extends SteppableArchive{
 	}
 	
 	@Override
-	public JBitmapDrawable parseImage(int i) {
+	public SoftReference<JBitmapDrawable> parseImage(int i, int width, int resize) {
 
         //Debug.startMethodTracing("calc");
 
@@ -84,11 +85,11 @@ public class JRarArchive extends SteppableArchive{
                 p = ImageParser.getImageSize(f);
                 is = new FileInputStream(f);
 
-                temp = ImageParser.parseImageFromDisk(is, p.x, p.y, parent);
+                temp = ImageParser.parseImageFromDisk(is, p.x, p.y, width, resize);
                 if (temp == null) {
                     super.clear();
                     is = new FileInputStream(f);
-                    temp = ImageParser.parseImageFromDisk(is, p.x, p.y, parent);
+                    temp = ImageParser.parseImageFromDisk(is, p.x, p.y, width, resize);
                 }
             } else {
 
@@ -98,11 +99,11 @@ public class JRarArchive extends SteppableArchive{
                     p = ImageParser.getImageSize(is);
                     is = rar.getInputStream(entry);
 
-                    temp = ImageParser.parseImageFromDisk(is, p.x, p.y, parent);
+                    temp = ImageParser.parseImageFromDisk(is, p.x, p.y, width, resize);
                     if (temp == null) {
                         super.clear();
                         is = rar.getInputStream(entry);
-                        temp = ImageParser.parseImageFromDisk(is, p.x, p.y, parent);
+                        temp = ImageParser.parseImageFromDisk(is, p.x, p.y, width, resize);
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -113,14 +114,11 @@ public class JRarArchive extends SteppableArchive{
                 is.close();
             }
 
-            //Debug.stopMethodTracing();
-
-            return temp;
-
         }catch (IOException ioe){
-            //Debug.stopMethodTracing();
             return null;
         }
+
+		return new SoftReference<>(temp);
     	
     }
 

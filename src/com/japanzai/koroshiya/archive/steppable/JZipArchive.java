@@ -3,6 +3,7 @@ package com.japanzai.koroshiya.archive.steppable;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.ref.SoftReference;
 import java.util.ArrayList;
 import java.util.zip.CRC32;
 
@@ -14,6 +15,7 @@ import com.japanzai.koroshiya.controls.JBitmapDrawable;
 import com.japanzai.koroshiya.cache.StepThread;
 import com.japanzai.koroshiya.io_utils.ArchiveParser;
 import com.japanzai.koroshiya.io_utils.ImageParser;
+import com.japanzai.koroshiya.reader.MainActivity;
 import com.japanzai.koroshiya.reader.Reader;
 import com.japanzai.koroshiya.reader.ToastThread;
 
@@ -29,9 +31,9 @@ public class JZipArchive extends SteppableArchive{
 	
 	private final ZipFile zip;
 
-	public JZipArchive(String path, Reader parent) throws IOException {
+	public JZipArchive(Reader reader, String path) throws IOException {
 		
-		super(parent, path);
+		super(reader, path);
 		
 		zip = new ZipFile(path);
 
@@ -54,10 +56,10 @@ public class JZipArchive extends SteppableArchive{
         super.sort();
 		
 		if (getMax() > 0){
-            setPrimary(new StepThread(this, true, true));
-            setSecondary(new StepThread(this, true, false));
+            setPrimary(new StepThread(this, true, true, width, extractMode));
+            setSecondary(new StepThread(this, true, false, width, extractMode));
 
-			setIndex(0);
+			setIndex(0, reader);
 			setMin();
 		}else {
 			throw new IOException();
@@ -93,7 +95,7 @@ public class JZipArchive extends SteppableArchive{
     }
 	
 	@Override
-	public JBitmapDrawable parseImage(int i){
+	public SoftReference<JBitmapDrawable> parseImage(int i, int width, int resizeMode){
 
         JImage j = getImages().get(i);
         FileHeader zipEntry = (FileHeader)j.getImage();
@@ -110,10 +112,10 @@ public class JZipArchive extends SteppableArchive{
 
             if (this.progressive) {
                 if (f.exists() || ArchiveParser.writeStreamToDisk(this.tempDir, zip.getInputStream(zipEntry), name)) {
-                    temp = ImageParser.parseImageFromDisk(f, parent);
+                    temp = ImageParser.parseImageFromDisk(f, width, resizeMode);
                     if (temp == null) {
                         super.clear();
-                        temp = ImageParser.parseImageFromDisk(f, parent);
+                        temp = ImageParser.parseImageFromDisk(f, width, resizeMode);
                     }
                 }
             } else {
@@ -123,18 +125,18 @@ public class JZipArchive extends SteppableArchive{
                     Point p = ImageParser.getImageSize(is);
                     is = zip.getInputStream(zipEntry);
 
-                    temp = ImageParser.parseImageFromDisk(is, p.x, p.y, parent);
+                    temp = ImageParser.parseImageFromDisk(is, p.x, p.y, width, resizeMode);
                     if (temp == null) {
                         super.clear();
                         is = zip.getInputStream(zipEntry);
-                        temp = ImageParser.parseImageFromDisk(is, p.x, p.y, parent);
+                        temp = ImageParser.parseImageFromDisk(is, p.x, p.y, width, resizeMode);
                     }
                     is.close();
                     is = null;
 
                 } catch (IOException e) {
                     e.printStackTrace();
-                    new ToastThread(R.string.archive_read_error, parent).start();
+                    new ToastThread(R.string.archive_read_error, MainActivity.getMainActivity()).start();
                 } finally {
                     if (is != null) {
                         is.close();
@@ -143,10 +145,10 @@ public class JZipArchive extends SteppableArchive{
             }
 
         } catch (IOException e) {
-            return null;
+            e.printStackTrace();
         }
     	
-    	return temp;
+    	return new SoftReference<>(temp);
     	
     }
 

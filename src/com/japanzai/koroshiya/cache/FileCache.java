@@ -9,19 +9,26 @@ import com.japanzai.koroshiya.reader.Reader;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.lang.ref.SoftReference;
 
 /**
  * Cache for images read from disk directly rather than from an archive.
  * eg. A cache pointing to a specific directory holding images within in.
  * */
 public class FileCache extends Steppable {
+
+    private final int width;
+    private final int resize;
 	
 	public FileCache(Reader parent, String path){
 		
-		super(parent, path);
+		super(path);
+
+		width = parent.getWidth();
+		resize = parent.getSettings().getDynamicResizing();
 		
-		setPrimary(new StepThread(this, true, true));
-		setSecondary(new StepThread(this, false, false));
+		setPrimary(new StepThread(this, true, true, width, resize));
+		setSecondary(new StepThread(this, false, false, width, resize));
 		
 		setMax();
 		setMin();
@@ -29,8 +36,10 @@ public class FileCache extends Steppable {
 	}
 
 	@Override
-	public JBitmapDrawable parseImage(int findex) {
-		
+	public SoftReference<JBitmapDrawable> parseImage(int findex, int width, int resize) {
+
+        JBitmapDrawable temp = null;
+
 		try{
 		
 			InputStream is = new FileInputStream((String)getImages().get(findex).getImage());
@@ -38,29 +47,23 @@ public class FileCache extends Steppable {
 			String name = (String)getImages().get(findex).getImage();
 			is = new FileInputStream(name);
 			
-			JBitmapDrawable temp = ImageParser.parseImageFromDisk(is, size.x, size.y, parent);
+			temp = ImageParser.parseImageFromDisk(is, size.x, size.y, width, resize);
 			if (temp == null){
 				super.clear();
 				is = new FileInputStream((String)getImages().get(findex).getImage());
-				temp = ImageParser.parseImageFromDisk(is, size.x, size.y, parent);
+				temp = ImageParser.parseImageFromDisk(is, size.x, size.y, width, resize);
 			}
-			return temp;
 		
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
 		
-		return null;
+		return new SoftReference<>(temp);
 	}
 
 	@Override
 	public StepThread getThread(boolean primary, boolean forward) {
-		return new StepThread(this, primary, forward);
-	}
-	
-	@Override
-	public StepThread getImageThread(int index) {
-		return new IndexThread(this, index);
+		return new StepThread(this, primary, forward, width, resize);
 	}
 	
 	public void close(){}

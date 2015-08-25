@@ -11,8 +11,8 @@ public class IndexThread extends StepThread {
 	
 	private final int index; //Index of the image to parse
 
-    public IndexThread(Steppable steppable, int index) {
-        super(steppable, false, false);
+    public IndexThread(Steppable steppable, int index, int width, int resize) {
+        super(steppable, false, false, width, resize);
         this.index = index;
     }
 	
@@ -36,7 +36,7 @@ public class IndexThread extends StepThread {
         }).start();
 
         Steppable step = getSteppable();
-		step.setCacheSecondary(step.parseImage(index));
+		step.setCacheSecondary(step.parseImage(index, width, resize));
 			
 	}
 	

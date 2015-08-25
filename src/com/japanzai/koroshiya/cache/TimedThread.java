@@ -2,6 +2,7 @@ package com.japanzai.koroshiya.cache;
 
 import android.os.Handler;
 import android.os.Looper;
+import android.view.View;
 
 import com.japanzai.koroshiya.R;
 import com.japanzai.koroshiya.reader.MainActivity;
@@ -26,15 +27,14 @@ public class TimedThread extends Thread {
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
-                            if (Progress.self.isVisible) {
-                                try {
-                                    Progress.self.oldFinish();
-                                } catch (Exception e) {
-                                    e.printStackTrace();
+                            final MainActivity main = MainActivity.getMainActivity();
+                            main.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    main.findViewById(R.id.progress).setVisibility(View.GONE);
+                                    new ToastThread(R.string.image_read_error, main);
                                 }
-                            }
-                            MainActivity main = MainActivity.getMainActivity();
-                            main.runOnUiThread(new ToastThread(R.string.image_read_error, main));
+                            });
                         }
                     }
                 }, 20000); //20 seconds
