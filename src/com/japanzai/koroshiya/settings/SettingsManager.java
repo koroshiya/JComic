@@ -44,7 +44,6 @@ public class SettingsManager {
 	private final boolean defaultSaveSession = true;
 	private final boolean defaultSaveRecent = true;
 	private final boolean defaultKeepBacklightOn = false;
-	private final boolean defaultCacheSafety = true;
     private final boolean defaultCacheOnStart = true;
     private final boolean defaultCacheRarFiles = false;
 	private final boolean defaultKeepZoomOnPageChange = false;
@@ -52,8 +51,6 @@ public class SettingsManager {
 	private final int defaultZoomIndex = 9;
 	private final int defaultOrientationIndex = 0;
 	private final int defaultArchiveModeIndex = 0;
-	private final int defaultCacheModeIndex = 0;
-	private final int defaultCacheLevel = 2;
 	private final int defaultRecursionLevel = 1;
 	private final int defaultDynamicResizing = 2;
 	private final int defaultDoubleTapIndex = 0;
@@ -71,8 +68,6 @@ public class SettingsManager {
 	private int zoomIndex = -1;
 	private int orientationIndex = -1;
 	private int archiveModeIndex = -1;
-	private int cacheModeIndex = -1;
-	private int cacheLevel = -1;
 	private int recursionLevel = -1;
 	private int dynamicResizing = -1;
 	private int doubleTapIndex = 0;
@@ -123,8 +118,6 @@ public class SettingsManager {
 		zoomIndex = preferences.getInt("zoomIndex", defaultZoomIndex);
 		orientationIndex = preferences.getInt("orientationIndex", defaultOrientationIndex);
 		archiveModeIndex = preferences.getInt("archiveModeIndex", defaultArchiveModeIndex);
-		cacheModeIndex = preferences.getInt("cacheModeIndex", defaultCacheModeIndex);
-		cacheLevel = preferences.getInt("cacheLevel", defaultCacheLevel);
 		recursionLevel = preferences.getInt("recursionLevel", defaultRecursionLevel);
 		dynamicResizing = preferences.getInt("dynamicResizing", defaultDynamicResizing);
 		doubleTapIndex = preferences.getInt("doubleTapIndex", defaultDoubleTapIndex);
@@ -231,8 +224,6 @@ public class SettingsManager {
 		setOrientationIndex(defaultOrientationIndex);
 		setArchiveModeIndex(defaultArchiveModeIndex);
 		setDoubleTapIndex(defaultDoubleTapIndex);
-		setCacheModeIndex(defaultCacheModeIndex);
-		setCacheLevel(defaultCacheLevel);
 		setRecursionLevel(defaultRecursionLevel);
 		setDynamicResizing(defaultDynamicResizing);
 		setHomeDir(System.getProperty("user.home"));
@@ -408,24 +399,6 @@ public class SettingsManager {
 	public void setContextMenuEnabled(boolean enabled){
 		contextMenuEnabled = enabled;
 		updateBool("contextMenuEnabled", enabled);
-	}
-
-	public int getCacheModeIndex(){
-		return cacheModeIndex;
-	}
-	
-	public void setCacheModeIndex(int index){
-		cacheModeIndex = index;
-		updateInt("cacheModeIndex", index);
-	}
-	
-	public int getCacheLevel(){
-		return cacheLevel;
-	}
-
-	public void setCacheLevel(int level){
-		cacheLevel = level;
-		updateInt("cacheLevel", level);
 	}
 	
 	public int getRecursionLevel(){

@@ -48,8 +48,6 @@ public class SettingsView extends DrawerActivity implements ModalReturn {
     private CheckSetting cacheOnStartup;
     private CheckSetting cacheRarFiles;
     private SpinnerSetting archiveMode;
-    private SpinnerSetting cacheMode;
-    private SpinnerSetting cacheLevel;
     private SpinnerSetting resizeMode;
 
     //Advanced settings
@@ -181,8 +179,6 @@ public class SettingsView extends DrawerActivity implements ModalReturn {
         if (cacheOnStartup != null) settings.setCacheOnStart(cacheOnStartup.getState() == 1);
         if (cacheRarFiles != null) settings.setCacheForRar(cacheRarFiles.getState() == 1);
         if (archiveMode != null){settings.setArchiveModeIndex(archiveMode.getState());}
-        if (cacheMode != null){settings.setCacheModeIndex(cacheMode.getState());}
-        if (cacheLevel != null){settings.setCacheLevel(cacheLevel.getState());}
         if (resizeMode != null){settings.setDynamicResizing(resizeMode.getState());}
 
         //Advanced settings
@@ -208,8 +204,6 @@ public class SettingsView extends DrawerActivity implements ModalReturn {
         if (cacheOnStartup != null) cacheOnStartup.setState(settings.isCacheOnStart() ? 1 : 0);
         if (cacheRarFiles != null) cacheRarFiles.setState(settings.isCacheForRar() ? 1 : 0);
         if (archiveMode != null){archiveMode.setState(settings.getArchiveModeIndex());}
-        if (cacheMode != null){cacheMode.setState(settings.getCacheModeIndex());}
-        if (cacheLevel != null){cacheLevel.setState(settings.getCacheLevel());}
         if (resizeMode != null){resizeMode.setState(settings.getDynamicResizing());}
 
         //Advanced settings
@@ -338,20 +332,6 @@ public class SettingsView extends DrawerActivity implements ModalReturn {
         }
 
         try{
-            cacheMode = new SpinnerSetting(this, R.string.setting_cache, R.array.performance_setting_cache_mode, 0);
-        }catch (Resources.NotFoundException nfe){
-            nfe.printStackTrace();
-            cacheMode = null;
-        }
-
-        try{
-            cacheLevel = new SpinnerSetting(this, R.string.advanced_setting_cache_level, R.array.advanced_setting_cache, 2);
-        }catch (Resources.NotFoundException nfe){
-            nfe.printStackTrace();
-            cacheLevel = null;
-        }
-
-        try{
             resizeMode = new SpinnerSetting(this, R.string.setting_resize, R.array.performance_setting_resize_mode, 0);
         }catch (Resources.NotFoundException nfe){
             nfe.printStackTrace();
@@ -380,8 +360,6 @@ public class SettingsView extends DrawerActivity implements ModalReturn {
             tv.setText(getString(R.string.setting_cache_rar_warning));
             lLayout.addView(tv);
             lLayout.addView(archiveMode);
-            lLayout.addView(cacheMode);
-            lLayout.addView(cacheLevel);
             lLayout.addView(resizeMode);
         }else if (type == ADVANCED) {
             lLayout.addView(recursion);
