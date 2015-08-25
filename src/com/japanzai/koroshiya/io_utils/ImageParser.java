@@ -10,7 +10,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Point;
 
 import com.japanzai.koroshiya.controls.JBitmapDrawable;
-import com.japanzai.koroshiya.reader.Reader;
 
 /**
  * Purpose: Used to check if a file is a supported image and/or parse it
@@ -88,6 +87,7 @@ public class ImageParser {
         try{
 
             if (resize != 0){
+                if (width == 0) width = inWidth;
                 width = inWidth / width;
                 if (!(resize == 2 && width < 1)){
                     opts.inSampleSize = width;
@@ -119,6 +119,7 @@ public class ImageParser {
 		try{
 			if (resize != 0){
 				Point p = getImageSize(new FileInputStream(image));
+                if (width == 0) width = p.x;
 				width = p.x / width;
 				if (!(resize == 2 && width < 1)){
 					opts.inSampleSize = width;
