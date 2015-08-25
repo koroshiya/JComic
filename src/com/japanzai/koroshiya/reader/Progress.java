@@ -41,7 +41,7 @@ public class Progress extends AsyncTask{
             reader.setCacheIndex(index == -1 ? 0 : index);
         }else if (ArchiveParser.isSupportedArchive(f)){
             if (!parseArchive(reader)){
-                reader.clearTempFile(reader);
+                reader.clearTempFile();
                 success = false;
             }
         }else {
@@ -71,7 +71,7 @@ public class Progress extends AsyncTask{
     protected void onPostExecute(Object result) {
         reader.findViewById(R.id.progress).setVisibility(View.GONE);
         if (success){
-            reader.clearTempFile(reader);
+            reader.clearTempFile();
         }else{
             new MessageThread(R.string.no_images, reader).start();
         }

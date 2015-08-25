@@ -31,7 +31,6 @@ public class FileCache extends Steppable {
 		setSecondary(new StepThread(this, false, false, width, resize));
 		
 		setMax();
-		setMin();
 		
 	}
 
@@ -44,15 +43,10 @@ public class FileCache extends Steppable {
 		
 			InputStream is = new FileInputStream((String)getImages().get(findex).getImage());
 			Point size = ImageParser.getImageSize(is);
+
 			String name = (String)getImages().get(findex).getImage();
 			is = new FileInputStream(name);
-			
 			temp = ImageParser.parseImageFromDisk(is, size.x, size.y, width, resize);
-			if (temp == null){
-				super.clear();
-				is = new FileInputStream((String)getImages().get(findex).getImage());
-				temp = ImageParser.parseImageFromDisk(is, size.x, size.y, width, resize);
-			}
 		
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();

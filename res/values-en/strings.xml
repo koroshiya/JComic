@@ -3,7 +3,6 @@
     <string name="app_name">JComic</string>
     <string name="author">Author:</string>
     <string name="contributions">Third-party contributions</string>
-    <string name="loading_progress">Loading - Please wait until processing is complete</string>
     <string name="cant_go_up">Can\'t go up any further</string>
     <string name="up_directory">Up</string>
     <string name="home_directory">Home</string>
@@ -21,11 +20,9 @@
     <string name="setting_performance">Performance</string>
     <string name="setting_pro">Advanced</string>
     <string name="setting_archive">Archive mode</string>
-    <string name="setting_cache">Cache mode</string>
     <string name="setting_resize">Dynamic resizing</string>
     <string name="setting_loop">Loop mode</string>
     <string name="setting_reset">Reset</string>
-    <string name="advanced_setting_cache_level">Cache level</string>
     <string name="advanced_setting_recursion_level">Recursion level</string>
     <string name="version">Version:</string>
     <string name="description_read">Read</string>
@@ -60,7 +57,6 @@
     <string name="file_size_gigabytes">GB</string>
     <string name="string_zoom">zoom</string>
     <string name="archive_read_error">Archive could not be read</string>
-    <string name="advanced_cache_safety">Enable cache safety</string>
     <string name="setting_double_tap">Double tap:</string>
     <string name="setting_cache_on_startup">Cache on startup</string>
     <string name="setting_keep_zoom_page_change">Keep zoom on page change</string>
@@ -98,22 +94,12 @@
         <item>Default</item>
         <item>Index</item>
         <item>Progressive extraction</item>
-    </string-array>    
-    <string-array name="performance_setting_cache_mode">
-        <item>Bi-directional</item>
-        <item>Forward</item>
-        <item>Backward</item>
-    </string-array>     
+    </string-array>
     <string-array name="performance_setting_resize_mode">
         <item>Disabled</item>
         <item>Enabled</item>
         <item>Only if image is too big</item>
-    </string-array>    
-    <string-array name="advanced_setting_cache">
-        <item>0 (disabled)</item>
-        <item>1</item>
-        <item>2 (default)</item>
-    </string-array>    
+    </string-array>
     <string-array name="advanced_setting_recursion">
         <item>0</item>
         <item>1 (default)</item>

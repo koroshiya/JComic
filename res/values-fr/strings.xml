@@ -3,7 +3,6 @@
     <string name="app_name">JComic</string>
     <string name="author">Auteur:</string>
     <string name="contributions">Contributions de tierces parties</string>
-    <string name="loading_progress">Chargement – Veuillez patienter jusqu’à la fin</string>
     <string name="cant_go_up">Vous ne pouvez pas aller plus loin</string>
     <string name="up_directory">Remonter</string>
     <string name="home_directory">Accueil</string>
@@ -21,12 +20,10 @@
     <string name="setting_performance">Performance</string>
     <string name="setting_pro">Avancé</string>
     <string name="setting_archive">Mode archive</string>
-    <string name="setting_cache">Mode cache</string>
     <string name="setting_resize">Redimensionnement dynamique</string>
     <string name="setting_loop">Mode répétition</string>
     <string name="setting_reset">Réglages</string>
     <string name="setting_reset_prompt">Réglages par défaut?</string>
-    <string name="advanced_setting_cache_level">Niveau de cache</string>
     <string name="advanced_setting_recursion_level">Recerche récursive</string>
     <string name="version">Version:</string>
     <string name="description_read">Lecture</string>
@@ -61,7 +58,6 @@
     <string name="file_size_gigabytes">GB</string>
     <string name="string_zoom">zoom</string>
     <string name="archive_read_error">d’archive ne peut être lu</string>
-    <string name="advanced_cache_safety">Permettre cache sécurité</string>
     <string name="setting_double_tap">Double tap:</string>
     <string name="setting_cache_on_startup">Cache au démarrage</string>
     <string name="setting_keep_zoom_page_change">Conserver l\'agrandissement lors du changement de page</string>
@@ -99,22 +95,12 @@
         <item>Défaut</item>
         <item>Index</item>
         <item>Progressive</item>
-    </string-array>    
-    <string-array name="performance_setting_cache_mode">
-        <item>Bidirectionnel</item>
-        <item>Suivant</item>
-        <item>Précédant</item>
-    </string-array>     
+    </string-array>
     <string-array name="performance_setting_resize_mode">
         <item>Désactivé</item>
         <item>Activé</item>
         <item>Seulement si l\'image est trop grande</item>
-    </string-array>    
-    <string-array name="advanced_setting_cache">
-        <item>0 (Désactivé)</item>
-        <item>1</item>
-        <item>2 (Défaut)</item>
-    </string-array>    
+    </string-array>
     <string-array name="advanced_setting_recursion">
         <item>0</item>
         <item>1 (Défaut)</item>

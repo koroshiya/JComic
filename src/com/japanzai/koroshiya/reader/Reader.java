@@ -2,16 +2,11 @@ package com.japanzai.koroshiya.reader;
 
 import java.io.File;
 import java.lang.ref.SoftReference;
-import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -23,16 +18,10 @@ import android.widget.Button;
 import android.widget.NumberPicker;
 
 import com.japanzai.koroshiya.R;
-import com.japanzai.koroshiya.archive.steppable.JImage;
-import com.japanzai.koroshiya.archive.steppable.JRarArchive;
-import com.japanzai.koroshiya.cache.FileCache;
-import com.japanzai.koroshiya.cache.StepThread;
 import com.japanzai.koroshiya.cache.Steppable;
 import com.japanzai.koroshiya.cache.TimedThread;
 import com.japanzai.koroshiya.controls.JBitmapDrawable;
 import com.japanzai.koroshiya.controls.JScrollView;
-import com.japanzai.koroshiya.io_utils.ArchiveParser;
-import com.japanzai.koroshiya.io_utils.ImageParser;
 import com.japanzai.koroshiya.settings.SettingsManager;
 
 /**
@@ -59,7 +48,7 @@ public class Reader extends FragmentActivity {
         super.onCreate(savedInstanceState);
         SettingsManager.setFullScreen(this);
         setContentView(R.layout.activity_reader);
-        //findViewById(R.id.progress).setVisibility(View.VISIBLE);
+        if (findViewById(R.id.progress) != null) findViewById(R.id.progress).setVisibility(View.VISIBLE);
         MainActivity.hideActionBar(this);
         
         Bundle b = getIntent().getExtras();
@@ -221,7 +210,7 @@ public class Reader extends FragmentActivity {
 	 * Purpose: Clears this class's temporary file and gets this Activity ready
 	 * to begin reading
 	 * */
-	public void clearTempFile(Activity act) {
+	public void clearTempFile() {
 
 		Point size = getScreenDimensions(this);
 		width = size.x;
@@ -230,8 +219,8 @@ public class Reader extends FragmentActivity {
 		this.parsed = true;
 		
 		this.tempFile = null;
-		imgPanel.clearCache(act);
-		
+		imgPanel.clearCache();
+
 		if (cache != null && cache.getMax() != 0) {
 			this.cache.sort();
 
@@ -345,18 +334,11 @@ public class Reader extends FragmentActivity {
 	}
 
     @Override
-    public void onPause(){
-        super.onPause();
-        if (cache != null) cache.clear();
-    }
-
-    @Override
     public void onDestroy(){
         super.onDestroy();
         if (settings.saveRecent()) settings.addRecent(cache.getPath(), cache.getIndex());
         if (settings.saveSession()) settings.setLastRead(new File(cache.getPath()), cache.getIndex());
         cache.emptyCache();
-        cache.clear();
         cache.close();
         cache = null;
     }

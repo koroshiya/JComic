@@ -51,7 +51,6 @@ public class JRarArchive extends SteppableArchive{
 		
 		if (getMax() > 0){
 			setIndex(0, parent);
-			setMin();
 		}else {
 			throw new IOException();
 		}
@@ -60,8 +59,6 @@ public class JRarArchive extends SteppableArchive{
 	
 	@Override
 	public SoftReference<JBitmapDrawable> parseImage(int i, int width, int resize) {
-
-        //Debug.startMethodTracing("calc");
 
 		FileHeader entry = (FileHeader)getEntry(i);
 		String name = entry.getFileNameString();
@@ -84,27 +81,17 @@ public class JRarArchive extends SteppableArchive{
 
                 p = ImageParser.getImageSize(f);
                 is = new FileInputStream(f);
-
                 temp = ImageParser.parseImageFromDisk(is, p.x, p.y, width, resize);
-                if (temp == null) {
-                    super.clear();
-                    is = new FileInputStream(f);
-                    temp = ImageParser.parseImageFromDisk(is, p.x, p.y, width, resize);
-                }
             } else {
 
                 try {
 
                     is = rar.getInputStream(entry);
                     p = ImageParser.getImageSize(is);
-                    is = rar.getInputStream(entry);
 
+                    is = rar.getInputStream(entry);
                     temp = ImageParser.parseImageFromDisk(is, p.x, p.y, width, resize);
-                    if (temp == null) {
-                        super.clear();
-                        is = rar.getInputStream(entry);
-                        temp = ImageParser.parseImageFromDisk(is, p.x, p.y, width, resize);
-                    }
+
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

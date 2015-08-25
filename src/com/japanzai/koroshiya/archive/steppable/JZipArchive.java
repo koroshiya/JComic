@@ -60,7 +60,6 @@ public class JZipArchive extends SteppableArchive{
             setSecondary(new StepThread(this, true, false, width, extractMode));
 
 			setIndex(0, reader);
-			setMin();
 		}else {
 			throw new IOException();
 		}
@@ -80,17 +79,22 @@ public class JZipArchive extends SteppableArchive{
                 crc32.update(buff, 0, readLen);
             }
 
+            try {
+                inputStream.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
             return crc32.getValue() == entry.getCrc32();
         } catch (Exception e) {
-            return false;
-        } finally {
             if (inputStream != null) {
                 try {
                     inputStream.close();
-                } catch (IOException e) {
-                    return false;
+                } catch (IOException ioe) {
+                    ioe.printStackTrace();
                 }
             }
+            return false;
         }
     }
 	
@@ -113,24 +117,16 @@ public class JZipArchive extends SteppableArchive{
             if (this.progressive) {
                 if (f.exists() || ArchiveParser.writeStreamToDisk(this.tempDir, zip.getInputStream(zipEntry), name)) {
                     temp = ImageParser.parseImageFromDisk(f, width, resizeMode);
-                    if (temp == null) {
-                        super.clear();
-                        temp = ImageParser.parseImageFromDisk(f, width, resizeMode);
-                    }
                 }
             } else {
                 InputStream is = null;
                 try {
                     is = zip.getInputStream(zipEntry);
                     Point p = ImageParser.getImageSize(is);
-                    is = zip.getInputStream(zipEntry);
 
+                    is = zip.getInputStream(zipEntry);
                     temp = ImageParser.parseImageFromDisk(is, p.x, p.y, width, resizeMode);
-                    if (temp == null) {
-                        super.clear();
-                        is = zip.getInputStream(zipEntry);
-                        temp = ImageParser.parseImageFromDisk(is, p.x, p.y, width, resizeMode);
-                    }
+
                     is.close();
                     is = null;
 

@@ -28,7 +28,6 @@ public abstract class Steppable {
 	public final ArrayList<JImage> images = new ArrayList<>();
 
 	protected int index;
-	private int min;
 	private int max;
     protected final String path;
 
@@ -217,11 +216,6 @@ public abstract class Steppable {
     	this.max = 0;
     }
 
-	/**  */
-	public void setMin(){
-    	this.min = 0;
-    }
-
 	/**
 	 * Purpose: Extracts and parses the file at the specified index.
 	 * @param findex The index of the item to extract
@@ -248,8 +242,6 @@ public abstract class Steppable {
         public void run(){
 
             super.run();
-
-            clear();
 
             SoftReference<JBitmapDrawable> temp = parseImage(index, reader.getWidth(), reader.getSettings().getDynamicResizing());
             if (temp != null) {
@@ -311,17 +303,18 @@ public abstract class Steppable {
 
 	}
 
-	/**
-	 * Clears all cached displayable images, NOT the JImage references
-	 * */
-	public void clear(){
-		/*primary = null;
-		secondary = null;
-		pcit = null;
-        cachePrimary.clear();
-        cacheSecondary.clear();
-		System.gc();*/
-	}
+    private void clear(){
+        if (primary != null){
+            primary.interrupt();
+            primary = null;
+        }
+        if (secondary != null){
+            secondary.interrupt();
+            secondary = null;
+        }
+        this.cachePrimary.clear();
+        this.cacheSecondary.clear();
+    }
 
 	public abstract void close();
 

@@ -2,7 +2,6 @@ package com.japanzai.koroshiya.controls;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -32,11 +31,9 @@ public class JScrollView extends TwoDScrollView {
 	private int pageStartx;
 	
 	private boolean lastDown = true;
-    private final Context context;
 
     public JScrollView(Context context) {
         super(context);
-        this.context = context;
         view = new JImageView(context);
         gestureListener = new GestureListener();
         gestureDetector = new GestureDetector(context, gestureListener);
@@ -46,7 +43,6 @@ public class JScrollView extends TwoDScrollView {
 
     public JScrollView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        this.context = context;
         view = new JImageView(context);
         gestureListener = new GestureListener();
         gestureDetector = new GestureDetector(context, gestureListener);
@@ -56,7 +52,6 @@ public class JScrollView extends TwoDScrollView {
 
     public JScrollView(Context context, AttributeSet attrs, int val1) {
         super(context, attrs, val1);
-        this.context = context;
         view = new JImageView(context);
         gestureListener = new GestureListener();
         gestureDetector = new GestureDetector(context, gestureListener);
@@ -66,7 +61,6 @@ public class JScrollView extends TwoDScrollView {
 
     public JScrollView(Context context, AttributeSet attrs, int val1, int val2) {
         super(context, attrs, val1, val2);
-        this.context = context;
         view = new JImageView(context);
         gestureListener = new GestureListener();
         gestureDetector = new GestureDetector(context, gestureListener);
@@ -304,21 +298,8 @@ public class JScrollView extends TwoDScrollView {
 
 	}
 
-	public void clearCache(Activity act){
-		/*if (view.getDrawable() != null){
-            view.getDrawable().setCallback(null);
-            ((JBitmapDrawable)view.getDrawable()).getBitmap().recycle();
-        }*/
+	public void clearCache(){
 		view.setImageDrawable(null);
-        /*act.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                removeView(view);
-                view.destroyDrawingCache();
-                view = new JImageView(context);
-                addView(view);
-            }
-        });*/
 	}
 	
 }

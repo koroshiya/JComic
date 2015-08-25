@@ -57,8 +57,7 @@ import android.widget.TextView;
  * within a larger container.
  */
 public class TwoDScrollView extends FrameLayout {
- private final int ANIMATED_SCROLL_GAP = 250;
- private final float MAX_SCROLL_FACTOR = 0.5f;
+    private final float MAX_SCROLL_FACTOR = 0.5f;
  
  private long mLastScroll;
  
@@ -710,7 +709,8 @@ public class TwoDScrollView extends FrameLayout {
   */
  public final void smoothScrollBy(int dx, int dy) {
    long duration = AnimationUtils.currentAnimationTimeMillis() - mLastScroll;
-   if (duration > ANIMATED_SCROLL_GAP) {
+     int ANIMATED_SCROLL_GAP = 250;
+     if (duration > ANIMATED_SCROLL_GAP) {
      mScroller.startScroll(getScrollX(), getScrollY(), dx, dy);
      awakenScrollBars(mScroller.getDuration());
      invalidate();
