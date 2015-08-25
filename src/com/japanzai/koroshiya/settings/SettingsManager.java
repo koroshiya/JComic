@@ -39,49 +39,49 @@ public class SettingsManager {
 	 *
 	 */
 
-    private static final boolean defaultLoopMode = false;
-    private static final boolean defaultSwipeToNextMode = true;
-	private static final boolean defaultSaveSession = true;
-	private static final boolean defaultSaveRecent = true;
-	private static final boolean defaultKeepBacklightOn = false;
-	private static final boolean defaultCacheSafety = true;
-    private static final boolean defaultCacheOnStart = true;
-    private static final boolean defaultCacheRarFiles = false;
-	private static final boolean defaultKeepZoomOnPageChange = false;
-	private static final boolean defaultContextMenuEnabled = true;
-	private static final int defaultZoomIndex = 9;
-	private static final int defaultOrientationIndex = 0;
-	private static final int defaultArchiveModeIndex = 0;
-	private static final int defaultCacheModeIndex = 0;
-	private static final int defaultCacheLevel = 2;
-	private static final int defaultRecursionLevel = 1;
-	private static final int defaultDynamicResizing = 2;
-	private static final int defaultDoubleTapIndex = 0;
+    private final boolean defaultLoopMode = false;
+    private final boolean defaultSwipeToNextMode = true;
+	private final boolean defaultSaveSession = true;
+	private final boolean defaultSaveRecent = true;
+	private final boolean defaultKeepBacklightOn = false;
+	private final boolean defaultCacheSafety = true;
+    private final boolean defaultCacheOnStart = true;
+    private final boolean defaultCacheRarFiles = false;
+	private final boolean defaultKeepZoomOnPageChange = false;
+	private final boolean defaultContextMenuEnabled = true;
+	private final int defaultZoomIndex = 9;
+	private final int defaultOrientationIndex = 0;
+	private final int defaultArchiveModeIndex = 0;
+	private final int defaultCacheModeIndex = 0;
+	private final int defaultCacheLevel = 2;
+	private final int defaultRecursionLevel = 1;
+	private final int defaultDynamicResizing = 2;
+	private final int defaultDoubleTapIndex = 0;
     private final String defaultHomeDir;
 
-    private static boolean loopMode;
-    private static boolean swipeToNextMode;
-	private static boolean saveSession;
-	private static boolean saveRecent;
-	private static boolean keepBacklightOn;
-	private static boolean cacheOnStart;
-    private static boolean cacheRarFiles;
-	private static boolean keepZoomOnPageChange;
-	private static boolean contextMenuEnabled;
-	private static int zoomIndex = -1;
-	private static int orientationIndex = -1;
-	private static int archiveModeIndex = -1;
-	private static int cacheModeIndex = -1;
-	private static int cacheLevel = -1;
-	private static int recursionLevel = -1;
-	private static int dynamicResizing = -1;
-	private static int doubleTapIndex = 0;
-    private static File homeDir = null;
-	private static File lastRead = null;
-    private static long lastDelete = -1;
-	private static int lastReadIndex = -1;
-	private static final ArrayList<Recent> recent = new ArrayList<>();
-	private static final ArrayList<String> favorite = new ArrayList<>();
+    private boolean loopMode;
+    private boolean swipeToNextMode;
+	private boolean saveSession;
+	private boolean saveRecent;
+	private boolean keepBacklightOn;
+	private boolean cacheOnStart;
+    private boolean cacheRarFiles;
+	private boolean keepZoomOnPageChange;
+	private boolean contextMenuEnabled;
+	private int zoomIndex = -1;
+	private int orientationIndex = -1;
+	private int archiveModeIndex = -1;
+	private int cacheModeIndex = -1;
+	private int cacheLevel = -1;
+	private int recursionLevel = -1;
+	private int dynamicResizing = -1;
+	private int doubleTapIndex = 0;
+    private File homeDir = null;
+	private File lastRead = null;
+    private long lastDelete = -1;
+	private int lastReadIndex = -1;
+	private final ArrayList<Recent> recent = new ArrayList<>();
+	private final ArrayList<String> favorite = new ArrayList<>();
 	private final SharedPreferences preferences;
 	
 	public final static int RECURSION_ALL = 3;
@@ -171,7 +171,7 @@ public class SettingsManager {
 	@Deprecated
 	private void fillFavoriteOld(){
 
-		SettingsManager.favorite.clear();
+		favorite.clear();
 		String s;
         Editor editor = preferences.edit();
 
@@ -181,7 +181,7 @@ public class SettingsManager {
 			if (s.equals("")){
 				break;
 			}
-			SettingsManager.favorite.add(s);
+			favorite.add(s);
 		}
 
         editor.commit();
@@ -191,7 +191,7 @@ public class SettingsManager {
     @Deprecated
 	private void fillRecentOld(){
 		
-		SettingsManager.recent.clear();
+		recent.clear();
 		String s;
 		int page;
         Editor editor = preferences.edit();
@@ -207,7 +207,7 @@ public class SettingsManager {
 			if (page < 0){
 				break;
 			}
-			SettingsManager.recent.add(new Recent(s, page));
+			recent.add(new Recent(s, page));
 		}
 
         editor.commit();
@@ -513,14 +513,14 @@ public class SettingsManager {
 	
 	public void addRecent(Recent r){
 
-        for (int i = 0; i < SettingsManager.recent.size(); i++){
-            if (SettingsManager.recent.get(i).getPath().equals(r.getPath())){
-                SettingsManager.recent.remove(i);
+        for (int i = 0; i < recent.size(); i++){
+            if (recent.get(i).getPath().equals(r.getPath())){
+                recent.remove(i);
                 break;
             }
         }
 
-        SettingsManager.recent.add(0, r);
+        recent.add(0, r);
 
         saveRecentList();
 		
@@ -565,14 +565,14 @@ public class SettingsManager {
 			path += "/";
 		}
 
-        for (int i = 0; i < SettingsManager.favorite.size(); i++){
-            if (SettingsManager.favorite.get(i).equals(path)){
-                SettingsManager.favorite.remove(i);
+        for (int i = 0; i < favorite.size(); i++){
+            if (favorite.get(i).equals(path)){
+                favorite.remove(i);
                 break;
             }
         }
 
-        SettingsManager.favorite.add(0, path);
+        favorite.add(0, path);
 
         saveFavoriteList();
 		

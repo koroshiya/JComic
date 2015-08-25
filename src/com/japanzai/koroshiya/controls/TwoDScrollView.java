@@ -22,9 +22,11 @@
 package com.japanzai.koroshiya.controls;
  
 import java.util.List;
- 
+
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Rect;
+import android.os.Build;
 import android.util.AttributeSet;
 import android.view.FocusFinder;
 import android.view.KeyEvent;
@@ -55,8 +57,8 @@ import android.widget.TextView;
  * within a larger container.
  */
 public class TwoDScrollView extends FrameLayout {
- static final int ANIMATED_SCROLL_GAP = 250;
- static final float MAX_SCROLL_FACTOR = 0.5f;
+ private final int ANIMATED_SCROLL_GAP = 250;
+ private final float MAX_SCROLL_FACTOR = 0.5f;
  
  private long mLastScroll;
  
@@ -117,11 +119,17 @@ public class TwoDScrollView extends FrameLayout {
    super(context, attrs);
    initTwoDScrollView();
  }
- 
- public TwoDScrollView(Context context, AttributeSet attrs, int defStyle) {
-   super(context, attrs, defStyle);
-   initTwoDScrollView();
- }
+
+    public TwoDScrollView(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
+        initTwoDScrollView();
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    public TwoDScrollView(Context context, AttributeSet attrs, int defStyle, int val2) {
+        super(context, attrs, defStyle, val2);
+        initTwoDScrollView();
+    }
  
  @Override
  protected float getTopFadingEdgeStrength() {

@@ -16,10 +16,10 @@ public class JImageView extends ImageView {
 
 	private int originalWidth;
 	private int originalHeight;
-	private static int currentWidth = -1;
-	private static int currentHeight;
+	private int currentWidth = -1;
+	private int currentHeight;
 	private double currentZoom = -1;
-	private static double inheritedZoom = 1d;
+	private double inheritedZoom = 1d;
 	
 	public JImageView(Context context) {
 		super(context);

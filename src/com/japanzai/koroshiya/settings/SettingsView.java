@@ -27,9 +27,9 @@ public class SettingsView extends DrawerActivity implements ModalReturn {
     protected SettingsManager settings;
     protected LinearLayout lLayout;
 
-    private static final int GENERAL = 1;
-    private static final int PERFORMANCE = 2;
-    private static final int ADVANCED = 3;
+    private final int GENERAL = 1;
+    private final int PERFORMANCE = 2;
+    private final int ADVANCED = 3;
     private int type = GENERAL;
 
     //General settings
