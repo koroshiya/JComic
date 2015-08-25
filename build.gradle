@@ -32,8 +32,8 @@ android {
         applicationId "com.japanzai.koroshiya"
         minSdkVersion 7
         targetSdkVersion 23
-        versionCode 49
-        versionName "2.0.11"
+        versionCode 50
+        versionName "2.1.0"
     }
 }
 
