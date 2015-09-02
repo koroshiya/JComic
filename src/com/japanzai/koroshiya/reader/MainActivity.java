@@ -154,7 +154,7 @@ public class MainActivity extends Activity {
 		b.putString("file", path);
         b.putInt("index", index);
         intent.putExtras(b);
-        //settings.setLastRead(new File(path), index);
+        if (settings.saveSession()) settings.setLastRead(new File(path), index);
 		startActivity(intent);
 		
 	}
@@ -162,7 +162,7 @@ public class MainActivity extends Activity {
 	@Override
 	public void onResume() {
 		super.onResume();
-		settings.forceOrientation(this);
+        settings.forceOrientation(this);
         instantiate();
 	}
 

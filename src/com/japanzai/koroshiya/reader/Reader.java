@@ -337,7 +337,7 @@ public class Reader extends FragmentActivity {
     public void onDestroy(){
         super.onDestroy();
         if (settings.saveRecent()) settings.addRecent(cache.getPath(), cache.getIndex());
-        if (settings.saveSession()) settings.setLastRead(new File(cache.getPath()), cache.getIndex());
+        //if (settings.saveSession()) settings.setLastRead(new File(cache.getPath()), cache.getIndex());
         cache.emptyCache();
         cache.close();
         cache = null;
