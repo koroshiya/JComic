@@ -10,6 +10,7 @@ import android.content.SharedPreferences.Editor;
 import android.content.pm.ActivityInfo;
 import android.os.Environment;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -39,42 +40,8 @@ public class SettingsManager {
 	 *
 	 */
 
-    private final boolean defaultLoopMode = false;
-    private final boolean defaultSwipeToNextMode = true;
-	private final boolean defaultSaveSession = true;
-	private final boolean defaultSaveRecent = true;
-	private final boolean defaultKeepBacklightOn = false;
-    private final boolean defaultCacheOnStart = true;
-    private final boolean defaultCacheRarFiles = false;
-	private final boolean defaultKeepZoomOnPageChange = false;
-	private final boolean defaultContextMenuEnabled = true;
-	private final int defaultZoomIndex = 9;
-	private final int defaultOrientationIndex = 0;
-	private final int defaultArchiveModeIndex = 0;
-	private final int defaultRecursionLevel = 1;
-	private final int defaultDynamicResizing = 2;
-	private final int defaultDoubleTapIndex = 0;
     private final String defaultHomeDir;
 
-    private boolean loopMode;
-    private boolean swipeToNextMode;
-	private boolean saveSession;
-	private boolean saveRecent;
-	private boolean keepBacklightOn;
-	private boolean cacheOnStart;
-    private boolean cacheRarFiles;
-	private boolean keepZoomOnPageChange;
-	private boolean contextMenuEnabled;
-	private int zoomIndex = -1;
-	private int orientationIndex = -1;
-	private int archiveModeIndex = -1;
-	private int recursionLevel = -1;
-	private int dynamicResizing = -1;
-	private int doubleTapIndex = 0;
-    private File homeDir = null;
-	private File lastRead = null;
-    private long lastDelete = -1;
-	private int lastReadIndex = -1;
 	private final ArrayList<Recent> recent = new ArrayList<>();
 	private final ArrayList<String> favorite = new ArrayList<>();
 	private final SharedPreferences preferences;
@@ -106,38 +73,10 @@ public class SettingsManager {
 	
 	public void initialize(){
 
-        loopMode = preferences.getBoolean("loopMode", defaultLoopMode);
-        swipeToNextMode = preferences.getBoolean("swipeToNextMode", defaultSwipeToNextMode);
-		saveSession = preferences.getBoolean("saveSession", defaultSaveSession);
-		saveRecent = preferences.getBoolean("saveRecent", defaultSaveRecent);
-		keepBacklightOn = preferences.getBoolean("keepBacklightOn", defaultKeepBacklightOn);
-        cacheOnStart = preferences.getBoolean("cacheOnStart", defaultCacheOnStart);
-        cacheRarFiles = preferences.getBoolean("cacheRarFiles", defaultCacheRarFiles);
-		keepZoomOnPageChange = preferences.getBoolean("keepZoomOnPageChange", defaultKeepZoomOnPageChange);
-		contextMenuEnabled = preferences.getBoolean("contextMenuEnabled", defaultContextMenuEnabled);
-		zoomIndex = preferences.getInt("zoomIndex", defaultZoomIndex);
-		orientationIndex = preferences.getInt("orientationIndex", defaultOrientationIndex);
-		archiveModeIndex = preferences.getInt("archiveModeIndex", defaultArchiveModeIndex);
-		recursionLevel = preferences.getInt("recursionLevel", defaultRecursionLevel);
-		dynamicResizing = preferences.getInt("dynamicResizing", defaultDynamicResizing);
-		doubleTapIndex = preferences.getInt("doubleTapIndex", defaultDoubleTapIndex);
-		homeDir = new File(preferences.getString("homeDir", defaultHomeDir));
-		try{
-			lastRead = new File(preferences.getString("lastRead", null));
-		}catch (Exception ex){
-			lastRead = null;
-		}
-		
-		lastReadIndex = preferences.getInt("lastReadIndex", -1);
-
-        lastDelete = preferences.getLong("lastDelete", -1);
-
         fillRecentOld(); //For compatibility with old versions
         fillFavoriteOld();  //For compatibility with old versions
         fillRecent();
         fillFavorite();
-
-		this.setBacklightAlwaysOn(keepBacklightOn);
 		
 	}
 
@@ -212,20 +151,6 @@ public class SettingsManager {
 	 * Does not include history settings, like favorites or recent.
 	 * */
 	public void restoreDefaultSettings(){
-		setLoopMode(defaultLoopMode);
-		setSaveSession(defaultSaveSession);
-		setSaveRecent(defaultSaveRecent);
-		setBacklightAlwaysOn(defaultKeepBacklightOn);
-		setCacheOnStart(defaultCacheOnStart);
-        setCacheForRar(defaultCacheRarFiles);
-		setKeepZoomOnPageChange(defaultKeepZoomOnPageChange);
-		setContextMenuEnabled(defaultContextMenuEnabled);
-		setZoomIndex(defaultZoomIndex);
-		setOrientationIndex(defaultOrientationIndex);
-		setArchiveModeIndex(defaultArchiveModeIndex);
-		setDoubleTapIndex(defaultDoubleTapIndex);
-		setRecursionLevel(defaultRecursionLevel);
-		setDynamicResizing(defaultDynamicResizing);
 		setHomeDir(System.getProperty("user.home"));
 	}
 
@@ -234,14 +159,13 @@ public class SettingsManager {
      * 			Otherwise, false.
      * */
     public boolean isLoopModeEnabled(){
-        return loopMode;
+        return preferences.getBoolean("loopMode", false);
     }
 
     /**
      * @param loop Boolean indicating whether to enable loop mode or not.
      * */
     public void setLoopMode(boolean loop){
-        loopMode = loop;
         updateBool("loopMode", loop);
     }
 
@@ -250,14 +174,13 @@ public class SettingsManager {
      * 			Otherwise, false.
      * */
     public boolean isSwipeToNextModeEnabled(){
-        return swipeToNextMode;
+        return preferences.getBoolean("swipeToNextMode", true);
     }
 
     /**
      * @param next Boolean indicating whether to enable swipe to next mode or not.
      * */
     public void setSwipeToNextMode(boolean next){
-        swipeToNextMode = next;
         updateBool("swipeToNextMode", next);
     }
 	
@@ -266,46 +189,42 @@ public class SettingsManager {
 	 * 			returns true. Otherwise, false.
 	 * */
 	public boolean saveSession(){
-		return saveSession;
+        return preferences.getBoolean("saveSession", true);
 	}
 	
 	/**
 	 * @param save Boolean indicating whether to save user viewing sessions or not.
 	 * */
 	public void setSaveSession(boolean save){
-		saveSession = save;
 		updateBool("saveSession", save);
 	}
 	
 	public int getDoubleTapIndex(){
-		return doubleTapIndex;
+        return preferences.getInt("doubleTapIndex", 0);
 	}
 	
 	public void setDoubleTapIndex(int index){
-		doubleTapIndex = index;
 		updateInt("doubleTapIndex", index);
 	}
 	
 	public boolean saveRecent(){
-		return saveRecent;
+        return preferences.getBoolean("saveRecent", true);
 	}
 	
 	public void setSaveRecent(boolean save){
-		saveRecent = save;
 		updateBool("saveRecent", save);
 	}
 	
 	public int getZoom(){
-		return zoomIndex;
+        return preferences.getInt("zoomIndex", 9);
 	}
 	
 	public void setZoomIndex(int index){
-		zoomIndex = index;
 		updateInt("zoomIndex", index);
 	}
 	
 	public double getCurrentZoomRatio(){
-        return getZoomRatio(zoomIndex);
+        return getZoomRatio(getZoom());
 	}
 	
 	public static double getZoomRatio(int index){
@@ -359,11 +278,10 @@ public class SettingsManager {
 	}
 	
 	public int getOrientation(){
-		return orientationIndex;
+        return preferences.getInt("orientationIndex", 0);
 	}
 	
 	public void setOrientationIndex(int index){
-		orientationIndex = index;
 		updateInt("orientationIndex", index);
 	}
 	
@@ -371,7 +289,7 @@ public class SettingsManager {
 
         int orientation = ActivityInfo.SCREEN_ORIENTATION_USER;
 		
-		switch(orientationIndex){
+		switch(getOrientation()){
 			case 1:
                 if (android.os.Build.VERSION.SDK_INT >= 9) {
                     orientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT;
@@ -393,44 +311,41 @@ public class SettingsManager {
 	}
 	
 	public int getArchiveModeIndex(){
-		return archiveModeIndex;
+        return preferences.getInt("archiveModeIndex", 0);
 	}
 	
 	public void setArchiveModeIndex(int index){
-		archiveModeIndex = index;
 		updateInt("archiveModeIndex", index);
 	}
 
 	public boolean isContextMenuEnabled(){
-		return contextMenuEnabled;
+        return preferences.getBoolean("contextMenuEnabled", true);
 	}
 
 	public void setContextMenuEnabled(boolean enabled){
-		contextMenuEnabled = enabled;
 		updateBool("contextMenuEnabled", enabled);
 	}
 	
 	public int getRecursionLevel(){
-		return recursionLevel;
+        return preferences.getInt("recursionLevel", 1);
 	}
 	
 	public void setRecursionLevel(int level){
-		recursionLevel = level;
 		updateInt("recursionLevel", level);
 	}
 	
 	public boolean isBacklightAlwaysOn(){
-		return keepBacklightOn;
+        return preferences.getBoolean("keepBacklightOn", false);
 	}
 	
 	public void setBacklightAlwaysOn(boolean alwaysOn){
 		try{
-			keepBacklightOn = alwaysOn;
 			int flag = android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
+            Window w = MainActivity.getMainActivity().getWindow();
 			if (alwaysOn){
-				MainActivity.getMainActivity().getWindow().addFlags(flag);
+				w.addFlags(flag);
 			}else{
-				MainActivity.getMainActivity().getWindow().clearFlags(flag);
+				w.clearFlags(flag);
 			}
 		}catch (Exception | Error e){
 			e.printStackTrace();
@@ -441,7 +356,7 @@ public class SettingsManager {
 	
 	public void keepBacklightOn(Window window){
 		try{
-			if (keepBacklightOn){
+			if (isBacklightAlwaysOn()){
 				int flag = android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
 				window.addFlags(flag);
 			}
@@ -451,46 +366,42 @@ public class SettingsManager {
 	}
 
     public boolean isCacheOnStart(){
-        return cacheOnStart;
+        return preferences.getBoolean("cacheOnStart", true);
     }
 
     public void setCacheOnStart(boolean enabled){
-        cacheOnStart = enabled;
         updateBool("cacheOnStart", enabled);
     }
 
-    public boolean isCacheForRar(){ return cacheRarFiles; }
+    public boolean isCacheForRar(){
+        return preferences.getBoolean("cacheRarFiles", false); }
 
     public void setCacheForRar(boolean enabled){
-        cacheRarFiles = enabled;
         updateBool("cacheRarFiles", enabled);
     }
 	
 	public boolean keepZoomOnPageChange(){
-		return keepZoomOnPageChange;
+        return preferences.getBoolean("keepZoomOnPageChange", false);
 	}
 	
 	public void setKeepZoomOnPageChange(boolean enabled){
-		keepZoomOnPageChange = enabled;
 		updateBool("keepZoomOnPageChange", enabled);
 	}
 
     public int getDynamicResizing(){
-        return dynamicResizing;
+        return preferences.getInt("dynamicResizing", 2);
     }
 	
 	public void setDynamicResizing(int index){
-		dynamicResizing = index;
 		updateInt("dynamicResizing", index);
 	}
 	
 	public void setHomeDir(String path){
-		homeDir = new File(path);
 		updateString("homeDir", path);
 	}
 	
 	public File getHomeDir(){
-		return homeDir;
+		return new File(preferences.getString("homeDir", defaultHomeDir));
 	}
 	
 	public void addRecent(Recent r){
@@ -510,12 +421,22 @@ public class SettingsManager {
 	
 	public void addRecent(String path, int pageNumber){
 
-		addRecent(new Recent(path, pageNumber));
+        Log.i("SettingsManager", "Setting index for " + path + " to " + pageNumber);
+        addRecent(new Recent(path, pageNumber));
 		
 	}
 
     public ArrayList<Recent> getRecent(){
         return recent;
+    }
+
+    public Recent getRecent(File f){
+        for (Recent r : recent){
+            if (r.getPath().equals(f.getAbsolutePath())){
+                return r;
+            }
+        }
+        return null;
     }
 	
 	public void removeRecent(String toRemove){
@@ -586,31 +507,32 @@ public class SettingsManager {
 	
 	public void setLastRead(File last, int lastIndex){
 		
-		if (saveSession){
-		
-			lastRead = last;
-			updateString("lastRead", lastRead.getAbsolutePath());
-			setLastReadIndex(lastIndex);
-		
-		}
-		
-	}
-	
-	public void setLastReadIndex(int lastIndex){
-		
-		if (saveSession && lastRead != null){
-			lastReadIndex = lastIndex;
-			updateInt("lastReadIndex", lastReadIndex);
-		}
+		if (saveSession()){
+			updateString("lastRead", last.getAbsolutePath());
+			setLastReadIndex(lastIndex, last);
+		}else if (saveRecent()) {
+            addRecent(last.getAbsolutePath(), lastIndex);
+        }
 		
 	}
+
+    public void setLastReadIndex(int lastIndex, File tempFile){
+
+        setLastReadIndex(lastIndex, tempFile.getAbsolutePath());
+
+    }
+
+    public void setLastReadIndex(int lastIndex, String tempFile){
+
+        if (saveRecent()) addRecent(tempFile, lastIndex);
+
+    }
 	
 	public File getLastFileRead(){
-		return lastRead;
-	}
-	
-	public int getLastFileReadIndex(){
-		return lastReadIndex;
+        String s = preferences.getString("lastRead", null);
+        File f = null;
+        if (s != null) f = new File(s);
+		return f;
 	}
 
     /**
@@ -619,8 +541,7 @@ public class SettingsManager {
      **/
     public boolean isShowLastDelete(){
         long millis = System.currentTimeMillis();
-        long oldLastDelete = lastDelete;
-        lastDelete = millis;
+        long oldLastDelete = preferences.getLong("lastDelete", -1);
         updateLong("lastDelete", millis);
         return Math.abs(millis - oldLastDelete) >= 604800000; //If it's been at least 1 week
     }

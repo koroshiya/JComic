@@ -23,6 +23,7 @@ import com.japanzai.koroshiya.cache.TimedThread;
 import com.japanzai.koroshiya.controls.JBitmapDrawable;
 import com.japanzai.koroshiya.controls.JScrollView;
 import com.japanzai.koroshiya.settings.SettingsManager;
+import com.japanzai.koroshiya.settings.classes.Recent;
 
 /**
  * Purpose: Used to display information about this application
@@ -52,28 +53,26 @@ public class Reader extends FragmentActivity {
         MainActivity.hideActionBar(this);
         
         Bundle b = getIntent().getExtras();
-        this.tempFile = new File(b.getString("file"));
+        String s = b.getString("file");
+        if (s == null) {
+            finish();
+            return;
+        }
+        this.tempFile = new File(s);
 
         settings = new SettingsManager(this);
         settings.setHomeDir(tempFile.getParent());
 
-        int index;
-        if (settings.getLastFileRead() != null && settings.getLastFileRead().equals(this.tempFile)){
-            index = settings.getLastFileReadIndex();
-            Log.d("Reader", "Last read index is "+index);
-        }else{
-            index = b.getInt("index");
-            settings.setLastReadIndex(index);
-            Log.d("Reader", "Starting from index " + index);
-        }
+        Recent r = settings.getRecent(this.tempFile);
+        int index = r != null ? r.getPageNumber() : 0;
+        Log.d("Reader", "Starting from index " + index);
 
         Progress p = new Progress(this, this.tempFile, index);
 
         //if (this.tempFile.isFile()) this.tempFile = this.tempFile.getParentFile();
         MainActivity.getMainActivity().tempDir = this.tempFile.getParentFile();
 
-		if (settings.saveRecent()) settings.addRecent(tempFile.getAbsolutePath(), index);
-		if (settings.saveSession()) settings.setLastRead(tempFile, index);
+		settings.setLastRead(tempFile, index);
 
 		imgPanel = (JScrollView) findViewById(R.id.imgPanel);
 
@@ -336,7 +335,7 @@ public class Reader extends FragmentActivity {
     @Override
     public void onDestroy(){
         super.onDestroy();
-        if (settings.saveRecent()) settings.addRecent(cache.getPath(), cache.getIndex());
+        //if (settings.saveRecent()) settings.addRecent(cache.getPath(), cache.getIndex());
         //if (settings.saveSession()) settings.setLastRead(new File(cache.getPath()), cache.getIndex());
         cache.emptyCache();
         cache.close();

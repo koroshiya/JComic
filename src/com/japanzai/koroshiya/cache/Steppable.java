@@ -74,8 +74,6 @@ public abstract class Steppable {
 
     		if (!parse(true, reader)){
     			setIndex(tempIndex, reader);
-    		}else{
-                reader.getSettings().setLastReadIndex(index);
     		}
 
     	}else if (!reader.getSettings().isLoopModeEnabled()){
@@ -126,7 +124,7 @@ public abstract class Steppable {
             } else {
                 reader.finish(); //TODO: look at replacing instead of finishing and restarting
                 MainActivity.getMainActivity().runOnUiThread(new ToastThread(forward ? R.string.chapter_next : R.string.chapter_previous, reader));
-				MainActivity.getMainActivity().startReading(replacement.getAbsolutePath(), 0);
+				MainActivity.getMainActivity().startReading(replacement.getAbsolutePath());
             }
         }else {
             reader.runOnUiThread(new ToastThread(forward ? R.string.end_of_chapter : R.string.start_of_chapter, reader));
@@ -187,9 +185,7 @@ public abstract class Steppable {
 
     		if (!parse(false, reader)){
     			setIndex(tempIndex, reader);
-    		}else{
-                reader.getSettings().setLastReadIndex(index);
-			}
+    		}
 
     	}else if (!reader.getSettings().isLoopModeEnabled()){
 			previousChapter(reader);
@@ -204,7 +200,7 @@ public abstract class Steppable {
 
     	if (i >= 0 && i < max){
     		this.index = i;
-    		reader.getSettings().setLastReadIndex(i);
+    		reader.getSettings().setLastReadIndex(i, this.getPath());
     	}else{
             Log.d("Steppable", "Index " + i + " is < 0 or > " + max);
         }
@@ -299,6 +295,7 @@ public abstract class Steppable {
 	    	pcit.start();
 		}
 
+        reader.getSettings().setLastReadIndex(index, getPath());
         return true;
 
 	}
