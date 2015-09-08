@@ -70,8 +70,8 @@
       <excludeFolder url="file:///tmp/Android/JComic/intermediates/dependency-cache" />
       <excludeFolder url="file:///tmp/Android/JComic/intermediates/dex" />
       <excludeFolder url="file:///tmp/Android/JComic/intermediates/dex-cache" />
-      <excludeFolder url="file:///tmp/Android/JComic/intermediates/exploded-aar/com.android.support/appcompat-v7/23.0.0/jars" />
-      <excludeFolder url="file:///tmp/Android/JComic/intermediates/exploded-aar/com.android.support/support-v4/23.0.0/jars" />
+      <excludeFolder url="file:///tmp/Android/JComic/intermediates/exploded-aar/com.android.support/appcompat-v7/23.0.1/jars" />
+      <excludeFolder url="file:///tmp/Android/JComic/intermediates/exploded-aar/com.android.support/support-v4/23.0.1/jars" />
       <excludeFolder url="file:///tmp/Android/JComic/intermediates/incremental" />
       <excludeFolder url="file:///tmp/Android/JComic/intermediates/jacoco" />
       <excludeFolder url="file:///tmp/Android/JComic/intermediates/javaResources" />
@@ -89,8 +89,8 @@
     </content>
     <orderEntry type="jdk" jdkName="Android API 23 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" exported="" name="appcompat-v7-23.0.0" level="project" />
-    <orderEntry type="library" exported="" name="support-v4-23.0.0" level="project" />
-    <orderEntry type="library" exported="" name="support-annotations-23.0.0" level="project" />
+    <orderEntry type="library" exported="" name="appcompat-v7-23.0.1" level="project" />
+    <orderEntry type="library" exported="" name="support-v4-23.0.1" level="project" />
+    <orderEntry type="library" exported="" name="support-annotations-23.0.1" level="project" />
   </component>
 </module>

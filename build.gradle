@@ -32,12 +32,12 @@ android {
         applicationId "com.japanzai.koroshiya"
         minSdkVersion 7
         targetSdkVersion 23
-        versionCode 51
-        versionName "2.1.01"
+        versionCode 52
+        versionName "2.1.02"
     }
 }
 
 dependencies {
-    compile 'com.android.support:support-v4:23.0.0'
-    compile 'com.android.support:appcompat-v7:23.0.0'
+    compile 'com.android.support:support-v4:23.0.1'
+    compile 'com.android.support:appcompat-v7:23.0.1'
 }

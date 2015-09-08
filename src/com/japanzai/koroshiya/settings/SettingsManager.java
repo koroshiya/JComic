@@ -368,18 +368,27 @@ public class SettingsManager {
 	}
 	
 	public void forceOrientation(Activity act){
+
+        int orientation = ActivityInfo.SCREEN_ORIENTATION_USER;
 		
 		switch(orientationIndex){
 			case 1:
-				act.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+                if (android.os.Build.VERSION.SDK_INT >= 9) {
+                    orientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT;
+                }else{
+                    orientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
+                }
 				break;
 			case 2:
-				act.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-				break;
-			default:
-				act.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_USER);
+				if (android.os.Build.VERSION.SDK_INT >= 9) {
+                    orientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE;
+				}else{
+                    orientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
+				}
 				break;
 		}
+
+        act.setRequestedOrientation(orientation);
 		
 	}
 	
