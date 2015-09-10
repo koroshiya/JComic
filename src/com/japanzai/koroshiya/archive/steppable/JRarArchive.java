@@ -30,9 +30,6 @@ public class JRarArchive extends SteppableArchive{
 	public JRarArchive(String path, Reader parent) throws IOException {
 		
 		super(parent, path);
-		
-		setPrimary(new StepThread(this, true, true, width, extractMode));
-		//setSecondary(new ArchiveThread(this, true, false));
 
 		FileHeader header;
 		rar = new Archive(new File(path));
@@ -48,8 +45,12 @@ public class JRarArchive extends SteppableArchive{
 		}
 
         super.sort();
-		
-		if (getMax() > 0){
+
+		if (parent == null){
+			return;
+		}else if (getMax() > 0){
+			setPrimary(new StepThread(this, true, true, width, extractMode));
+			//setSecondary(new ArchiveThread(this, true, false));
 			setIndex(0, parent);
 		}else {
 			throw new IOException();

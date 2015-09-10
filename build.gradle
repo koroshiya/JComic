@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 23
-    buildToolsVersion "23.0.0"
+    buildToolsVersion "23.0.1"
 
     sourceSets {
         main {
@@ -32,8 +32,8 @@ android {
         applicationId "com.japanzai.koroshiya"
         minSdkVersion 7
         targetSdkVersion 23
-        versionCode 54
-        versionName "2.1.04"
+        versionCode 55
+        versionName "2.1.05"
     }
 }
 

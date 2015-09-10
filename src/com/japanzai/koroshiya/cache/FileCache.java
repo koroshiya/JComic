@@ -24,12 +24,16 @@ public class FileCache extends Steppable {
 		
 		super(path);
 
-		width = parent.getWidth();
-		resize = parent.getSettings().getDynamicResizing();
-		
-		setPrimary(new StepThread(this, true, true, width, resize));
-		setSecondary(new StepThread(this, false, false, width, resize));
-		
+		if (parent != null) {
+			width = parent.getWidth();
+			resize = parent.getSettings().getDynamicResizing();
+
+			setPrimary(new StepThread(this, true, true, width, resize));
+			setSecondary(new StepThread(this, false, false, width, resize));
+		}else{
+			width = 0;
+			resize = 0;
+		}
 		setMax();
 		
 	}

@@ -50,7 +50,9 @@ public class JZipArchive extends SteppableArchive{
 
         }
 		
-		if (getMax() > 0){
+		if (reader == null){
+            return;
+        }else if (getMax() > 0){
             super.sort();
             setPrimary(new StepThread(this, true, true, width, extractMode));
             setSecondary(new StepThread(this, true, false, width, extractMode));
@@ -148,6 +150,7 @@ public class JZipArchive extends SteppableArchive{
 	public ArrayList<String> peekAtContents() {
 
 		ArrayList<String> names = new ArrayList<>();
+        Log.d("JZipArchive", "Scanning zip archive");
 		
 		for (int i = 0; i < getMax(); i++){
 			String name = getImages().get(i).getName();
