@@ -5,7 +5,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.ref.SoftReference;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.zip.CRC32;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 import android.graphics.Point;
 import android.util.Log;
@@ -18,9 +21,6 @@ import com.japanzai.koroshiya.io_utils.ImageParser;
 import com.japanzai.koroshiya.reader.MainActivity;
 import com.japanzai.koroshiya.reader.Reader;
 import com.japanzai.koroshiya.reader.ToastThread;
-
-import net.lingala.zip4j.core.ZipFile;
-import net.lingala.zip4j.model.FileHeader;
 
 /**
  * Purpose: Represents a standard Zip archive.
@@ -37,25 +37,21 @@ public class JZipArchive extends SteppableArchive{
 		
 		zip = new ZipFile(path);
 
-        if (!zip.isValidZipFile()) throw new IOException();
+        Enumeration<? extends ZipEntry> e = zip.entries();
 
-        FileHeader zipEntry;
-        String name;
+        while (e.hasMoreElements()) {
 
-        for (Object o : zip.getFileHeaders()) {
-
-            zipEntry = (FileHeader) o;
-            name = zipEntry.getFileName();
+            ZipEntry zipEntry = e.nextElement();
+            String name = zipEntry.getName();
 
             if (ImageParser.isSupportedImage(name) && zipEntry.getCompressedSize() > 0 && isValidEntry(zip, zipEntry)) {
-                addImageToCache(zipEntry, zipEntry.getFileName());
+                addImageToCache(zipEntry, name);
             }
 
         }
-
-        super.sort();
 		
 		if (getMax() > 0){
+            super.sort();
             setPrimary(new StepThread(this, true, true, width, extractMode));
             setSecondary(new StepThread(this, true, false, width, extractMode));
 
@@ -66,7 +62,7 @@ public class JZipArchive extends SteppableArchive{
 		
 	}
 
-    private boolean isValidEntry(ZipFile zip, FileHeader entry){
+    private boolean isValidEntry(ZipFile zip, ZipEntry entry){
         InputStream inputStream = null;
         try {
             inputStream = zip.getInputStream(entry);
@@ -85,7 +81,7 @@ public class JZipArchive extends SteppableArchive{
                 e.printStackTrace();
             }
 
-            return crc32.getValue() == entry.getCrc32();
+            return crc32.getValue() == entry.getCrc();
         } catch (Exception e) {
             if (inputStream != null) {
                 try {
@@ -102,7 +98,7 @@ public class JZipArchive extends SteppableArchive{
 	public SoftReference<JBitmapDrawable> parseImage(int i, int width, int resizeMode){
 
         JImage j = getImages().get(i);
-        FileHeader zipEntry = (FileHeader)j.getImage();
+        ZipEntry zipEntry = (ZipEntry)j.getImage();
         String name = j.getName();
 		File f = new File(tempDir + "/" + name);
 		
