@@ -26,7 +26,7 @@ public abstract class ArchiveParser {
      * */
 	public static boolean isSupportedArchive(File f){
         String s = f.getName();
-    	return isSupportedZipArchive(s) || isSupportedRarArchive(s);
+    	return (isSupportedZipArchive(s) || isSupportedRarArchive(s)) && f.length() > 0;
     }
 	public static boolean isSupportedZipArchive(String s){
     	return isSupported(s, new String[]{".zip", ".cbz"});

@@ -61,7 +61,7 @@ public class Progress extends AsyncTask{
                 }
             }
         }
-        if (reader.getCache().getMax() == 0){
+        if (reader.getCache() == null || reader.getCache().getMax() == 0){
             success = false;
         }
         return success;
