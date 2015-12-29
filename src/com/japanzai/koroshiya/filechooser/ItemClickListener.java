@@ -6,8 +6,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
+import android.Manifest;
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -20,6 +24,7 @@ import com.japanzai.koroshiya.archive.steppable.SteppableArchive;
 import com.japanzai.koroshiya.interfaces.ModalReturn;
 import com.japanzai.koroshiya.io_utils.ArchiveParser;
 import com.japanzai.koroshiya.io_utils.ImageParser;
+import com.japanzai.koroshiya.io_utils.StorageHelper;
 import com.japanzai.koroshiya.reader.MainActivity;
 import com.japanzai.koroshiya.reader.MessageThread;
 import com.japanzai.koroshiya.reader.ToastThread;
@@ -34,39 +39,74 @@ public class ItemClickListener implements View.OnClickListener, View.OnLongClick
 
 	private final FileChooser parent;
 	private File tempFile = null;
+    private String tmpLocation = null;
+
+    public static final int READ_EXTERNAL_STORAGE_PERMISSION = 100;
 	
 	public ItemClickListener(FileChooser parent){
 		
 		this.parent = parent;
 		
 	}
+
+    public String getTmpLocation(){return this.tmpLocation;}
+    public void setTmpLocation(String tmpLocation){this.tmpLocation = tmpLocation;}
+
+    private boolean promptExternal(String location){
+        if (!new File(location).canRead()){
+            if (StorageHelper.isExternalStorageReadable() &&
+                    ContextCompat.checkSelfPermission(parent, Manifest.permission.READ_EXTERNAL_STORAGE)
+                            != PackageManager.PERMISSION_GRANTED){
+                tmpLocation = location;
+                ActivityCompat.requestPermissions(
+                        parent,
+                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                        READ_EXTERNAL_STORAGE_PERMISSION
+                );
+            }else{
+                parent.runOnUiThread(new ToastThread("Cannot read - Permission denied", parent));
+            }
+            return false;
+        }else{
+            return true;
+        }
+    }
 	
 	@Override
 	public void onClick(View arg1) {
-
-		final String location = arg1.getContentDescription().toString();
-		
-		if (location.equals(getString(R.string.recent_function_disabled)) || location.equals(getString(R.string.recent_no_recent_files))){
-			return;
-		}
-
-		boolean processed = false;
-		if (parent.getType() == FileChooser.RECENT){
-			File file = new File(location);
-			if (!file.exists()){
-				processItem(false, location);
-				processed = true;
-			}
-			for (Recent recent : MainActivity.getMainActivity().getSettings().getRecent()){
-				if (recent.getPath().equals(location)){
-					parent.returnValue(file, recent.getPageNumber());
-					return;
-				}
-			}
-		}
-		if (!processed) processItem(false, location);
-		
+        String location = arg1.getContentDescription().toString();
+        if (!location.startsWith("/")) {
+            String home = parent.getHome();
+            if (!home.endsWith("/")) home += "/";
+            location = home + location;
+        }
+		onClick(location);
 	}
+
+    public void onClick(String location){
+        if (location.equals(getString(R.string.recent_function_disabled)) || location.equals(getString(R.string.recent_no_recent_files))){
+            return;
+        }
+        if (!promptExternal(location)){
+            return;
+        }
+
+        boolean processed = false;
+        if (parent.getType() == FileChooser.RECENT){
+            File file = new File(location);
+            if (!file.exists()){
+                processItem(false, location);
+                processed = true;
+            }
+            for (Recent recent : MainActivity.getMainActivity().getSettings().getRecent()){
+                if (recent.getPath().equals(location)){
+                    parent.returnValue(file, recent.getPageNumber());
+                    return;
+                }
+            }
+        }
+        if (!processed) processItem(false, location);
+    }
 
     @Override
     public boolean onLongClick(View v){

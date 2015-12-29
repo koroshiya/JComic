@@ -1,12 +1,9 @@
 package com.japanzai.koroshiya.filechooser;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.View;
 
@@ -17,11 +14,16 @@ import com.japanzai.koroshiya.dialog.ConfirmDialog;
 import com.japanzai.koroshiya.interfaces.ModalReturn;
 import com.japanzai.koroshiya.io_utils.ArchiveParser;
 import com.japanzai.koroshiya.io_utils.ImageParser;
+import com.japanzai.koroshiya.io_utils.StorageHelper;
 import com.japanzai.koroshiya.reader.MainActivity;
 import com.japanzai.koroshiya.reader.Reader;
 import com.japanzai.koroshiya.settings.SettingsManager;
 import com.japanzai.koroshiya.settings.SettingsView;
 import com.japanzai.koroshiya.settings.classes.Recent;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Activity responsible for displaying file chooser options and processing such events.
@@ -59,6 +61,21 @@ public class FileChooser extends DrawerActivity {
 		home = tempDir == null ? targetDir : tempDir;
 		
 	}
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case ItemClickListener.READ_EXTERNAL_STORAGE_PERMISSION:
+                String location = icl.getTmpLocation();
+                icl.setTmpLocation(null);
+
+                if (location != null && new File(location).canRead()){
+                    icl.onClick(location);
+                }
+                break;
+        }
+    }
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -113,7 +130,7 @@ public class FileChooser extends DrawerActivity {
 			}
 		});
 
-        findViewById(R.id.btn_bulk_delete).setOnClickListener(new View.OnClickListener(){
+        findViewById(R.id.btn_bulk_delete).setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 startActivity(new Intent(parent, BulkDelete.class));
             }
@@ -216,19 +233,23 @@ public class FileChooser extends DrawerActivity {
     	
     }
 
+    private File getSafeStorage(){
+        if (StorageHelper.isExternalStorageReadable()){
+            return Environment.getExternalStorageDirectory();
+        }else{
+            String userHome = System.getProperty("user.home");
+            return new File(userHome);
+        }
+    }
+
     public void instantiate(){
         if (this.type == FILES){
             File smHome = parent.getSettings().getHomeDir();
 
-            if (smHome != null && smHome.exists() && smHome.isDirectory()){
+            if (smHome != null && smHome.exists() && smHome.isDirectory() && smHome.canRead()){
                 setHome(smHome);
             }else{
-                File home = Environment.getExternalStorageDirectory();
-                if (home == null){
-                    String userHome = System.getProperty("user.home");
-                    home = new File(userHome);
-                }
-                setHome(home);
+                setHome(getSafeStorage());
             }
 
             if (getHomeAsFile().list() != null){
