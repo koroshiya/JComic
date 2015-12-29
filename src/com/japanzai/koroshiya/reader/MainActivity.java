@@ -1,12 +1,9 @@
 package com.japanzai.koroshiya.reader;
 
-import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.Locale;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +12,12 @@ import android.widget.BaseAdapter;
 import com.japanzai.koroshiya.R;
 import com.japanzai.koroshiya.controls.EllipsizingTextView;
 import com.japanzai.koroshiya.controls.ResizingGridView;
+import com.japanzai.koroshiya.filechooser.FileChooser;
 import com.japanzai.koroshiya.settings.SettingsManager;
+
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Locale;
 
 public class MainActivity extends Activity {
 
@@ -23,6 +25,16 @@ public class MainActivity extends Activity {
 	private SettingsManager settings;
 	
 	public File tempDir;
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case MainClickListener.READ_EXTERNAL_STORAGE_PERMISSION:
+                startActivity(new Intent(this, FileChooser.class));
+                break;
+        }
+    }
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
