@@ -18,7 +18,7 @@ import com.japanzai.koroshiya.settings.classes.Recent;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 
 public class FileItemAdapter extends FileAdapter {
 
@@ -34,9 +34,8 @@ public class FileItemAdapter extends FileAdapter {
         for (File s : curdir.listFiles()){
             if ((s.isDirectory() || ImageParser.isSupportedFile(s)) && !s.isHidden()){tempList.add(s.getAbsolutePath());}
         }
-        String[] tempArray = tempList.toArray(new String[0]);
-        Arrays.sort(tempArray);
-        for (String obj : tempArray){
+        Collections.sort(tempList);
+        for (String obj : tempList){
             Recent r = new Recent(obj, 0, 0);
             items.add(r);
         }
