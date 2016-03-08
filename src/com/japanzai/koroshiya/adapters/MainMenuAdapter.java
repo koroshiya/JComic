@@ -33,8 +33,8 @@ public class MainMenuAdapter extends RecyclerView.Adapter<MainMenuAdapter.MainMe
 
     public static class MainMenuViewHolder extends RecyclerView.ViewHolder{
 
-        private AppCompatTextView itemText;
-        private Context context;
+        private final AppCompatTextView itemText;
+        private final Context context;
 
         public MainMenuViewHolder(View v) {
             super(v);

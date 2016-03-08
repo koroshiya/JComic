@@ -119,17 +119,11 @@ public class TwoDScrollView extends FrameLayout {
    initTwoDScrollView();
  }
 
-    public TwoDScrollView(Context context, AttributeSet attrs, int defStyle) {
-        super(context, attrs, defStyle);
-        initTwoDScrollView();
-    }
+ public TwoDScrollView(Context context, AttributeSet attrs, int defStyle) {
+    super(context, attrs, defStyle);
+    initTwoDScrollView();
+ }
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public TwoDScrollView(Context context, AttributeSet attrs, int defStyle, int val2) {
-        super(context, attrs, defStyle, val2);
-        initTwoDScrollView();
-    }
- 
  @Override
  protected float getTopFadingEdgeStrength() {
    if (getChildCount() == 0) {

@@ -1,11 +1,11 @@
 package com.japanzai.koroshiya.archive.steppable;
 
+import android.content.Context;
 import android.graphics.Point;
 
 import com.japanzai.koroshiya.controls.JBitmapDrawable;
 import com.japanzai.koroshiya.io_utils.ArchiveParser;
 import com.japanzai.koroshiya.io_utils.ImageParser;
-import com.japanzai.koroshiya.settings.SettingsManager;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -22,9 +22,9 @@ public class JRarArchive extends SteppableArchive{
 
 	private final Archive rar;
 	
-	public JRarArchive(String path, File cacheDir, SettingsManager prefs) throws IOException {
+	public JRarArchive(String path, Context c) throws IOException {
 		
-		super(cacheDir, prefs);
+		super(c);
 
 		FileHeader header;
 		rar = new Archive(new File(path));

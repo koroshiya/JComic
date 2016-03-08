@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 
 import com.japanzai.koroshiya.R;
 import com.japanzai.koroshiya.io_utils.ImageParser;
-import com.japanzai.koroshiya.settings.SettingsManager;
 import com.japanzai.koroshiya.settings.classes.Recent;
 
 import java.io.File;
@@ -22,11 +21,11 @@ import java.util.Collections;
 
 public class FileItemAdapter extends FileAdapter {
 
-    public FileItemAdapter(Handler.Callback permCallback, SettingsManager prefs) {
-        super(permCallback, prefs, false);
+    public FileItemAdapter(Context c, Handler.Callback permCallback) {
+        super(c, permCallback, false);
     }
 
-    public void setData(){
+    public void setData(Context c){
 
         items.clear();
 
@@ -58,9 +57,9 @@ public class FileItemAdapter extends FileAdapter {
 
     public class ViewHolder extends FileAdapter.ViewHolder{
 
-        private CardView cardview;
-        private AppCompatImageView imageview;
-        private AppCompatTextView textview;
+        private final CardView cardview;
+        private final AppCompatImageView imageview;
+        private final AppCompatTextView textview;
 
         public ViewHolder(View v) {
             super(v);

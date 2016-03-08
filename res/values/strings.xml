@@ -5,16 +5,10 @@
     <string name="contributions">Third-party contributions: https://github.com/koroshiya/JComic/blob/master/LICENSE.md</string>
     <string name="up_directory">Up</string>
     <string name="setting_zoom">Default zoom: </string>
-    <string name="setting_orientation">Orientation: </string>
-    <string name="setting_session">Save previous session</string>
-    <string name="setting_recent">Save list of recently viewed files</string>
     <string name="setting_backlight">Keep screen on while reading</string>
     <string name="setting_fullscreen">Read comics in fullscreen mode</string>
-    <string name="setting_archive">Archive mode</string>
     <string name="setting_resize">Dynamic resizing</string>
-    <string name="setting_loop">Loop mode</string>
     <string name="version">Version: %s</string>
-    <string name="setting_double_tap">Double tap:</string>
     <string name="setting_cache_on_startup">Cache on startup</string>
     <string name="setting_keep_zoom_page_change">Keep zoom on page change</string>
     <string name="rating">Enjoying this app? Let me know what you think by rating and/or reviewing JComic.\nEncountered problems? Please send an error report instead and help me improve JComic.</string>
@@ -22,7 +16,6 @@
     <string name="error_button">Report error</string>
     <string name="setting_cache_rar">Cache RAR files*</string>
     <string name="setting_cache_rar_warning">*Warning: attempting to cache some RAR files can cause lock-ups.</string>
-    <string name="setting_swipe_next">Swipe to next/previous chapter</string>
     <string-array name="general_setting_max_recent">
         <item>0</item>
         <item>10</item>
@@ -36,26 +29,10 @@
         <item>Scale to Height</item>
         <item>Scale to Width</item>
     </string-array>
-    <string-array name="general_setting_orientation">
-        <item>Auto</item>
-        <item>Portrait</item>
-        <item>Landscape</item>
-    </string-array>
-    <string-array name="performance_setting_archive_mode">
-        <item>Default</item>
-        <item>Index</item>
-        <item>Progressive extraction</item>
-    </string-array>
     <string-array name="performance_setting_resize_mode">
         <item>Disabled</item>
         <item>Enabled</item>
         <item>Only if image is too big</item>
-    </string-array>
-    <string-array name="array_double_tap">
-        <item>Cycle zoom</item>
-        <item>Zoom in</item>
-        <item>Zoom out</item>
-        <item>Disabled</item>
     </string-array>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
@@ -65,25 +42,23 @@
 
     <!-- Example General settings -->
 
-    <string name="setting_loop_title">Loop Mode</string>
-    <string name="setting_swipe_next_title">Swipe To Next</string>
-    <string name="setting_session_title">Save Session</string>
-    <string name="setting_recent_title">Save Recent List</string>
     <string name="setting_backlight_title">Keep Backlight On</string>
     <string name="setting_fullscreen_title">Fullscreen</string>
     <string name="setting_keep_zoom_page_change_title">Keep Zoom</string>
     <string name="setting_zoom_title">Default Zoom</string>
-    <string name="setting_orientation_title">Force Orientation</string>
-    <string name="setting_double_tap_title">Double Tap</string>
     <string name="setting_resize_title">Resize Mode</string>
-    <string name="setting_archive_title">Archive extraction mode</string>
     <string name="setting_cache_on_startup_title">Cache On Start</string>
-    <string name="general_setting_orientation_default">0</string>
     <string name="performance_setting_resize_default">2</string>
     <string name="general_setting_default_zoom_default">0</string>
     <string name="general_setting_max_recent_default">10</string>
     <string name="source">Source: https://github.com/koroshiya/JComic</string>
     <string name="st_fullscreen">fullscreen</string>
     <string name="st_backlight">keepBacklightOn</string>
+    <string name="pref_max_recent">maxRecent</string>
+    <string name="pref_keep_zoom_on_page_change">keepZoomOnPageChange</string>
+    <string name="pref_cache_rar_files">cacheRarFiles</string>
+    <string name="pref_cache_on_start">cacheOnStart</string>
+    <string name="pref_zoom_index">zoomIndex</string>
+    <string name="pref_dynamic_resizing">dynamicResizing</string>
 
 </resources>

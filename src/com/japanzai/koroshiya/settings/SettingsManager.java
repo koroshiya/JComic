@@ -12,9 +12,6 @@ import java.util.ArrayList;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
-import android.content.pm.ActivityInfo;
-import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.view.Window;
 import android.view.WindowManager;
@@ -32,26 +29,9 @@ import org.json.JSONObject;
  * Responsible for setting default settings, loading user settings from
  * disk, saving settings to disk, etc.
  * */
-public class SettingsManager {
-	
-	/*TODO:
-	 * Other long press/menu options, like zoom
-	 *Double swipe to go to first/last //setting for this instead of pinch-zoom?
+public abstract class SettingsManager {
 
-		Settings:
-		Default location for reading
-		fit to height/width, scale, etc. - make wide images fit to height
-		Smartscale? (zoom out to certain degree depending on page size)
-		
-	 * 
-	 *
-	 */
-
-    private final String defaultHomeDir;
-
-	private final ArrayList<Recent> recentAndFavorite = new ArrayList<>();
-	private final SharedPreferences preferences;
-    private final File cacheDir;
+	private static final ArrayList<Recent> recentAndFavorite = new ArrayList<>();
 
     private static final String RECENT_FILE = "recent.json";
 
@@ -60,22 +40,13 @@ public class SettingsManager {
     public static final int ZOOM_SCALE_HEIGHT = 2;
     public static final int ZOOM_SCALE_WIDTH = 3;
 
-    public SettingsManager(Context context, boolean fillRecent){
-        preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        File home = Environment.getExternalStorageDirectory();
-        if (home == null){
-            String userHome = System.getProperty("user.home");
-            home = new File(userHome);
-        }
-        defaultHomeDir = home.getAbsolutePath();
-        cacheDir = context.getCacheDir();
-        if (fillRecent) fillRecent();
+    private SettingsManager(){
     }
 
-    private void fillRecent(){
-        File rFile = new File(cacheDir, RECENT_FILE);
+    private static void fillRecent(Context c){
+        File rFile = new File(c.getCacheDir(), RECENT_FILE);
 
-        if (rFile.exists()){
+        if (rFile.exists() && rFile.length() > 0){
             try {
                 FileInputStream fis = new FileInputStream(rFile);
                 FileChannel fc = fis.getChannel();
@@ -116,7 +87,7 @@ public class SettingsManager {
                 }
             }
 
-            for (File file : cacheDir.listFiles(ImageParser.fnf)){
+            for (File file : c.getCacheDir().listFiles(ImageParser.fnf)){
                 if (file.getName().endsWith(".webp")){
                     found = false;
                     for (long i : uuids){
@@ -131,46 +102,13 @@ public class SettingsManager {
 
         }
     }
-	
-	public int getOrientation(){
-        return preferences.getInt("orientationIndex", 0);
-	}
-	
-	public void forceOrientation(Activity act){
 
-        int orientation = ActivityInfo.SCREEN_ORIENTATION_USER;
-		
-		switch(getOrientation()){
-			case 1:
-                if (android.os.Build.VERSION.SDK_INT >= 9) {
-                    orientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT;
-                }else{
-                    orientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
-                }
-				break;
-			case 2:
-				if (android.os.Build.VERSION.SDK_INT >= 9) {
-                    orientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE;
-				}else{
-                    orientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
-				}
-				break;
-		}
+    private static SharedPreferences getPreferences(Context c){
+        return PreferenceManager.getDefaultSharedPreferences(c);
+    }
 
-        act.setRequestedOrientation(orientation);
-		
-	}
-	
-	public int getArchiveModeIndex(){
-        return preferences.getInt("archiveModeIndex", 0);
-	}
-
-	public boolean isContextMenuEnabled(){
-        return preferences.getBoolean("contextMenuEnabled", true);
-	}
-	
-	public void setBacklightAlwaysOn(Activity act, boolean alwaysOn){
-        alwaysOn = alwaysOn && preferences.getBoolean(act.getString(R.string.st_backlight), false);
+	public static void setBacklightAlwaysOn(Activity act, boolean alwaysOn){
+        alwaysOn = alwaysOn && getPreferences(act).getBoolean(act.getString(R.string.st_backlight), false);
 		try{
 			int flag = android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
             Window w = act.getWindow();
@@ -184,8 +122,8 @@ public class SettingsManager {
 		}
 	}
 
-    public void setFullScreen(Activity act, boolean enableFullscreen){
-        enableFullscreen = enableFullscreen && preferences.getBoolean(act.getString(R.string.st_fullscreen), false);
+    public static void setFullScreen(Activity act, boolean enableFullscreen){
+        enableFullscreen = enableFullscreen && getPreferences(act).getBoolean(act.getString(R.string.st_fullscreen), false);
         try{
             int flag = WindowManager.LayoutParams.FLAG_FULLSCREEN;
             Window w = act.getWindow();
@@ -199,41 +137,33 @@ public class SettingsManager {
         }
     }
 
-    public boolean isCacheOnStart(){
-        return preferences.getBoolean("cacheOnStart", true);
+    public static boolean isCacheOnStart(Context c){
+        return getPreferences(c).getBoolean(c.getString(R.string.pref_cache_on_start), true);
     }
 
-    public boolean isCacheForRar(){
-        return preferences.getBoolean("cacheRarFiles", false); }
+    public static boolean isCacheForRar(Context c){
+        return getPreferences(c).getBoolean(c.getString(R.string.pref_cache_rar_files), false); }
 	
-	public boolean keepZoomOnPageChange(){
-        return preferences.getBoolean("keepZoomOnPageChange", false);
+	public static boolean keepZoomOnPageChange(Context c){
+        return getPreferences(c).getBoolean(c.getString(R.string.pref_keep_zoom_on_page_change), false);
 	}
 
-    public int getZoom(){
-        return Integer.parseInt(preferences.getString("zoomIndex", Integer.toString(ZOOM_AUTO)));
+    public static int getZoom(Context c){
+        return Integer.parseInt(getPreferences(c).getString(c.getString(R.string.pref_zoom_index), Integer.toString(ZOOM_AUTO)));
     }
 
-    public int getDynamicResizing(){
-        return Integer.parseInt(preferences.getString("dynamicResizing", "2"));
+    public static int getDynamicResizing(Context c){
+        return Integer.parseInt(getPreferences(c).getString(c.getString(R.string.pref_dynamic_resizing), "2"));
     }
 
-    public int getMaxRecent(){
-        return Integer.parseInt(preferences.getString("maxRecent", "10"));
+    public static int getMaxRecent(Context c){
+        return Integer.parseInt(getPreferences(c).getString(c.getString(R.string.pref_max_recent), "10"));
     }
 
-	public void setHomeDir(String path){
-		updateString("homeDir", path);
-	}
-	
-	public File getHomeDir(){
-		return new File(preferences.getString("homeDir", defaultHomeDir));
-	}
 
 
 
-
-    public void addRecentAndFavorite(Recent r){
+    public static void addRecentAndFavorite(Context c, Recent r){
 
         boolean isRecent = isRecent(r);
 
@@ -245,11 +175,11 @@ public class SettingsManager {
         }
         recentAndFavorite.add(0, r);
 
-        saveRecentList();
+        saveRecentList(c);
 
     }
 
-    public ArrayList<Recent> getRecentAndFavorites(boolean isRecent){
+    public static ArrayList<Recent> getRecentAndFavorites(Context c, boolean isRecent){
 
         int totalRecents = recentAndFavorite.size();
         ArrayList<Recent> data = new ArrayList<>();
@@ -269,13 +199,16 @@ public class SettingsManager {
         }
 
         if (totalRecents != data.size()){
-            saveRecentList();
+            saveRecentList(c);
         }
 
         return data;
     }
 
-    public Recent getRecentAndFavorite(String path, boolean isRecent){
+    public static Recent getRecentAndFavorite(Context c, String path, boolean isRecent){
+        if (recentAndFavorite.size() == 0){
+            fillRecent(c);
+        }
         for (Recent r : recentAndFavorite){
             if (isRecent(r) == isRecent && r.getPath().equals(path)){
                 return r;
@@ -288,39 +221,31 @@ public class SettingsManager {
         return r.getPageNumber() >= 0;
     }
 	
-	private void saveRecentList(){
+	private static void saveRecentList(Context c){
 
-        JSONArray arr = new JSONArray();
-        for (Recent r : recentAndFavorite){
+        File rFile = new File(c.getCacheDir(), RECENT_FILE);
+
+        if (recentAndFavorite.size() == 0){
+            if (rFile.exists()) rFile.delete();
+        }else {
+
+            JSONArray arr = new JSONArray();
+            for (Recent r : recentAndFavorite) {
+                try {
+                    arr.put(r.toJSON());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
             try {
-                arr.put(r.toJSON());
-            } catch (JSONException e) {
+                FileOutputStream fos = new FileOutputStream(rFile);
+                fos.write(arr.toString().getBytes());
+            } catch (IOException e) {
                 e.printStackTrace();
             }
+
         }
 
-        File rFile = new File(cacheDir, RECENT_FILE);
-        try {
-            FileOutputStream fos = new FileOutputStream(rFile);
-            fos.write(arr.toString().getBytes());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-	}
-
-
-
-
-
-    private void updateString(String key, String value){
-        Editor edit = preferences.edit();
-        edit.putString(key, value).apply();
-    }
-
-	private void updateBool(String key, boolean value){
-		Editor edit = preferences.edit();
-		edit.putBoolean(key, value).apply();
 	}
 	
 }

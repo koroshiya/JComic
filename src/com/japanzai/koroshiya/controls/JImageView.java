@@ -22,37 +22,29 @@ public class JImageView extends AppCompatImageView {
 	private double currentZoom = -1;
 	private double inheritedZoom = 1d;
     private boolean manualZoom;
-    private SettingsManager settings;
     private Point p;
 	
 	public JImageView(Context context) {
-		super(context);
-        setup(context);
+		this(context, null);
 	}
 
     public JImageView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        setup(context);
+        this(context, attrs, 0);
     }
 
-    public JImageView(Context context, AttributeSet attrs, int val1) {
-        super(context, attrs, val1);
-        setup(context);
-    }
-
-    private void setup(Context c){
-        settings = new SettingsManager(c, false);
-
-        if (settings.keepZoomOnPageChange()){
+    public JImageView(Context c, AttributeSet attrs, int val1) {
+        super(c, attrs, val1);
+        if (SettingsManager.keepZoomOnPageChange(c)){
             manualZoom = true;
             this.currentZoom = inheritedZoom;
         }else{
             manualZoom = false;
-            this.currentZoom = settings.getZoom();
+            this.currentZoom = SettingsManager.getZoom(c);
         }
 
         p = ImageParser.getScreenSize(c);
     }
+
 	
 	
 	@Override
@@ -69,7 +61,7 @@ public class JImageView extends AppCompatImageView {
 				originalHeight = drawable.getIntrinsicHeight();
 			}
 			
-			if (currentWidth == -1 || !settings.keepZoomOnPageChange()){
+			if (currentWidth == -1 || !SettingsManager.keepZoomOnPageChange(getContext())){
 				currentWidth = originalWidth;
 				currentHeight = originalHeight;
 			}
@@ -115,8 +107,8 @@ public class JImageView extends AppCompatImageView {
 
 	public void zoom(Drawable drawable){
 
-		int zoom = settings.getZoom();
-		if (settings.keepZoomOnPageChange()){
+		int zoom = SettingsManager.getZoom(getContext());
+		if (SettingsManager.keepZoomOnPageChange(getContext())){
 			pseudoZoom(drawable);
 		}else{
 			zoom(zoom, drawable);

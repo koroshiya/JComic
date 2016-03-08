@@ -26,7 +26,7 @@ public class EllipsizingTextView extends AppCompatTextView {
     private static final int MAX_ELLIPSIZE_LINES = 100;
 
     private int mMaxLines;
-    private int ellipsize;
+    private final int ellipsize;
 
     public EllipsizingTextView(Context context) {
         this(context, null, 0);

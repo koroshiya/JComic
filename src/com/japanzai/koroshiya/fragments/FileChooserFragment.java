@@ -18,11 +18,10 @@ import android.view.ViewGroup;
 import com.japanzai.koroshiya.R;
 import com.japanzai.koroshiya.activities.Nav;
 import com.japanzai.koroshiya.filechooser.FileItemAdapter;
-import com.japanzai.koroshiya.settings.SettingsManager;
 
 public class FileChooserFragment extends Fragment {
 
-    Handler.Callback callback = new Handler.Callback() {
+    final Handler.Callback callback = new Handler.Callback() {
         @Override
         public boolean handleMessage(Message msg) {
 
@@ -63,8 +62,7 @@ public class FileChooserFragment extends Fragment {
 
         RecyclerView rgv = (RecyclerView) rootView.findViewById(R.id.file_chooser_recycler_view);
         rgv.setLayoutManager(new LinearLayoutManager(c));
-        SettingsManager prefs = new SettingsManager(c, true);
-        FileItemAdapter fia = new FileItemAdapter(callback, prefs);
+        FileItemAdapter fia = new FileItemAdapter(c, callback);
         rgv.setAdapter(fia);
 
         return rootView;

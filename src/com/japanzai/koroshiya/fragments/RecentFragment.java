@@ -18,13 +18,12 @@ import com.japanzai.koroshiya.R;
 import com.japanzai.koroshiya.activities.Nav;
 import com.japanzai.koroshiya.filechooser.FileListAdapter;
 import com.japanzai.koroshiya.io_utils.ImageParser;
-import com.japanzai.koroshiya.settings.SettingsManager;
 
 public class RecentFragment extends Fragment {
 
     public static final String ARG_RECENT = "recent";
 
-    Handler.Callback callback = new Handler.Callback() {
+    final Handler.Callback callback = new Handler.Callback() {
         @Override
         public boolean handleMessage(Message msg) {
 
@@ -65,8 +64,7 @@ public class RecentFragment extends Fragment {
 
         RecyclerView rgv = (RecyclerView) inflater.inflate(R.layout.fragment_file_chooser, container, false);
         rgv.setLayoutManager(new GridLayoutManager(c, cols));
-        SettingsManager prefs = new SettingsManager(c, true);
-        FileListAdapter fld = new FileListAdapter(callback, prefs, c.getCacheDir(), isRecent);
+        FileListAdapter fld = new FileListAdapter(c, callback, isRecent);
         rgv.setAdapter(fld);
 
         return rgv;

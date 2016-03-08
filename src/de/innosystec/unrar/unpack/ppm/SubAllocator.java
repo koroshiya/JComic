@@ -17,6 +17,8 @@
  */
 package de.innosystec.unrar.unpack.ppm;
 
+import com.japanzai.koroshiya.BuildConfig;
+
 import java.util.Arrays;
 
 public class SubAllocator {
@@ -133,8 +135,9 @@ public class SubAllocator {
         subAllocatorSize = t;
         // Bug fixed
         freeListPos = heapStart + allocSize;
-        assert (realAllocSize - tempMemBlockPos == RarMemBlock.size) : realAllocSize
-            + " " + tempMemBlockPos + " " + RarMemBlock.size;
+        if (BuildConfig.DEBUG && !(realAllocSize - tempMemBlockPos == RarMemBlock.size)){
+            throw new RuntimeException(realAllocSize + " " + tempMemBlockPos + " " + RarMemBlock.size);
+        }
 
         // Init freeList
         for (int i = 0, pos = freeListPos; i < freeList.length; i++, pos += RarNode.size) {

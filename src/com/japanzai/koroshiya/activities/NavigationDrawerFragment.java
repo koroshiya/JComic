@@ -56,7 +56,7 @@ public class NavigationDrawerFragment extends Fragment {
     private boolean mFromSavedInstanceState;
     private boolean mUserLearnedDrawer;
 
-    private MainMenuItem[] mainMenuItems = new MainMenuItem[]{
+    private final MainMenuItem[] mainMenuItems = new MainMenuItem[]{
             new MainMenuItem("Select comic", R.drawable.ic_book),
             new MainMenuItem("Continue reading", R.drawable.bookmark),
             new MainMenuItem("Recently Read", R.drawable.list_unordered),

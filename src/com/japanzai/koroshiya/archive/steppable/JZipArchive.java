@@ -10,21 +10,21 @@ import java.util.zip.CRC32;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+import android.content.Context;
 import android.graphics.Point;
 import android.util.Log;
 
 import com.japanzai.koroshiya.controls.JBitmapDrawable;
 import com.japanzai.koroshiya.io_utils.ArchiveParser;
 import com.japanzai.koroshiya.io_utils.ImageParser;
-import com.japanzai.koroshiya.settings.SettingsManager;
 
 public class JZipArchive extends SteppableArchive{
 	
 	private final ZipFile zip;
 
-	public JZipArchive(String path, File cacheDir, SettingsManager prefs) throws IOException {
+	public JZipArchive(String path, Context c) throws IOException {
 		
-		super(cacheDir, prefs);
+		super(c);
 		
 		zip = new ZipFile(path);
 

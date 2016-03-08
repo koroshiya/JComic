@@ -2,8 +2,8 @@ package com.japanzai.koroshiya.adapters;
 
 public class MainMenuItem{
 
-    private String str;
-    private int i;
+    private final String str;
+    private final int i;
 
     public MainMenuItem(String str, int i){
         this.str = str;

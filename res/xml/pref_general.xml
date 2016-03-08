@@ -15,7 +15,7 @@
             />
         <CheckBoxPreference
             android:defaultValue="false"
-            android:key="keepZoomOnPageChange"
+            android:key="@string/pref_keep_zoom_on_page_change"
             android:title="@string/setting_keep_zoom_page_change_title"
             android:summary="@string/setting_keep_zoom_page_change"
             />
@@ -23,7 +23,7 @@
             android:defaultValue="@string/general_setting_max_recent_default"
             android:entries="@array/general_setting_max_recent"
             android:entryValues="@array/general_setting_max_recent_values"
-            android:key="maxRecent"
+            android:key="@string/pref_max_recent"
             android:negativeButtonText="@null"
             android:positiveButtonText="@null"
             android:title="Max Recent List Length"
@@ -33,7 +33,7 @@
             android:defaultValue="@string/general_setting_default_zoom_default"
             android:entries="@array/general_setting_default_zoom"
             android:entryValues="@array/general_setting_default_zoom_values"
-            android:key="zoomIndex"
+            android:key="@string/pref_zoom_index"
             android:negativeButtonText="@null"
             android:positiveButtonText="@null"
             android:title="@string/setting_zoom_title"
@@ -43,13 +43,13 @@
     <PreferenceCategory android:title="Performance Settings">
         <CheckBoxPreference
             android:defaultValue="true"
-            android:key="cacheOnStart"
+            android:key="@string/pref_cache_on_start"
             android:title="@string/setting_cache_on_startup_title"
             android:summary="@string/setting_cache_on_startup"
             />
         <CheckBoxPreference
             android:defaultValue="false"
-            android:key="cacheRarFiles"
+            android:key="@string/pref_cache_rar_files"
             android:title="@string/setting_cache_rar"
             android:summary="@string/setting_cache_rar_warning"
             />
@@ -68,7 +68,7 @@
             android:defaultValue="@string/performance_setting_resize_default"
             android:entries="@array/performance_setting_resize_mode"
             android:entryValues="@array/general_setting_resize_values"
-            android:key="dynamicResizing"
+            android:key="@string/pref_dynamic_resizing"
             android:negativeButtonText="@null"
             android:positiveButtonText="@null"
             android:title="@string/setting_resize_title"

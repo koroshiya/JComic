@@ -1,5 +1,7 @@
 package com.japanzai.koroshiya.archive.steppable;
 
+import android.content.Context;
+
 import com.japanzai.koroshiya.controls.JBitmapDrawable;
 import com.japanzai.koroshiya.settings.SettingsManager;
 
@@ -14,25 +16,18 @@ public abstract class SteppableArchive {
 	
 	protected final File tempDir;
 	protected final boolean progressive;
-    protected final int extractMode;
-    protected ArrayList<JImage> cache;
+    protected final ArrayList<JImage> cache;
 	
-	public SteppableArchive(File cacheDir, SettingsManager prefs){
+	public SteppableArchive(Context c){
 
-        this.tempDir = new File(cacheDir + "/JComic/");
-        this.extractMode = prefs.getDynamicResizing();
+        this.tempDir = new File(c.getCacheDir() + "/JComic/");
 
         if (this.tempDir.exists() && this.tempDir.isDirectory()) {
             deleteFile(this.tempDir);
         }
         this.tempDir.mkdirs();
 
-		int mode = prefs.getArchiveModeIndex();
-		if (this instanceof JRarArchive){
-			this.progressive = (mode == 0 || mode == 2);
-		}else{
-			this.progressive = mode == 2;
-		}
+        this.progressive = this instanceof JRarArchive;
 
         cache = new ArrayList<>();
 		

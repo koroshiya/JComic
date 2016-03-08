@@ -87,10 +87,18 @@
       <excludeFolder url="file:///tmp/Android/JComic/intermediates/exploded-aar/com.android.support/support-v4/23.2.0/jars" />
       <excludeFolder url="file:///tmp/Android/JComic/intermediates/exploded-aar/com.android.support/support-vector-drawable/23.2.0/jars" />
       <excludeFolder url="file:///tmp/Android/JComic/intermediates/incremental" />
+      <excludeFolder url="file:///tmp/Android/JComic/intermediates/incremental-classes" />
+      <excludeFolder url="file:///tmp/Android/JComic/intermediates/incremental-runtime-classes" />
+      <excludeFolder url="file:///tmp/Android/JComic/intermediates/incremental-verifier" />
+      <excludeFolder url="file:///tmp/Android/JComic/intermediates/instant-run-support" />
+      <excludeFolder url="file:///tmp/Android/JComic/intermediates/jniLibs" />
       <excludeFolder url="file:///tmp/Android/JComic/intermediates/manifests" />
+      <excludeFolder url="file:///tmp/Android/JComic/intermediates/reload-dex" />
       <excludeFolder url="file:///tmp/Android/JComic/intermediates/res" />
+      <excludeFolder url="file:///tmp/Android/JComic/intermediates/restart-dex" />
       <excludeFolder url="file:///tmp/Android/JComic/intermediates/rs" />
       <excludeFolder url="file:///tmp/Android/JComic/intermediates/symbols" />
+      <excludeFolder url="file:///tmp/Android/JComic/intermediates/transforms" />
       <excludeFolder url="file:///tmp/Android/JComic/outputs" />
       <excludeFolder url="file:///tmp/Android/JComic/tmp" />
     </content>

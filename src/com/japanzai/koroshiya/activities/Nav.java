@@ -60,21 +60,20 @@ public class Nav extends AppCompatActivity
             FragmentManager fragmentManager = getFragmentManager();
             Fragment frag;
             View v = findViewById(R.id.navigation_drawer);
-            SettingsManager prefs = new SettingsManager(this, true);
 
             switch (position){
                 case SETTINGS:
                     frag = new SettingFragment();
                     break;
                 case CONTINUE:
-                    frag = ReadFragment.newInstance(null, -1, prefs, getCacheDir());
+                    frag = ReadFragment.newInstance(null, -1, this);
                     if (frag == null){
                         Snackbar.make(v, "No recent comics found", Snackbar.LENGTH_SHORT).show();
                         return;
                     }
                     break;
                 case RECENT:
-                    if (prefs.getRecentAndFavorites(true).size() > 0){
+                    if (SettingsManager.getRecentAndFavorites(this, true).size() > 0){
                         frag = new RecentFragment();
                         Bundle b = new Bundle();
                         b.putBoolean(RecentFragment.ARG_RECENT, true);
@@ -85,7 +84,7 @@ public class Nav extends AppCompatActivity
                     }
                     break;
                 case FAVORITES:
-                    if (prefs.getRecentAndFavorites(false).size() > 0){
+                    if (SettingsManager.getRecentAndFavorites(this, false).size() > 0){
                         frag = new RecentFragment();
                         Bundle b = new Bundle();
                         b.putBoolean(RecentFragment.ARG_RECENT, false);
@@ -115,7 +114,7 @@ public class Nav extends AppCompatActivity
     }
 
     public void fileChooserCallback(String filePath, int page){
-        Fragment frag = ReadFragment.newInstance(filePath, page, null, null);
+        Fragment frag = ReadFragment.newInstance(filePath, page, this);
         getFragmentManager().beginTransaction()
                 .replace(R.id.container, frag)
                 .commit();

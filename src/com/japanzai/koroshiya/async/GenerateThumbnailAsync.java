@@ -1,11 +1,11 @@
 package com.japanzai.koroshiya.async;
 
+import android.content.Context;
 import android.os.AsyncTask;
 
 import com.japanzai.koroshiya.archive.steppable.SteppableArchive;
 import com.japanzai.koroshiya.io_utils.ArchiveParser;
 import com.japanzai.koroshiya.io_utils.ImageParser;
-import com.japanzai.koroshiya.settings.SettingsManager;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -13,10 +13,10 @@ import java.io.InputStream;
 
 public class GenerateThumbnailAsync extends AsyncTask<String, String, Boolean> {
 
-    private final SettingsManager prefs;
+    private final Context c;
 
-    public GenerateThumbnailAsync(SettingsManager prefs){
-        this.prefs = prefs;
+    public GenerateThumbnailAsync(Context c){
+        this.c = c;
     }
 
     @Override
@@ -39,7 +39,7 @@ public class GenerateThumbnailAsync extends AsyncTask<String, String, Boolean> {
                     File f = files[0];
                     is = new FileInputStream(f);
                 } else if (ArchiveParser.isSupportedArchive(src)) {
-                    SteppableArchive sa = ArchiveParser.parseArchive(srcFile, cacheDir, prefs);
+                    SteppableArchive sa = ArchiveParser.parseArchive(srcFile, c);
                     if (sa != null) is = sa.getStream(0);
                 } else {
                     return false;

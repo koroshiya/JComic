@@ -6,6 +6,7 @@ import android.graphics.Point;
 import com.japanzai.koroshiya.ReadCache;
 import com.japanzai.koroshiya.controls.JBitmapDrawable;
 import com.japanzai.koroshiya.io_utils.ImageParser;
+import com.japanzai.koroshiya.settings.SettingsManager;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -37,7 +38,7 @@ public class DecodeBitmapFileAsync extends DecodeAsync {
                 Point size = ImageParser.getImageSize(is);
 
                 is = new FileInputStream(f);
-                temp = ImageParser.parseImageFromDisk(is, size.x, size.y, p.x, prefs.getDynamicResizing());
+                temp = ImageParser.parseImageFromDisk(is, size.x, size.y, p.x, SettingsManager.getDynamicResizing(c));
 
             } catch (FileNotFoundException e) {
                 e.printStackTrace();

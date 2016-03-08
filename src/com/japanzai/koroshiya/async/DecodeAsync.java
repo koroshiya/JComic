@@ -9,7 +9,6 @@ import com.japanzai.koroshiya.R;
 import com.japanzai.koroshiya.ReadCache;
 import com.japanzai.koroshiya.controls.JBitmapDrawable;
 import com.japanzai.koroshiya.io_utils.ImageParser;
-import com.japanzai.koroshiya.settings.SettingsManager;
 
 import java.io.File;
 import java.lang.ref.SoftReference;
@@ -18,20 +17,18 @@ public abstract class DecodeAsync extends AsyncTask<String, String, SoftReferenc
 
     protected final ReadCache readCache;
     protected final ProgressDialog dialog;
-    protected final File cacheDir;
-    protected final SettingsManager prefs;
     protected final int cacheType;
     protected int page;
     protected File f;
-    protected Point p;
+    protected final Point p;
+    protected final Context c;
 
     public DecodeAsync(Context c, ReadCache readCache, int cacheType){
         this.readCache = readCache;
         this.dialog = new ProgressDialog(c);
         this.dialog.setIcon(R.drawable.ic_launcher);
-        this.cacheDir = c.getCacheDir();
-        this.prefs = new SettingsManager(c, false);
         this.cacheType = cacheType;
+        this.c = c;
 
         p = ImageParser.getScreenSize(c);
     }

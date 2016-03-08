@@ -1,5 +1,7 @@
 package com.japanzai.koroshiya.io_utils;
 
+import android.content.Context;
+
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -44,16 +46,16 @@ public abstract class ArchiveParser {
      * @return Returns an instantiated JArchive object after validation, or null
      * @throws IOException if the archive couldn't be read
      * */
-    public static SteppableArchive parseArchive(File f, File cacheDir, SettingsManager prefs) throws IOException {
+    public static SteppableArchive parseArchive(File f, Context c) throws IOException {
     	
     	String s = f.getName().toLowerCase(Locale.getDefault());
     	String fPath = f.getAbsolutePath();
     	
     	if (s.endsWith(".zip") || s.endsWith(".cbz")){
-            return new JZipArchive(fPath, cacheDir, prefs);
+            return new JZipArchive(fPath, c);
     	}else if (s.endsWith(".rar") || s.endsWith(".cbr")){ //hybrid disk mode
-    		JRarArchive arch = new JRarArchive(fPath, cacheDir, prefs);
-    		if (arch.getArchive().isPasswordProtected(cacheDir)){
+    		JRarArchive arch = new JRarArchive(fPath, c);
+    		if (arch.getArchive().isPasswordProtected(c.getCacheDir())){
     			throw new IOException("RAR is password protected");
     		}else{
     			return arch;

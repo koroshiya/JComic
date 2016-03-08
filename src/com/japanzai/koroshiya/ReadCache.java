@@ -43,11 +43,9 @@ public class ReadCache {
         }else{
             c = fragment.getActivity();
         }
-        SettingsManager prefs = new SettingsManager(c, false);
 
         if (ArchiveParser.isSupportedArchive(f.getAbsolutePath())){
-            File cache = c.getCacheDir();
-            archive = ArchiveParser.parseArchive(f, cache, prefs);
+            archive = ArchiveParser.parseArchive(f, c);
             totalPages = archive.getTotalPages();
         }else{
             archive = null;
@@ -114,10 +112,9 @@ public class ReadCache {
             } else {
                 c = fragment.getActivity();
             }
-            SettingsManager prefs = new SettingsManager(c, true);
 
             if (recent == null) {
-                recent = prefs.getRecentAndFavorite(f.getAbsolutePath(), true);
+                recent = SettingsManager.getRecentAndFavorite(c, f.getAbsolutePath(), true);
             }
 
             if (recent != null) {
@@ -125,7 +122,7 @@ public class ReadCache {
             } else {
                 JBitmapDrawable jbd = image.get();
                 recent = new Recent(f.getAbsolutePath(), currentPage);
-                GenerateThumbnailAsync async = new GenerateThumbnailAsync(prefs);
+                GenerateThumbnailAsync async = new GenerateThumbnailAsync(c);
                 async.execute(
                         f.getAbsolutePath(),
                         c.getCacheDir().getAbsolutePath(),
@@ -135,7 +132,7 @@ public class ReadCache {
                 );
             }
 
-            prefs.addRecentAndFavorite(recent); //TODO: move to detach instead?
+            SettingsManager.addRecentAndFavorite(c, recent); //TODO: move to detach instead?
 
         }
 
@@ -197,12 +194,11 @@ public class ReadCache {
 
     private void cacheNext(Context c){
 
-        SettingsManager prefs = new SettingsManager(c, false);
         cacheForward = new SoftReference<>(null);
 
-        if (getTotalPages() > currentPage + 1 && prefs.isCacheOnStart()){
+        if (getTotalPages() > currentPage + 1 && SettingsManager.isCacheOnStart(c)){
             if (ArchiveParser.isSupportedRarArchive(f.getAbsolutePath())){
-                if (!prefs.isCacheForRar()){
+                if (!SettingsManager.isCacheForRar(c)){
                     return; //TODO: implement rar check elsewhere? Background cache async?
                 }
             }

@@ -26,8 +26,8 @@ import java.util.ArrayList;
 
 public class ReadFragment extends Fragment {
 
-    public static String ARG_FILE = "file";
-    public static String ARG_PAGE = "page";
+    public static final String ARG_FILE = "file";
+    public static final String ARG_PAGE = "page";
 
     private JScrollView jsv;
     private ReadCache cache;
@@ -37,17 +37,13 @@ public class ReadFragment extends Fragment {
         // Required empty public constructor
     }
 
-    /**
-     * @param prefs Only needed if file is null. Otherwise prefs can be null.
-     * @param cacheDir Only needed if file is null. Otherwise cacheDir can be null.
-     * */
-    public static ReadFragment newInstance(String file, int page, SettingsManager prefs, File cacheDir) {
+    public static ReadFragment newInstance(String file, int page, Context c) {
         ReadFragment fragment = new ReadFragment();
         Bundle b = new Bundle();
         Log.i("FLA", "Instance: "+file);
         if (file == null) {
 
-            ArrayList<Recent> recents = prefs.getRecentAndFavorites(true);
+            ArrayList<Recent> recents = SettingsManager.getRecentAndFavorites(c, true);
 
             if (recents.size() == 0) {
                 return null;
@@ -113,17 +109,15 @@ public class ReadFragment extends Fragment {
     public void onAttach(Context context){
         super.onAttach(context);
         Activity act = getActivity();
-        SettingsManager sm = new SettingsManager(context, false);
-        sm.setBacklightAlwaysOn(act, true);
-        sm.setFullScreen(act, true);
+        SettingsManager.setBacklightAlwaysOn(act, true);
+        SettingsManager.setFullScreen(act, true);
     }
 
     @Override
     public void onDetach() {
         Activity act = getActivity();
-        SettingsManager sm = new SettingsManager(act, false);
-        sm.setBacklightAlwaysOn(act, false);
-        sm.setFullScreen(act, false);
+        SettingsManager.setBacklightAlwaysOn(act, false);
+        SettingsManager.setFullScreen(act, false);
         if (cache != null) {
             cache.close();
         }

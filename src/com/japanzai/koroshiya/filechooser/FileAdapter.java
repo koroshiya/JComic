@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.support.design.widget.Snackbar;
@@ -24,22 +25,20 @@ import java.util.Arrays;
 
 public abstract class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
 
-    protected boolean isRecent;
+    protected final boolean isRecent;
 
-    public FileAdapter(Handler.Callback permCallback, SettingsManager prefs, boolean isRecent) {
+    public FileAdapter(Context c, Handler.Callback permCallback, boolean isRecent) {
         this.permCallback = permCallback;
-        this.prefs = prefs;
-        this.curdir = prefs.getHomeDir(); // TODO: Query preferences
+        this.curdir = Environment.getExternalStorageDirectory(); // TODO: Query preferences
         this.isRecent = isRecent;
-        setData();
+        setData(c);
     }
 
     final ArrayList<Recent> items = new ArrayList<>();
     protected File curdir;
-    protected Handler.Callback permCallback;
-    protected SettingsManager prefs;
+    protected final Handler.Callback permCallback;
 
-    public static final String ARG_SCROLL = "scroll";
+    //public static final String ARG_SCROLL = "scroll";
 
     @Override
     public int getItemCount() {
@@ -51,7 +50,7 @@ public abstract class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewH
         holder.setDataOnView(holder, position);
     }
 
-    public abstract void setData();
+    public abstract void setData(Context c);
 
     public Recent getItem(int position) {
         return items.get(position);
@@ -80,13 +79,13 @@ public abstract class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewH
             }
         }else if (f.isDirectory() && !forceReturn){
             this.curdir = f;
-            this.setData();
+            this.setData(c);
         }else{
             int i = 0;
             Message m = new Message();
             Bundle b = new Bundle();
             if (f.isDirectory() || ArchiveParser.isSupportedArchive(f.getAbsolutePath())) {
-                Recent recent = prefs.getRecentAndFavorite(f.getAbsolutePath(), true);
+                Recent recent = SettingsManager.getRecentAndFavorite(c, f.getAbsolutePath(), true);
                 if (recent != null) i = recent.getPageNumber();
             }else{
                 Log.d("ItemClickListener", "Processing item after " + f.getName());
@@ -113,19 +112,19 @@ public abstract class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewH
     public void up(View v){
         if (this.curdir.getParentFile() != null){
             this.curdir = this.curdir.getParentFile();
-            this.setData();
+            this.setData(v.getContext());
         }else{
             Snackbar.make(v, "Cannot go up any further", Snackbar.LENGTH_SHORT).show();
         }
     }
 
-    protected void scrollToTop(){
+    /*protected void scrollToTop(){
         Message message = new Message();
         Bundle bundle = new Bundle();
         bundle.putString(ARG_SCROLL, "top");
         message.setData(bundle);
         permCallback.handleMessage(message);
-    }
+    }*/
 
 
     public abstract class ViewHolder extends RecyclerView.ViewHolder{

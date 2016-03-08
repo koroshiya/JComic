@@ -1,5 +1,6 @@
 package com.japanzai.koroshiya.filechooser;
 
+import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.support.v7.widget.AppCompatImageView;
@@ -19,11 +20,11 @@ import java.io.File;
 
 public class FileListAdapter extends FileAdapter {
 
-    private File cacheDir;
+    private final File cacheDir;
 
-    public FileListAdapter(Handler.Callback permCallback, SettingsManager prefs, File cacheDir, boolean isRecent) {
-        super(permCallback, prefs, isRecent);
-        this.cacheDir = cacheDir;
+    public FileListAdapter(Context c, Handler.Callback permCallback, boolean isRecent) {
+        super(c, permCallback, isRecent);
+        this.cacheDir = c.getCacheDir();
     }
 
     @Override
@@ -32,19 +33,19 @@ public class FileListAdapter extends FileAdapter {
         return new ViewHolder(v);
     }
 
-    public void setData(){
+    public void setData(Context c){
 
         items.clear();
-        items.addAll(prefs.getRecentAndFavorites(isRecent));
+        items.addAll(SettingsManager.getRecentAndFavorites(c, isRecent));
 
         super.notifyDataSetChanged();
     }
 
     public class ViewHolder extends FileAdapter.ViewHolder{
 
-        LinearLayoutCompat llc;
-        EllipsizingTextView tv;
-        AppCompatImageView iv;
+        final LinearLayoutCompat llc;
+        final EllipsizingTextView tv;
+        final AppCompatImageView iv;
 
         public ViewHolder(View v) {
             super(v);
