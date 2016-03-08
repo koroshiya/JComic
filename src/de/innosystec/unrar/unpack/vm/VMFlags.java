@@ -24,7 +24,7 @@ public enum VMFlags {
 	
 	private final int flag;
 	
-	private VMFlags(int flag){
+	VMFlags(int flag){
 		this.flag = flag;
 	}
 	/**

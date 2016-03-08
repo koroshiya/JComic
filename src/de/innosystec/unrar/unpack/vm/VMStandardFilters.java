@@ -35,7 +35,7 @@ public enum VMStandardFilters {
 	
 	private final int filter;
 	
-	private VMStandardFilters(int filter){
+	VMStandardFilters(int filter){
 		this.filter=filter;
 	}
 

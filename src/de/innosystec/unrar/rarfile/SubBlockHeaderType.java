@@ -30,7 +30,7 @@ public enum SubBlockHeaderType
 	
 	private final short subblocktype;
 
-	private SubBlockHeaderType(short subblocktype)
+	SubBlockHeaderType(short subblocktype)
 	{
 		this.subblocktype = subblocktype;
 	}
