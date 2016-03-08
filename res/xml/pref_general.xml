@@ -2,19 +2,19 @@
 
     <PreferenceCategory android:title="General Settings">
         <CheckBoxPreference
-            android:defaultValue="false"
+            android:defaultValue="@string/st_fullscreen_default"
             android:key="@string/st_fullscreen"
             android:title="@string/setting_fullscreen_title"
             android:summary="@string/setting_fullscreen"
             />
         <CheckBoxPreference
-            android:defaultValue="false"
+            android:defaultValue="@string/st_backlight_default"
             android:key="@string/st_backlight"
             android:title="@string/setting_backlight_title"
             android:summary="@string/setting_backlight"
             />
         <CheckBoxPreference
-            android:defaultValue="false"
+            android:defaultValue="@string/pref_keep_zoom_on_page_change_default"
             android:key="@string/pref_keep_zoom_on_page_change"
             android:title="@string/setting_keep_zoom_page_change_title"
             android:summary="@string/setting_keep_zoom_page_change"
@@ -42,13 +42,13 @@
     </PreferenceCategory>
     <PreferenceCategory android:title="Performance Settings">
         <CheckBoxPreference
-            android:defaultValue="true"
+            android:defaultValue="@string/pref_cache_on_start_default"
             android:key="@string/pref_cache_on_start"
             android:title="@string/setting_cache_on_startup_title"
             android:summary="@string/setting_cache_on_startup"
             />
         <CheckBoxPreference
-            android:defaultValue="false"
+            android:defaultValue="@string/pref_cache_rar_files_default"
             android:key="@string/pref_cache_rar_files"
             android:title="@string/setting_cache_rar"
             android:summary="@string/setting_cache_rar_warning"

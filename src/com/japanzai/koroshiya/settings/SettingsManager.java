@@ -108,7 +108,7 @@ public abstract class SettingsManager {
     }
 
 	public static void setBacklightAlwaysOn(Activity act, boolean alwaysOn){
-        alwaysOn = alwaysOn && getPreferences(act).getBoolean(act.getString(R.string.st_backlight), false);
+        alwaysOn = alwaysOn && getPreferences(act).getBoolean(act.getString(R.string.st_backlight),Boolean.parseBoolean(act.getString(R.string.st_backlight_default)));
 		try{
 			int flag = android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
             Window w = act.getWindow();
@@ -123,7 +123,7 @@ public abstract class SettingsManager {
 	}
 
     public static void setFullScreen(Activity act, boolean enableFullscreen){
-        enableFullscreen = enableFullscreen && getPreferences(act).getBoolean(act.getString(R.string.st_fullscreen), false);
+        enableFullscreen = enableFullscreen && getPreferences(act).getBoolean(act.getString(R.string.st_fullscreen), Boolean.parseBoolean(act.getString(R.string.st_fullscreen_default)));
         try{
             int flag = WindowManager.LayoutParams.FLAG_FULLSCREEN;
             Window w = act.getWindow();
@@ -138,14 +138,14 @@ public abstract class SettingsManager {
     }
 
     public static boolean isCacheOnStart(Context c){
-        return getPreferences(c).getBoolean(c.getString(R.string.pref_cache_on_start), true);
+        return getPreferences(c).getBoolean(c.getString(R.string.pref_cache_on_start), Boolean.parseBoolean(c.getString(R.string.pref_cache_on_start_default)));
     }
 
     public static boolean isCacheForRar(Context c){
-        return getPreferences(c).getBoolean(c.getString(R.string.pref_cache_rar_files), false); }
+        return getPreferences(c).getBoolean(c.getString(R.string.pref_cache_rar_files), Boolean.parseBoolean(c.getString(R.string.pref_cache_rar_files_default))); }
 	
 	public static boolean keepZoomOnPageChange(Context c){
-        return getPreferences(c).getBoolean(c.getString(R.string.pref_keep_zoom_on_page_change), false);
+        return getPreferences(c).getBoolean(c.getString(R.string.pref_keep_zoom_on_page_change), Boolean.parseBoolean(c.getString(R.string.pref_keep_zoom_on_page_change_default)));
 	}
 
     public static int getZoom(Context c){
@@ -153,11 +153,11 @@ public abstract class SettingsManager {
     }
 
     public static int getDynamicResizing(Context c){
-        return Integer.parseInt(getPreferences(c).getString(c.getString(R.string.pref_dynamic_resizing), "2"));
+        return Integer.parseInt(getPreferences(c).getString(c.getString(R.string.pref_dynamic_resizing), c.getString(R.string.performance_setting_resize_default)));
     }
 
     public static int getMaxRecent(Context c){
-        return Integer.parseInt(getPreferences(c).getString(c.getString(R.string.pref_max_recent), "10"));
+        return Integer.parseInt(getPreferences(c).getString(c.getString(R.string.pref_max_recent), c.getString(R.string.general_setting_max_recent_default)));
     }
 
 

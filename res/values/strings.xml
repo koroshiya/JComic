@@ -60,5 +60,10 @@
     <string name="pref_cache_on_start">cacheOnStart</string>
     <string name="pref_zoom_index">zoomIndex</string>
     <string name="pref_dynamic_resizing">dynamicResizing</string>
+    <string name="pref_cache_rar_files_default">false</string>
+    <string name="pref_cache_on_start_default">true</string>
+    <string name="st_backlight_default">false</string>
+    <string name="st_fullscreen_default">false</string>
+    <string name="pref_keep_zoom_on_page_change_default">false</string>
 
 </resources>
