@@ -10,7 +10,7 @@ import java.util.Locale;
 import com.japanzai.koroshiya.archive.steppable.JRarArchive;
 import com.japanzai.koroshiya.archive.steppable.JZipArchive;
 import com.japanzai.koroshiya.archive.steppable.SteppableArchive;
-import com.japanzai.koroshiya.reader.Reader;
+import com.japanzai.koroshiya.settings.SettingsManager;
 
 /**
  * Purpose: Used for testing archives and methods by which to implement them.
@@ -18,15 +18,10 @@ import com.japanzai.koroshiya.reader.Reader;
 public abstract class ArchiveParser {
 
 	public static final byte[] BUFFER = new byte[8192];
-	
-    /**
-     * Purpose: Checks to see if archive is of a supported format
-     * @param f File to parse
-     * @return If the file is supported, returns true. Otherwise, false.
-     * */
-	public static boolean isSupportedArchive(File f){
-        String s = f.getName();
-    	return (isSupportedZipArchive(s) || isSupportedRarArchive(s)) && f.length() > 0;
+
+    public static boolean isSupportedArchive(String s){
+        File f = new File(s);
+        return f.isFile() && (isSupportedZipArchive(s) || isSupportedRarArchive(s)) && f.length() > 0;
     }
 	public static boolean isSupportedZipArchive(String s){
     	return isSupported(s, new String[]{".zip", ".cbz"});
@@ -49,22 +44,22 @@ public abstract class ArchiveParser {
      * @return Returns an instantiated JArchive object after validation, or null
      * @throws IOException if the archive couldn't be read
      * */
-    public static SteppableArchive parseArchive(File f, Reader r) throws IOException {
+    public static SteppableArchive parseArchive(File f, File cacheDir, SettingsManager prefs) throws IOException {
     	
     	String s = f.getName().toLowerCase(Locale.getDefault());
     	String fPath = f.getAbsolutePath();
     	
     	if (s.endsWith(".zip") || s.endsWith(".cbz")){
-            return new JZipArchive(r, fPath);
+            return new JZipArchive(fPath, cacheDir, prefs);
     	}else if (s.endsWith(".rar") || s.endsWith(".cbr")){ //hybrid disk mode
-    		JRarArchive arch = new JRarArchive(fPath, r);
-    		if (arch.getArchive().isPasswordProtected()){
+    		JRarArchive arch = new JRarArchive(fPath, cacheDir, prefs);
+    		if (arch.getArchive().isPasswordProtected(cacheDir)){
     			throw new IOException("RAR is password protected");
     		}else{
     			return arch;
     		}
     	}else {
-        	return null;
+        	throw new IOException("Unsupported archive");
     	}    	
     	
     }

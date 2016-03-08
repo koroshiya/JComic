@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="AppTheme" parent="android:Theme.Material">
-        <!-- Customize your theme using Material Design here. -->
-        <item name="colorPrimary">@color/blue_grey_200</item>
-        <item name="colorPrimaryDark">@color/blue_grey_900</item>
-        <item name="colorAccent">@color/grey_800</item>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="@style/Theme.AppCompat.Light">
+        <!-- Customize your theme here. -->
+    </style>
+
+    <style name="CardButton" parent="CardView.Light">
+        <item name="cardUseCompatPadding">true</item>
+        <item name="android:elevation">5dp</item>
+        <item name="elevation">5dp</item>
     </style>
 </resources>

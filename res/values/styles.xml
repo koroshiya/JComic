@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="@style/Theme.AppCompat.Light">
+        <!-- Customize your theme here. -->
+    </style>
+
+    <style name="CardButton" parent="CardView.Light">
+        <item name="cardUseCompatPadding">true</item>
+        <item name="elevation">5dp</item>
+    </style>
+
+</resources>

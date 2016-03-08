@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="general_setting_max_recent_values">
+        <item>0</item>
+        <item>10</item>
+        <item>25</item>
+        <item>50</item>
+        <item>999</item>
+    </string-array>
+    <string-array name="general_setting_default_zoom_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+    <string-array name="general_setting_orientation_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+    <string-array name="general_setting_resize_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+</resources>

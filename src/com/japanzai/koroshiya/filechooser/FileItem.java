@@ -1,35 +1,30 @@
 package com.japanzai.koroshiya.filechooser;
 
-import android.app.Activity;
-import android.graphics.drawable.Drawable;
-
 import com.japanzai.koroshiya.R;
-import com.japanzai.koroshiya.io_utils.ArchiveParser;
 import com.japanzai.koroshiya.io_utils.ImageParser;
 
+import java.io.File;
 import java.util.ArrayList;
 
 public class FileItem{
 
     private final String text;
     private final int res;
-    private final Activity act;
 
-    public FileItem(String text, int res, Activity act){
+    public FileItem(String text, int res){
         this.text = text;
         this.res = res;
-        this.act = act;
     }
 
     public String getText(){
         return text;
     }
 
-    public Drawable getRes(){
-        return android.os.Build.VERSION.SDK_INT >= 21 ? act.getDrawable(res) : act.getResources().getDrawable(res);
+    public int getRes(){
+        return res;
     }
 
-    public static ArrayList<FileItem> getHashList(ArrayList<String> listItems, Activity act){
+    public static ArrayList<FileItem> getHashList(ArrayList<String> listItems){
 
         ArrayList<FileItem> aList = new ArrayList<>();
 
@@ -37,15 +32,13 @@ public class FileItem{
 
             int img;
             if (ImageParser.isSupportedImage(s)){
-                img = R.drawable.image;
-            }else if (ArchiveParser.isSupportedZipArchive(s)){
-                img = R.drawable.zip;
-            }else if (ArchiveParser.isSupportedRarArchive(s)){
-                img = R.drawable.rar;
+                img = R.drawable.file_media;
+            }else if (new File(s).isDirectory()){
+                img = R.drawable.file_directory;
             }else{
-                img = R.drawable.folder;
+                img = R.drawable.file_zip;
             }
-            FileItem hm = new FileItem(s, img, act);
+            FileItem hm = new FileItem(s, img);
             aList.add(hm);
         }
 

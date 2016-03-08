@@ -21,8 +21,6 @@ package de.innosystec.unrar;
 import android.annotation.TargetApi;
 import android.os.Build;
 
-import com.japanzai.koroshiya.reader.MainActivity;
-
 import java.io.Closeable;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -463,13 +461,13 @@ public class Archive implements Closeable {
 	 *
 	 * @return True if encrypted/password protected, otherwise false
 	 * */
-	public boolean isPasswordProtected(){
+	public boolean isPasswordProtected(File cacheDir){
 
         if (this.getFileHeaders().size() > 0){
             FileHeader h = this.getFileHeaders().get(0);
             File f = null;
             try {
-                f = File.createTempFile(h.getFileNameString(), null, MainActivity.getMainActivity().getTempDir());
+                f = File.createTempFile(h.getFileNameString(), null, cacheDir);
                 extractFile(h, new FileOutputStream(f));
                 f.delete();
             } catch (Exception e) {

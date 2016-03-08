@@ -412,7 +412,7 @@ public final class Unpack extends Unpack20 {
                 int FilteredDataSize = Prg.getFilteredDataSize();
                 byte[] FilteredData = new byte[FilteredDataSize];
 
-                System.arraycopy(rarVM.getMem(), FilteredDataOffset + 0, FilteredData, 0, FilteredDataSize);
+                System.arraycopy(rarVM.getMem(), FilteredDataOffset, FilteredData, 0, FilteredDataSize);
 
                 prgStack.set(I, null);
                 while (I + 1 < prgStack.size()) {

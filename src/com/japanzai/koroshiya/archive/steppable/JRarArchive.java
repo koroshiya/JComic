@@ -3,10 +3,9 @@ package com.japanzai.koroshiya.archive.steppable;
 import android.graphics.Point;
 
 import com.japanzai.koroshiya.controls.JBitmapDrawable;
-import com.japanzai.koroshiya.cache.StepThread;
 import com.japanzai.koroshiya.io_utils.ArchiveParser;
 import com.japanzai.koroshiya.io_utils.ImageParser;
-import com.japanzai.koroshiya.reader.Reader;
+import com.japanzai.koroshiya.settings.SettingsManager;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -19,17 +18,13 @@ import java.util.List;
 import de.innosystec.unrar.Archive;
 import de.innosystec.unrar.rarfile.FileHeader;
 
-/**
- * Purpose: Represents a rar archive.
- * 			Provides methods for manipulating such an archive.
- * */
 public class JRarArchive extends SteppableArchive{
 
 	private final Archive rar;
 	
-	public JRarArchive(String path, Reader parent) throws IOException {
+	public JRarArchive(String path, File cacheDir, SettingsManager prefs) throws IOException {
 		
-		super(parent, path);
+		super(cacheDir, prefs);
 
 		FileHeader header;
 		rar = new Archive(new File(path));
@@ -44,21 +39,21 @@ public class JRarArchive extends SteppableArchive{
 			
 		}
 
-        super.sort();
-
-		if (parent == null){
-			return;
-		}else if (getMax() > 0){
-			setPrimary(new StepThread(this, true, true, width, extractMode));
-			//setSecondary(new ArchiveThread(this, true, false));
-			setIndex(0, parent);
+		if (getTotalPages() > 0){
+            super.sort();
 		}else {
 			throw new IOException();
 		}
 		
 	}
-	
-	@Override
+
+    @Override
+    public InputStream getStream(int i) throws IOException {
+        FileHeader entry = (FileHeader)getEntry(i);
+        return rar.getInputStream(entry);
+    }
+
+    @Override
 	public SoftReference<JBitmapDrawable> parseImage(int i, int width, int resize) {
 
 		FileHeader entry = (FileHeader)getEntry(i);
@@ -133,7 +128,7 @@ public class JRarArchive extends SteppableArchive{
 		
 		ArrayList<String> names = new ArrayList<>();
 		
-		for (int i = 0; i < getMax(); i++){
+		for (int i = 0; i < getTotalPages(); i++){
 			names.add(((FileHeader)getEntry(i)).getFileNameString());
 		}
 		
@@ -146,12 +141,13 @@ public class JRarArchive extends SteppableArchive{
 	}
 
 	public Object getEntry(int i){
-		if (i < getImages().size()){
-			return rar.getFileHeaders().get((Integer)getImages().get(i).getImage());
+		if (i < getTotalPages()){
+			return rar.getFileHeaders().get((Integer)this.cache.get(i).getImage());
 		}
 		return null;
 	}
-	
+
+    @Override
 	public void close(){
 		try {
 			rar.close();

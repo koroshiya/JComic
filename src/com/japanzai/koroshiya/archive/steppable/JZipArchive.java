@@ -13,27 +13,18 @@ import java.util.zip.ZipFile;
 import android.graphics.Point;
 import android.util.Log;
 
-import com.japanzai.koroshiya.R;
 import com.japanzai.koroshiya.controls.JBitmapDrawable;
-import com.japanzai.koroshiya.cache.StepThread;
 import com.japanzai.koroshiya.io_utils.ArchiveParser;
 import com.japanzai.koroshiya.io_utils.ImageParser;
-import com.japanzai.koroshiya.reader.MainActivity;
-import com.japanzai.koroshiya.reader.Reader;
-import com.japanzai.koroshiya.reader.ToastThread;
+import com.japanzai.koroshiya.settings.SettingsManager;
 
-/**
- * Purpose: Represents a standard Zip archive.
- * 			Also used for cbz archives.
- * 			Could be used for Jar archives, if implemented later.
- * */
 public class JZipArchive extends SteppableArchive{
 	
 	private final ZipFile zip;
 
-	public JZipArchive(Reader reader, String path) throws IOException {
+	public JZipArchive(String path, File cacheDir, SettingsManager prefs) throws IOException {
 		
-		super(reader, path);
+		super(cacheDir, prefs);
 		
 		zip = new ZipFile(path);
 
@@ -50,14 +41,8 @@ public class JZipArchive extends SteppableArchive{
 
         }
 		
-		if (reader == null){
-            return;
-        }else if (getMax() > 0){
+		if (getTotalPages() > 0){
             super.sort();
-            setPrimary(new StepThread(this, true, true, width, extractMode));
-            setSecondary(new StepThread(this, true, false, width, extractMode));
-
-			setIndex(0, reader);
 		}else {
 			throw new IOException();
 		}
@@ -95,11 +80,18 @@ public class JZipArchive extends SteppableArchive{
             return false;
         }
     }
-	
+
+    @Override
+    public InputStream getStream(int i) throws IOException {
+        JImage j = this.cache.get(i);
+        ZipEntry zipEntry = (ZipEntry)j.getImage();
+        return zip.getInputStream(zipEntry);
+    }
+
 	@Override
 	public SoftReference<JBitmapDrawable> parseImage(int i, int width, int resizeMode){
 
-        JImage j = getImages().get(i);
+        JImage j = this.cache.get(i);
         ZipEntry zipEntry = (ZipEntry)j.getImage();
         String name = j.getName();
 		File f = new File(tempDir + "/" + name);
@@ -130,7 +122,6 @@ public class JZipArchive extends SteppableArchive{
 
                 } catch (IOException e) {
                     e.printStackTrace();
-                    new ToastThread(R.string.archive_read_error, MainActivity.getMainActivity()).start();
                 } finally {
                     if (is != null) {
                         is.close();
@@ -152,8 +143,8 @@ public class JZipArchive extends SteppableArchive{
 		ArrayList<String> names = new ArrayList<>();
         Log.d("JZipArchive", "Scanning zip archive");
 		
-		for (int i = 0; i < getMax(); i++){
-			String name = getImages().get(i).getName();
+		for (int i = 0; i < getTotalPages(); i++){
+			String name = this.cache.get(i).getName();
 			names.add(name);
             Log.d("JZipArchive", "Zip entry " + i + ": " + name);
         }
@@ -161,7 +152,8 @@ public class JZipArchive extends SteppableArchive{
 		return names;
 		
 	}
-	
-	public void close(){}
+
+    @Override
+    public void close(){}
 	
 }

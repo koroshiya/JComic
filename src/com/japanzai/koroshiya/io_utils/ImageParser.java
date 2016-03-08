@@ -1,13 +1,21 @@
 package com.japanzai.koroshiya.io_utils;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FilenameFilter;
 import java.io.InputStream;
 import java.util.Locale;
 
+import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Point;
+import android.util.Log;
+import android.view.Display;
+import android.view.WindowManager;
 
 import com.japanzai.koroshiya.controls.JBitmapDrawable;
 
@@ -20,7 +28,14 @@ public class ImageParser {
 		//We don't want this file to be instantiated
 	}
 	
-	private static final String[] supportedImages = {".png", ".jpg", ".jpeg", ".gif"};
+	private static final String[] supportedImages = {".png", ".jpg", ".jpeg", ".gif", ".webp"};
+    public static final FilenameFilter fnf = new FilenameFilter() {
+        @Override
+        public boolean accept(File dir, String filename) {
+            File f = new File(dir, filename);
+            return f.isFile() && f.canRead() && f.length() > 0 && isSupportedImage(f);
+        }
+    };
 	   
     /**
      * Purpose: Checks to see if image is of a supported format
@@ -29,8 +44,21 @@ public class ImageParser {
      * */
 	public static boolean isSupportedImage(File f){
     	
-    	return isSupportedImage(f.getName());
+    	return isSupportedImage(f.getAbsolutePath());
     	
+    }
+
+    /**
+     * @param f File to check if supported
+     * @return Returns true if the file is supported, otherwise false
+     * */
+    public static boolean isSupportedFile(File f){
+
+        return f != null && f.exists() && (
+                (f.isDirectory() && f.list(fnf).length > 0) ||
+                (f.length() > 0 && (ArchiveParser.isSupportedArchive(f.getAbsolutePath()) || ImageParser.isSupportedImage(f)))
+        );
+
     }
 	
 	/**
@@ -44,8 +72,6 @@ public class ImageParser {
 		
 		if ((new File(comp)).getName().charAt(0) == '.'){ //Prevents hidden files and, more importantly MACOSX folder contents, from being read
 			return false;
-		}else if (android.os.Build.VERSION.SDK_INT >= 14 && comp.endsWith(".webp")){ //WebP is only natively available for android 4.0+
-			return true;
 		}
 		
     	for (String ext : supportedImages) if (comp.endsWith(ext)) return true;
@@ -61,15 +87,8 @@ public class ImageParser {
      *
      * @return True if the directory is suitable for parsing
      **/
-    public static boolean isSupportedDirectory(File f){
-        if (f.isDirectory()){
-            for (File img : f.listFiles()){
-                if (img.length() > 0 && isSupportedImage(img)){
-                    return true;
-                }
-            }
-        }
-        return false;
+    public static boolean isSupportedDirectory(File f) {
+        return f.isDirectory() && f.listFiles(fnf).length > 0;
     }
 	
 	/**
@@ -85,6 +104,10 @@ public class ImageParser {
         BitmapFactory.Options opts = getRealOpts();
 
         try{
+
+            Log.e("ImageParser", "InWidth: "+inWidth);
+            Log.e("ImageParser", "InHeight: "+inHeight);
+            Log.e("ImageParser", "Width: "+width);
 
             if (resize != 0){
                 if (width == 0) width = inWidth;
@@ -108,6 +131,43 @@ public class ImageParser {
             return null;
         }catch (Exception ex){
             return null;
+        }
+
+    }
+
+    public static void createThumbnail(InputStream is, File targetFile, int imgWidth, int imgHeight, int targetDimen){
+
+        BitmapFactory.Options opts = getRealOpts();
+
+        try{
+
+            float scale;
+            Log.i("IP", "Target targetDimen: "+targetDimen);
+            Log.i("IP", "Target imgWidth: "+imgWidth);
+            Log.i("IP", "Target imgHeight: "+imgHeight);
+            if (imgWidth > imgHeight)
+                scale = (float)targetDimen / (float)imgWidth;
+            else
+                scale = (float)targetDimen / (float)imgHeight;
+
+            int targetWidth = (int)Math.floor(imgWidth * scale);
+            int targetHeight = (int)Math.floor(imgHeight * scale);
+            Log.i("IP", "Target width: "+targetWidth);
+            Log.i("IP", "Target height: "+targetHeight);
+            Log.i("IP", "Scale: "+scale);
+            //opts.inSampleSize = (int)Math.floor(1.0 / scale);
+            opts.outHeight = targetHeight;
+            opts.outWidth = targetWidth;
+
+            Bitmap b = BitmapFactory.decodeStream(new BufferedInputStream(is), null, opts);
+            FileOutputStream fos = new FileOutputStream(targetFile);
+            BufferedOutputStream bos = new BufferedOutputStream(fos);
+            b.compress(Bitmap.CompressFormat.WEBP, 75, bos);
+            bos.close();
+            fos.close();
+
+        }catch(OutOfMemoryError | Exception ex){
+            ex.printStackTrace();
         }
 
     }
@@ -168,7 +228,7 @@ public class ImageParser {
     private static BitmapFactory.Options getSampleOpts(){
         BitmapFactory.Options opts = new BitmapFactory.Options();
         opts.inJustDecodeBounds = true;
-        if (android.os.Build.VERSION.SDK_INT >= 10) opts.inPreferQualityOverSpeed = false;
+        opts.inPreferQualityOverSpeed = false;
         opts.inDither = false;
         opts.inSampleSize = 4;
         if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.LOLLIPOP){
@@ -188,6 +248,14 @@ public class ImageParser {
         }
         opts.inTempStorage = new byte[32768]; //32kb
         return opts;
+    }
+
+    public static Point getScreenSize(Context c){
+        WindowManager wm = (WindowManager) c.getSystemService(Context.WINDOW_SERVICE);
+        Display display = wm.getDefaultDisplay();
+        Point p = new Point();
+        display.getSize(p);
+        return p;
     }
 
 }

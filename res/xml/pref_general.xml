@@ -1,0 +1,79 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory android:title="General Settings">
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="@string/st_fullscreen"
+            android:title="@string/setting_fullscreen_title"
+            android:summary="@string/setting_fullscreen"
+            />
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="@string/st_backlight"
+            android:title="@string/setting_backlight_title"
+            android:summary="@string/setting_backlight"
+            />
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="keepZoomOnPageChange"
+            android:title="@string/setting_keep_zoom_page_change_title"
+            android:summary="@string/setting_keep_zoom_page_change"
+            />
+        <ListPreference
+            android:defaultValue="@string/general_setting_max_recent_default"
+            android:entries="@array/general_setting_max_recent"
+            android:entryValues="@array/general_setting_max_recent_values"
+            android:key="maxRecent"
+            android:negativeButtonText="@null"
+            android:positiveButtonText="@null"
+            android:title="Max Recent List Length"
+            android:summary="Maximum number of recent files to remember"
+            />
+        <ListPreference
+            android:defaultValue="@string/general_setting_default_zoom_default"
+            android:entries="@array/general_setting_default_zoom"
+            android:entryValues="@array/general_setting_default_zoom_values"
+            android:key="zoomIndex"
+            android:negativeButtonText="@null"
+            android:positiveButtonText="@null"
+            android:title="@string/setting_zoom_title"
+            android:summary="@string/setting_zoom"
+            />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="Performance Settings">
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="cacheOnStart"
+            android:title="@string/setting_cache_on_startup_title"
+            android:summary="@string/setting_cache_on_startup"
+            />
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="cacheRarFiles"
+            android:title="@string/setting_cache_rar"
+            android:summary="@string/setting_cache_rar_warning"
+            />
+
+        <!--<ListPreference
+            android:defaultValue="@string/general_setting_orientation_default"
+            android:entries="@array/general_setting_orientation"
+            android:entryValues="@array/general_setting_orientation_values"
+            android:key="orientationIndex"
+            android:negativeButtonText="@null"
+            android:positiveButtonText="@null"
+            android:title="@string/setting_orientation_title"
+            android:summary="@string/setting_orientation"
+            />-->
+        <ListPreference
+            android:defaultValue="@string/performance_setting_resize_default"
+            android:entries="@array/performance_setting_resize_mode"
+            android:entryValues="@array/general_setting_resize_values"
+            android:key="dynamicResizing"
+            android:negativeButtonText="@null"
+            android:positiveButtonText="@null"
+            android:title="@string/setting_resize_title"
+            android:summary="@string/setting_resize"
+            />
+    </PreferenceCategory>
+
+</PreferenceScreen>
