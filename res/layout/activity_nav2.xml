@@ -5,7 +5,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.japanzai.koroshiya.activities.Nav">
+    tools:context="com.japanzai.koroshiya.activities.Nav"
+    android:layout_gravity="start"
+    >
 
     <!-- As the main content view, the view below consumes the entire
          space available using match_parent in both dimensions. -->

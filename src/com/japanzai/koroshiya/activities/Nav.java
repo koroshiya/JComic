@@ -3,6 +3,7 @@ package com.japanzai.koroshiya.activities;
 import android.annotation.TargetApi;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
@@ -57,7 +58,7 @@ public class Nav extends AppCompatActivity
             Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/koroshiya/JComic/issues"));
             startActivity(browserIntent);
         }else {
-            FragmentManager fragmentManager = getFragmentManager();
+            FragmentManager fm = getFragmentManager();
             Fragment frag;
             View v = findViewById(R.id.navigation_drawer);
 
@@ -107,17 +108,34 @@ public class Nav extends AppCompatActivity
                     return;
             }
 
-            fragmentManager.beginTransaction()
-                    .replace(R.id.container, frag)
-                    .commit();
+            FragmentTransaction ft = fm.beginTransaction();
+            ft.replace(R.id.container, frag);
+            ft.addToBackStack(null);
+            ft.commit();
         }
     }
 
     public void fileChooserCallback(String filePath, int page){
         Fragment frag = ReadFragment.newInstance(filePath, page, this);
-        getFragmentManager().beginTransaction()
-                .replace(R.id.container, frag)
-                .commit();
+        FragmentManager fm = this.getFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+        ft.replace(R.id.container, frag);
+        ft.addToBackStack(null);
+        ft.commit();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (mNavigationDrawerFragment.isDrawerOpen()) {
+            mNavigationDrawerFragment.closeDrawer();
+        }else{
+            FragmentManager fm = this.getFragmentManager();
+            if (fm.getBackStackEntryCount() == 1) {
+                super.onBackPressed();
+            } else {
+                fm.popBackStackImmediate();
+            }
+        }
     }
 
     @TargetApi(Build.VERSION_CODES.M)

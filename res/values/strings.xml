@@ -4,7 +4,7 @@
     <string name="author">Author: Koroshiya</string>
     <string name="contributions">Third-party contributions: https://github.com/koroshiya/JComic/blob/master/LICENSE.md</string>
     <string name="up_directory">Up</string>
-    <string name="setting_zoom">Default zoom: </string>
+    <string name="setting_zoom">How and how far to zoom images by default while reading</string>
     <string name="setting_backlight">Keep screen on while reading</string>
     <string name="setting_fullscreen">Read comics in fullscreen mode</string>
     <string name="setting_resize">Dynamic resizing</string>

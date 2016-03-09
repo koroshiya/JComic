@@ -186,7 +186,7 @@ public class NavigationDrawerFragment extends Fragment {
             }
         });
 
-        mDrawerLayout.setDrawerListener(mDrawerToggle);
+        mDrawerLayout.addDrawerListener(mDrawerToggle);
 
         ActionBar actionBar = getActionBar();
         if (actionBar != null) {
@@ -229,6 +229,7 @@ public class NavigationDrawerFragment extends Fragment {
         if (context instanceof NavigationDrawerCallbacks){
             mCallbacks = (NavigationDrawerCallbacks) context;
         }
+
     }
 
     @Override
@@ -277,4 +278,13 @@ public class NavigationDrawerFragment extends Fragment {
          */
         void onNavigationDrawerItemSelected(int position);
     }
+
+    public boolean isDrawerOpen(){
+        return mDrawerLayout.isDrawerOpen(GravityCompat.START);
+    }
+
+    public void closeDrawer(){
+        mDrawerLayout.closeDrawer(GravityCompat.START);
+    }
+
 }

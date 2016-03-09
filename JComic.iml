@@ -76,6 +76,7 @@
       <sourceFolder url="file:///tmp/Android/JComic/generated/res/resValues/androidTest/debug" type="java-test-resource" />
       <excludeFolder url="file:///tmp/Android/JComic/intermediates/assets" />
       <excludeFolder url="file:///tmp/Android/JComic/intermediates/blame" />
+      <excludeFolder url="file:///tmp/Android/JComic/intermediates/builds" />
       <excludeFolder url="file:///tmp/Android/JComic/intermediates/bundles" />
       <excludeFolder url="file:///tmp/Android/JComic/intermediates/classes" />
       <excludeFolder url="file:///tmp/Android/JComic/intermediates/dependency-cache" />
