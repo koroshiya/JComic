@@ -166,11 +166,18 @@ public abstract class SettingsManager {
     public static void addRecentAndFavorite(Context c, Recent r){
 
         boolean isRecent = isRecent(r);
+        int totalRecent = 0;
+        int max = getMaxRecent(c);
 
         for (int i = recentAndFavorite.size() - 1; i >= 0; i--){
             Recent recent = recentAndFavorite.get(i);
             if (isRecent(recent) == isRecent && recent.getPath().equals(r.getPath())){
                 recentAndFavorite.remove(i);
+            }else if (isRecent(recent)){
+                if (totalRecent < max)
+                    totalRecent++;
+                else
+                    recentAndFavorite.remove(i);
             }
         }
         recentAndFavorite.add(0, r);
