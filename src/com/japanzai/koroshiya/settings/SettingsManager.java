@@ -176,8 +176,10 @@ public abstract class SettingsManager {
             }else if (isRecent(recent)){
                 if (totalRecent < max)
                     totalRecent++;
-                else
+                else {
+                    recent.deleteFromDisk();
                     recentAndFavorite.remove(i);
+                }
             }
         }
         recentAndFavorite.add(0, r);
@@ -224,6 +226,9 @@ public abstract class SettingsManager {
         return null;
     }
 
+    /**
+     * Determine whether r is a recently read comic, or a favorite.
+     * */
     private static boolean isRecent(Recent r){
         return r.getPageNumber() >= 0;
     }

@@ -5,6 +5,7 @@ import android.util.Log;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.UUID;
 
 public class Recent {
@@ -56,4 +57,9 @@ public class Recent {
     public void setPageNumber(int pageNumber) {
         this.pageNumber = pageNumber;
     }
+
+    public boolean deleteFromDisk(){
+        return new File(this.path).delete();
+    }
+
 }

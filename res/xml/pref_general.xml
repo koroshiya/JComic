@@ -75,5 +75,13 @@
             android:summary="@string/setting_resize"
             />
     </PreferenceCategory>
+    <PreferenceCategory android:title="Advanced Settings">
+        <CheckBoxPreference
+            android:defaultValue="@string/pref_delete_less_recent_default"
+            android:key="@string/pref_delete_less_recent"
+            android:title="@string/pref_delete_less_recent_title"
+            android:summary="@string/pref_delete_less_recent_summary"
+            />
+    </PreferenceCategory>
 
 </PreferenceScreen>

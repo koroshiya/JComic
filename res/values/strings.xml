@@ -65,5 +65,9 @@
     <string name="st_backlight_default">false</string>
     <string name="st_fullscreen_default">false</string>
     <string name="pref_keep_zoom_on_page_change_default">false</string>
+    <string name="pref_delete_less_recent">deleteLessRecent</string>
+    <string name="pref_delete_less_recent_default">false</string>
+    <string name="pref_delete_less_recent_title">Delete comics after reading</string>
+    <string name="pref_delete_less_recent_summary">When the recent list limit is reached, and a new entry is added, the removed entry will be deleted from disk</string>
 
 </resources>
