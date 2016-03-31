@@ -12,7 +12,6 @@ import java.util.Locale;
 import com.japanzai.koroshiya.archive.steppable.JRarArchive;
 import com.japanzai.koroshiya.archive.steppable.JZipArchive;
 import com.japanzai.koroshiya.archive.steppable.SteppableArchive;
-import com.japanzai.koroshiya.settings.SettingsManager;
 
 /**
  * Purpose: Used for testing archives and methods by which to implement them.

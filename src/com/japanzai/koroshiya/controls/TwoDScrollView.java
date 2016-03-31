@@ -23,10 +23,8 @@ package com.japanzai.koroshiya.controls;
  
 import java.util.List;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Rect;
-import android.os.Build;
 import android.util.AttributeSet;
 import android.view.FocusFinder;
 import android.view.KeyEvent;

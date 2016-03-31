@@ -30,9 +30,8 @@ public class Nav extends AppCompatActivity
     private final int RECENT = 2;
     private final int FAVORITES = 3;
     private final int SETTINGS = 4;
-    private final int HELP = 5;
-    private final int CREDITS = 6;
-    private final int REPORT_ERROR = 7;
+    private final int CREDITS = 5;
+    private final int REPORT_ERROR = 6;
 
     private NavigationDrawerFragment mNavigationDrawerFragment;
 
@@ -98,8 +97,6 @@ public class Nav extends AppCompatActivity
                 case READ:
                     frag = new FileChooserFragment();
                     break;
-                case HELP:
-                    //TODO: link to git help page
                 case CREDITS:
                     frag = new CreditsFragment();
                     break;

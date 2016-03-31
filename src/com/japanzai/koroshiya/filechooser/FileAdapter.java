@@ -3,6 +3,7 @@ package com.japanzai.koroshiya.filechooser;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -64,7 +65,8 @@ public abstract class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewH
             Snackbar.make(v, "File does not exist", Snackbar.LENGTH_SHORT).show();
             Log.e("FileItemAdapter", "Doesn't exist: "+f.getAbsolutePath());
         }else if (!f.canRead()){
-            if (StorageHelper.isExternalStorageReadable() &&
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN &&
+                    StorageHelper.isExternalStorageReadable() &&
                     ContextCompat.checkSelfPermission(c, Manifest.permission.READ_EXTERNAL_STORAGE)
                             != PackageManager.PERMISSION_GRANTED){
 

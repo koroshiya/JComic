@@ -3,7 +3,6 @@ package com.japanzai.koroshiya.archive.steppable;
 import android.content.Context;
 
 import com.japanzai.koroshiya.controls.JBitmapDrawable;
-import com.japanzai.koroshiya.settings.SettingsManager;
 
 import java.io.File;
 import java.io.IOException;
