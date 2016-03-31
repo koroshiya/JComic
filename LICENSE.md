@@ -1,31 +1,28 @@
-JComic uses, or previously used, the following libraries/classes:
+*Note: The code for JComic itself is licensed under MIT, as per below.
+However, individual components of JComic might not be.
+Please refer to Contributions.md for clarafication.
 
-<a href="https://github.com/edmund-wagner/junrar">JUnrar</a> by Edmund Wagner
-License: <a href="https://github.com/edmund-wagner/junrar/blob/master/license.txt">Custom</a>
-As of v1.09.1, my modified version of junrar is used.
-You can grab the source for it <a href="https://github.com/koroshiya/junrar/">on github</a>.
 
-<a href="http://commons.apache.org/proper/commons-compress">Commons Compress</a> by Apache
-License: <a href="http://www.apache.org/licenses/LICENSE-2.0.html">Apache v2.0</a>
-A modified version of Commons Compress is used as of v1.07.
-You can grab the source for it <a href="downloads/commons_modified_11_July_2013.zip">here</a>.
 
-<a href="http://actionbarsherlock.com">ActionBarSherlock</a> by Jake Wharton
-License: <a href="http://www.apache.org/licenses/LICENSE-2.0.html">Apache v2.0</a>
 
-<a href="http://GORGES.us">TwoDScrollView</a> by GORGES
-License: <a href="http://www.apache.org/licenses/LICENSE-2.0.html">Apache v2.0</a>
+The MIT License (MIT)
 
-<a href="https://github.com/triposo/barone">EllipsizingTextView</a> by Micah Hainline, Triposo
-License: <a href="http://www.apache.org/licenses/LICENSE-2.0.html">Apache v2.0</a>
+Copyright (c) 2013-2016 Koroshiya
 
-<a href="https://github.com/triposo/barone">EllipsizedTextView</a> by Google Inc.
-License: <a href="http://www.apache.org/licenses/LICENSE-2.0.html">Apache v2.0</a>
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-English to French translations were provided courtesy of Lucas Marot.
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
-Most icons were made by Peter Hull.
-His services can be accessed at http://leftalive.deviantart.com/
-
-Reset & refresh icons by VisualPharm: http://www.visualpharm.com/
-Other icons by Oxygen Team: http://www.oxygen-icons.org/
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
