@@ -2,3 +2,8 @@
 bin/
 build/
 *.apk
+gradle/
+.idea/
+gradlew
+gradlew.bat
+local.properties
