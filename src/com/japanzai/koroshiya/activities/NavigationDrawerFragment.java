@@ -13,6 +13,8 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -49,7 +51,7 @@ public class NavigationDrawerFragment extends Fragment {
     private ActionBarDrawerToggle mDrawerToggle;
 
     private DrawerLayout mDrawerLayout;
-    private ListView mDrawerListView;
+    private RecyclerView mDrawerListView;
     private View mFragmentContainerView;
 
     private int mCurrentSelectedPosition = 0;
@@ -96,28 +98,10 @@ public class NavigationDrawerFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        mDrawerListView = (ListView) inflater.inflate(
-                R.layout.drawer_nav2, container, false);
-        mDrawerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                selectItem(position);
-            }
-        });
-
-        Context c;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            c = getContext();
-        }else{
-            c = inflater.getContext();
-        }
-
-        Log.i("NavDrawerFragment", "Testing");
-
-        mDrawerListView.setAdapter(new MenuDrawerAdapter(c, R.layout.view_menu_item, mainMenuItems));
-        mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        mDrawerListView = (RecyclerView) inflater.inflate(R.layout.drawer_nav2, container, false);
+        mDrawerListView.setLayoutManager(new LinearLayoutManager(inflater.getContext()));
+        mDrawerListView.setAdapter(new MenuDrawerAdapter(mCallbacks, mainMenuItems));
         return mDrawerListView;
     }
 
@@ -195,13 +179,10 @@ public class NavigationDrawerFragment extends Fragment {
 
     public void selectItem(int position) {
         mCurrentSelectedPosition = position;
-        if (mDrawerListView != null) {
-            mDrawerListView.setItemChecked(position, true);
-        }
         if (mDrawerLayout != null) {
             mDrawerLayout.closeDrawer(mFragmentContainerView);
         }
-        if (mCallbacks != null) {
+        if (mCallbacks != null){
             mCallbacks.onNavigationDrawerItemSelected(position);
         }
     }
@@ -273,6 +254,8 @@ public class NavigationDrawerFragment extends Fragment {
          * Called when an item in the navigation drawer is selected.
          */
         void onNavigationDrawerItemSelected(int position);
+
+        void selectNavDrawerItem(int position);
     }
 
     public boolean isDrawerOpen(){

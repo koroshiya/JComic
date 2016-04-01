@@ -6,54 +6,72 @@ import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatTextView;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 
 import com.japanzai.koroshiya.R;
+import com.japanzai.koroshiya.activities.Nav;
+import com.japanzai.koroshiya.activities.NavigationDrawerFragment;
 
-public class MenuDrawerAdapter extends ArrayAdapter<MainMenuItem> {
+public class MenuDrawerAdapter extends RecyclerView.Adapter<MenuDrawerAdapter.ViewHolder> {
 
-    public MenuDrawerAdapter(Context context, int resource, MainMenuItem[] objects) {
-        super(context, resource, objects);
+    private MainMenuItem[] items;
+    private NavigationDrawerFragment.NavigationDrawerCallbacks callbacks;
 
+    public MenuDrawerAdapter(NavigationDrawerFragment.NavigationDrawerCallbacks mCallbacks, MainMenuItem[] items) {
+        this.items = items;
+        this.callbacks = mCallbacks;
     }
 
-    private class ViewHolder {
-        AppCompatTextView textView;
+    @Override
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.view_menu_item, parent, false);
+        return new ViewHolder(v);
     }
 
+    @Override
+    public void onBindViewHolder(ViewHolder holder, int position) {
+        holder.setDataOnView(position);
+    }
 
-    public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder holder;
-        MainMenuItem rowItem = getItem(position);
+    @Override
+    public int getItemCount() {
+        return items.length;
+    }
 
-        LayoutInflater mInflater = (LayoutInflater) getContext().getSystemService(AppCompatActivity.LAYOUT_INFLATER_SERVICE);
-        if (convertView == null) {
-            convertView = mInflater.inflate(R.layout.view_menu_item, parent, false);
-            holder = new ViewHolder();
-            holder.textView = (AppCompatTextView) convertView.findViewById(R.id.viewMenuItemTextView);
-            convertView.setTag(holder);
-        } else {
-            holder = (ViewHolder) convertView.getTag();
+    public class ViewHolder extends RecyclerView.ViewHolder {
+
+        private final AppCompatTextView textView;
+
+        public ViewHolder(View itemView) {
+            super(itemView);
+            textView = (AppCompatTextView) itemView.findViewById(R.id.viewMenuItemTextView);
         }
 
-        Drawable d;
-        Resources r = getContext().getResources();
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-            d = r.getDrawable(rowItem.getResId(), null);
-        }else{
-            d = r.getDrawable(rowItem.getResId());
+        public void setDataOnView(final int position){
+            MainMenuItem rowItem = items[position];
+
+            Drawable d;
+            Resources r = textView.getContext().getResources();
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                d = r.getDrawable(rowItem.getResId(), null);
+            }else{
+                d = r.getDrawable(rowItem.getResId());
+            }
+            if (d != null) d.setBounds(new Rect(0,0,48,48));
+
+            textView.setCompoundDrawables(d, null, null, null);
+            textView.setText(rowItem.getText());
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    callbacks.selectNavDrawerItem(position);
+                }
+            });
         }
-        if (d != null) d.setBounds(new Rect(0,0,48,48));
-
-        holder.textView.setCompoundDrawables(d, null, null, null);
-        holder.textView.setText(rowItem.getText());
-
-        return convertView;
     }
-
-
 
 }

@@ -112,6 +112,11 @@ public class Nav extends AppCompatActivity
         }
     }
 
+    @Override
+    public void selectNavDrawerItem(int position){
+        mNavigationDrawerFragment.selectItem(position);
+    }
+
     public void fileChooserCallback(String filePath, int page){
         Fragment frag = ReadFragment.newInstance(filePath, page, this);
         FragmentManager fm = this.getFragmentManager();
@@ -139,8 +144,6 @@ public class Nav extends AppCompatActivity
     public void requestPermission(String permission){
         requestPermissions(new String[]{permission}, 0);
     }
-
-
 
 
     public void creditsBtnRateApp(View v){
