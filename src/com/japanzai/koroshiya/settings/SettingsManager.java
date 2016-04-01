@@ -176,24 +176,40 @@ public abstract class SettingsManager {
             }else if (isRecent(recent)){
                 if (totalRecent < max)
                     totalRecent++;
-                else {
-                    SharedPreferences prefs = getPreferences(c);
-                    boolean deleteLessRecent = prefs.getBoolean(c.getString(R.string.pref_delete_less_recent), Boolean.parseBoolean(c.getString(R.string.pref_delete_less_recent_default)));
-                    if (deleteLessRecent) {
-                        boolean dontDeleteFolders = prefs.getBoolean(c.getString(R.string.pref_dont_delete_folders), Boolean.parseBoolean(c.getString(R.string.pref_dont_delete_folders_default)));
-                        File f = new File(recent.getPath());
-                        if (!f.isDirectory() || dontDeleteFolders) {
-                            f.delete();
-                        }
-                    }
-                    recentAndFavorite.remove(i);
-                }
+                else
+                    deleteRecent(i, c, recent);
             }
         }
         recentAndFavorite.add(0, r);
 
         saveRecentList(c);
 
+    }
+
+    private static void deleteRecent(int i, Context c, Recent recent){
+        SharedPreferences prefs = getPreferences(c);
+        boolean deleteLessRecent = prefs.getBoolean(c.getString(R.string.pref_delete_less_recent), Boolean.parseBoolean(c.getString(R.string.pref_delete_less_recent_default)));
+        if (deleteLessRecent) {
+            boolean onlyDeleteFiles = prefs.getBoolean(c.getString(R.string.pref_only_delete_folder_images), Boolean.parseBoolean(c.getString(R.string.pref_only_delete_folder_images_default)));
+            File f = new File(recent.getPath());
+            if (!f.isDirectory() || !onlyDeleteFiles) {
+                f.delete();
+            }else{
+                for (File file : f.listFiles()){
+                    if (file.isDirectory()){
+                        if (file.list().length == 0){
+                            file.delete();
+                        }
+                    }else if (ImageParser.isSupportedImage(file)){
+                        file.delete();
+                    }
+                }
+                if (f.list().length == 0){
+                    f.delete();
+                }
+            }
+        }
+        recentAndFavorite.remove(i);
     }
 
     public static ArrayList<Recent> getRecentAndFavorites(Context c, boolean isRecent){

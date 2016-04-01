@@ -69,9 +69,9 @@
     <string name="pref_delete_less_recent_default">false</string>
     <string name="pref_delete_less_recent_title">Delete comics after reading</string>
     <string name="pref_delete_less_recent_summary">When the recent list limit is reached, and a new entry is added, the removed entry will be deleted from disk</string>
-    <string name="pref_dont_delete_folders">pref_dont_delete_folders</string>
-    <string name="pref_dont_delete_folders_default">true</string>
-    <string name="pref_dont_delete_folders_title">Don\'t delete folders</string>
-    <string name="pref_dont_delete_folders_summary">Only delete recent images and archives, not folders</string>
+    <string name="pref_only_delete_folder_images">pref_only_delete_folder_images</string>
+    <string name="pref_only_delete_folder_images_default">true</string>
+    <string name="pref_only_delete_folder_images_title">Don\'t delete all folder contents</string>
+    <string name="pref_only_delete_folder_images_summary">When deleting a recent folder, only delete images, not archives or subfolders</string>
 
 </resources>
