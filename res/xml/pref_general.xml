@@ -82,6 +82,12 @@
             android:title="@string/pref_delete_less_recent_title"
             android:summary="@string/pref_delete_less_recent_summary"
             />
+        <CheckBoxPreference
+            android:defaultValue="@string/pref_dont_delete_folders_default"
+            android:key="@string/pref_dont_delete_folders"
+            android:title="@string/pref_dont_delete_folders_title"
+            android:summary="@string/pref_dont_delete_folders_summary"
+            />
     </PreferenceCategory>
 
 </PreferenceScreen>

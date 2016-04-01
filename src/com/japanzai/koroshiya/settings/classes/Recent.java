@@ -5,7 +5,6 @@ import android.util.Log;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
 import java.util.UUID;
 
 public class Recent {
@@ -26,7 +25,6 @@ public class Recent {
         this.path = path;
         this.pageNumber = pageNumber;
         this.uuid = uuid;
-        Log.i("Recent", "Recent path: "+path);
     }
 
     public Recent(JSONObject jsObj) throws JSONException {
@@ -56,10 +54,6 @@ public class Recent {
 
     public void setPageNumber(int pageNumber) {
         this.pageNumber = pageNumber;
-    }
-
-    public boolean deleteFromDisk(){
-        return new File(this.path).delete();
     }
 
 }

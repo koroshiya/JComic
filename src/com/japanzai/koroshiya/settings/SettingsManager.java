@@ -1,14 +1,5 @@
 package com.japanzai.koroshiya.settings;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.nio.MappedByteBuffer;
-import java.nio.channels.FileChannel;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -23,6 +14,15 @@ import com.japanzai.koroshiya.settings.classes.Recent;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.MappedByteBuffer;
+import java.nio.channels.FileChannel;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
 
 /**
  * Class for managing all user settings.
@@ -177,7 +177,15 @@ public abstract class SettingsManager {
                 if (totalRecent < max)
                     totalRecent++;
                 else {
-                    recent.deleteFromDisk();
+                    SharedPreferences prefs = getPreferences(c);
+                    boolean deleteLessRecent = prefs.getBoolean(c.getString(R.string.pref_delete_less_recent), Boolean.parseBoolean(c.getString(R.string.pref_delete_less_recent_default)));
+                    if (deleteLessRecent) {
+                        boolean dontDeleteFolders = prefs.getBoolean(c.getString(R.string.pref_dont_delete_folders), Boolean.parseBoolean(c.getString(R.string.pref_dont_delete_folders_default)));
+                        File f = new File(recent.getPath());
+                        if (!f.isDirectory() || dontDeleteFolders) {
+                            f.delete();
+                        }
+                    }
                     recentAndFavorite.remove(i);
                 }
             }
