@@ -26,7 +26,7 @@ public abstract class DecodeAsync extends AsyncTask<String, String, SoftReferenc
     public DecodeAsync(Context c, ReadCache readCache, int cacheType){
         this.readCache = readCache;
         this.dialog = new ProgressDialog(c);
-        this.dialog.setIcon(R.mipmap.ic_launcher);
+        this.dialog.setIcon(R.mipmap.icon);
         this.cacheType = cacheType;
         this.c = c;
 
