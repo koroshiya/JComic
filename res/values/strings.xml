@@ -73,5 +73,9 @@
     <string name="pref_only_delete_folder_images_default">true</string>
     <string name="pref_only_delete_folder_images_title">Don\'t delete all folder contents</string>
     <string name="pref_only_delete_folder_images_summary">When deleting a recent folder, only delete images, not archives or subfolders</string>
+    <string name="pref_only_delete_finished">pref_only_delete_finished</string>
+    <string name="pref_only_delete_finished_default">true</string>
+    <string name="pref_only_delete_finished_title">Only delete finished chapters</string>
+    <string name="pref_only_delete_finished_summary">Only delete items purged from the recent list if you were already on the last page of that chapter</string>
 
 </resources>

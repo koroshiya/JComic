@@ -8,6 +8,8 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import com.japanzai.koroshiya.R;
+import com.japanzai.koroshiya.archive.steppable.SteppableArchive;
+import com.japanzai.koroshiya.io_utils.ArchiveParser;
 import com.japanzai.koroshiya.io_utils.ImageParser;
 import com.japanzai.koroshiya.settings.classes.Recent;
 
@@ -189,23 +191,52 @@ public abstract class SettingsManager {
     private static void deleteRecent(int i, Context c, Recent recent){
         SharedPreferences prefs = getPreferences(c);
         boolean deleteLessRecent = prefs.getBoolean(c.getString(R.string.pref_delete_less_recent), Boolean.parseBoolean(c.getString(R.string.pref_delete_less_recent_default)));
+        boolean onlyDeleteFinishedChapters = prefs.getBoolean(c.getString(R.string.pref_only_delete_finished), Boolean.parseBoolean(c.getString(R.string.pref_only_delete_finished_default)));
         if (deleteLessRecent) {
-            boolean onlyDeleteFiles = prefs.getBoolean(c.getString(R.string.pref_only_delete_folder_images), Boolean.parseBoolean(c.getString(R.string.pref_only_delete_folder_images_default)));
-            File f = new File(recent.getPath());
-            if (!f.isDirectory() || !onlyDeleteFiles) {
-                f.delete();
-            }else{
-                for (File file : f.listFiles()){
-                    if (file.isDirectory()){
-                        if (file.list().length == 0){
+
+            boolean canDelete = true;
+
+            if (onlyDeleteFinishedChapters){
+                int pageNumber = recent.getPageNumber() + 1; //So it's "length", not index
+                int totalPages;
+                String path = recent.getPath();
+                File f = new File(path);
+                if (ArchiveParser.isSupportedArchive(path)){
+                    try {
+                        SteppableArchive a = ArchiveParser.parseArchive(f, c);
+                        totalPages = a.getTotalPages();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        totalPages = 0;
+                    }
+                }else if (ImageParser.isSupportedImage(f)){
+                    totalPages = f.getParentFile().list(ImageParser.fnf).length;
+                }else if (f.isDirectory()){
+                    totalPages = f.getParentFile().list(ImageParser.fnf).length;
+                }else{
+                    totalPages = 0;
+                }
+                canDelete = totalPages <= pageNumber;
+            }
+
+            if (canDelete) {
+                boolean onlyDeleteFiles = prefs.getBoolean(c.getString(R.string.pref_only_delete_folder_images), Boolean.parseBoolean(c.getString(R.string.pref_only_delete_folder_images_default)));
+                File f = new File(recent.getPath());
+                if (!f.isDirectory() || !onlyDeleteFiles) {
+                    f.delete();
+                } else {
+                    for (File file : f.listFiles()) {
+                        if (file.isDirectory()) {
+                            if (file.list().length == 0) {
+                                file.delete();
+                            }
+                        } else if (ImageParser.isSupportedImage(file)) {
                             file.delete();
                         }
-                    }else if (ImageParser.isSupportedImage(file)){
-                        file.delete();
                     }
-                }
-                if (f.list().length == 0){
-                    f.delete();
+                    if (f.list().length == 0) {
+                        f.delete();
+                    }
                 }
             }
         }
