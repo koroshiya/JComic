@@ -16,7 +16,7 @@ import android.view.ViewGroup;
 
 import com.japanzai.koroshiya.R;
 import com.japanzai.koroshiya.activities.Nav;
-import com.japanzai.koroshiya.filechooser.FileListAdapter;
+import com.japanzai.koroshiya.adapters.FileListAdapter;
 import com.japanzai.koroshiya.io_utils.ImageParser;
 
 public class RecentFragment extends Fragment {

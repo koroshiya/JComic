@@ -17,7 +17,7 @@ import android.view.ViewGroup;
 
 import com.japanzai.koroshiya.R;
 import com.japanzai.koroshiya.activities.Nav;
-import com.japanzai.koroshiya.filechooser.FileItemAdapter;
+import com.japanzai.koroshiya.adapters.FileItemAdapter;
 
 public class FileChooserFragment extends Fragment {
 
