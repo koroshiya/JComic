@@ -13,6 +13,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.Toast;
 
 import com.japanzai.koroshiya.R;
 import com.japanzai.koroshiya.fragments.CreditsFragment;
@@ -20,7 +21,11 @@ import com.japanzai.koroshiya.fragments.FileChooserFragment;
 import com.japanzai.koroshiya.fragments.ReadFragment;
 import com.japanzai.koroshiya.fragments.RecentFragment;
 import com.japanzai.koroshiya.fragments.SettingFragment;
+import com.japanzai.koroshiya.io_utils.ArchiveParser;
+import com.japanzai.koroshiya.io_utils.ImageParser;
 import com.japanzai.koroshiya.settings.SettingsManager;
+
+import java.io.File;
 
 public class Nav extends AppCompatActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks, ActivityCompat.OnRequestPermissionsResultCallback {
@@ -49,6 +54,12 @@ public class Nav extends AppCompatActivity
                 (DrawerLayout) findViewById(R.id.drawer_layout)
         );
 
+        Intent i = getIntent();
+        if (i.getData() != null){
+            Uri uri = i.getData();
+            handleFileInput(uri);
+        }
+
     }
 
     @Override
@@ -60,6 +71,7 @@ public class Nav extends AppCompatActivity
             FragmentManager fm = getFragmentManager();
             Fragment frag;
             View v = findViewById(R.id.navigation_drawer);
+            if (v == null) return;
 
             switch (position){
                 case SETTINGS:
@@ -95,7 +107,7 @@ public class Nav extends AppCompatActivity
                     }
                     break;
                 case READ:
-                    frag = new FileChooserFragment();
+                    frag = new FileChooserFragment(); //TODO: check for read storage permission
                     break;
                 case CREDITS:
                     frag = new CreditsFragment();
@@ -154,6 +166,36 @@ public class Nav extends AppCompatActivity
     public void creditsBtnReportError(View v){
         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/koroshiya/JComic/issues"));
         startActivity(browserIntent);
+    }
+
+    private void handleFileInput(Uri uri){
+        String filePath = uri.toString();
+        File f = new File(filePath);
+        boolean supported = ImageParser.isSupportedFile(f);
+
+        if (!supported){
+            Toast.makeText(this, R.string.str_unsupported_file_type_or_unreadable_directory, Toast.LENGTH_SHORT).show();
+        }else{
+            if (ImageParser.isSupportedImage(f)){
+                File[] files = f.getParentFile().listFiles(ImageParser.fnf);
+                String name = f.getName();
+                int i = -1;
+                for (int i1 = 0; i1 < files.length; i1++) {
+                    File file = files[i1];
+                    if (file.getName().equals(name)){
+                        i = i1;
+                        break;
+                    }
+                }
+                fileChooserCallback(filePath, i);
+            }else if (ArchiveParser.isSupportedArchive(filePath)){
+                fileChooserCallback(filePath, 0);
+            }else if (ImageParser.isSupportedDirectory(f)){
+                fileChooserCallback(filePath, 0);
+            }else{
+                Toast.makeText(this, R.string.str_unsupported_file_type_or_unreadable_directory, Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
 }

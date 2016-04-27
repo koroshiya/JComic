@@ -77,5 +77,6 @@
     <string name="pref_only_delete_finished_default">true</string>
     <string name="pref_only_delete_finished_title">Only delete finished chapters</string>
     <string name="pref_only_delete_finished_summary">Only delete items purged from the recent list if you were already on the last page of that chapter</string>
+    <string name="str_unsupported_file_type_or_unreadable_directory">Unsupported file type or unreadable directory</string>
 
 </resources>
