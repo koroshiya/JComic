@@ -198,11 +198,7 @@ public class NavigationDrawerFragment extends Fragment {
     @Override
     public void onAttach(Activity context) {
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            super.onAttach(context.getBaseContext());
-        }else{
-            super.onAttach(context);
-        }
+        super.onAttach(context);
         if (context instanceof NavigationDrawerCallbacks){
             mCallbacks = (NavigationDrawerCallbacks) context;
         }
