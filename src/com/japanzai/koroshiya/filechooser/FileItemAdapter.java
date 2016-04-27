@@ -1,8 +1,6 @@
 package com.japanzai.koroshiya.filechooser;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.Handler;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
@@ -51,10 +49,6 @@ public class FileItemAdapter extends FileAdapter {
         return new ViewHolder(v);
     }
 
-
-
-
-
     public class ViewHolder extends FileAdapter.ViewHolder{
 
         private final CardView cardview;
@@ -74,8 +68,6 @@ public class FileItemAdapter extends FileAdapter {
         public void setDataOnView(FileAdapter.ViewHolder holder, int position) {
 
             final Recent p = getItem(position);
-            Drawable d;
-            final Context c = textview.getContext();
             String t = p.getPath();
 
             cardview.setOnClickListener(new View.OnClickListener() {
@@ -96,12 +88,7 @@ public class FileItemAdapter extends FileAdapter {
                 res = R.drawable.file_zip;
             }
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                d = c.getDrawable(res);
-            }else{
-                d = c.getResources().getDrawable(res);
-            }
-            imageview.setImageDrawable(d);
+            imageview.setImageResource(res);
 
             int last = t.lastIndexOf('/');
             t = t.substring(last + 1);
