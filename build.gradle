@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 23
-    buildToolsVersion "23.0.2"
+    buildToolsVersion "23.0.3"
 
     sourceSets {
         main {
@@ -29,7 +29,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.japanzai.koroshiya.test"
+        applicationId "com.koroshiya.jcomic"
         minSdkVersion 14
         targetSdkVersion 23
         versionCode 58
