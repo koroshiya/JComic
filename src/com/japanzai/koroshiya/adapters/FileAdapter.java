@@ -1,4 +1,4 @@
-package com.japanzai.koroshiya.filechooser;
+package com.japanzai.koroshiya.adapters;
 
 import android.Manifest;
 import android.content.Context;
