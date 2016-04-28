@@ -1,14 +1,5 @@
 package com.japanzai.koroshiya.io_utils;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.FilenameFilter;
-import java.io.InputStream;
-import java.util.Locale;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -18,6 +9,16 @@ import android.view.Display;
 import android.view.WindowManager;
 
 import com.japanzai.koroshiya.controls.JBitmapDrawable;
+
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FilenameFilter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Locale;
 
 /**
  * Purpose: Used to check if a file is a supported image and/or parse it
@@ -101,27 +102,12 @@ public class ImageParser {
 	 * */
     public static JBitmapDrawable parseImageFromDisk(InputStream is, int inWidth, int inHeight, int screenWidth, boolean resize){
 
-        BitmapFactory.Options opts = getRealOpts();
-
         try{
 
             Log.e("ImageParser", "InWidth: "+inWidth);
             Log.e("ImageParser", "InHeight: "+inHeight);
             Log.e("ImageParser", "Width: "+screenWidth);
-
-            if (resize){
-                if (screenWidth == 0) screenWidth = inWidth;
-                float scale = (float)inWidth / (float)screenWidth;
-                if (scale > 1){
-                    if (scale < 4){
-                        scale = 4;
-                    }else{
-                        scale = (float)Math.ceil(Math.log(scale)/Math.log(4));
-                    }
-                    opts.inSampleSize = (int)scale;
-                    Log.e("ImageParser", "Subsample: "+opts.inSampleSize);
-                }
-            }
+            BitmapFactory.Options opts = getResizeOpts(is, screenWidth, resize);
             JBitmapDrawable b = new JBitmapDrawable(BitmapFactory.decodeStream(new BufferedInputStream(is), null, opts));
             if (inWidth == 0 || inHeight == 0){
                 inWidth = b.getWidth();
@@ -179,24 +165,9 @@ public class ImageParser {
     }
 
 	public static JBitmapDrawable parseImageFromDisk(File image, int screenWidth, boolean resize){
-		
-		BitmapFactory.Options opts = getRealOpts();
 
 		try{
-			if (resize){
-				Point p = getImageSize(new FileInputStream(image));
-                if (screenWidth == 0) screenWidth = p.x;
-                float scale = (float)p.x / (float)screenWidth;
-                if (scale > 1){
-                    if (scale < 4){
-                        scale = 4;
-                    }else{
-                        scale = (float)Math.ceil(Math.log(scale)/Math.log(4));
-                    }
-                    opts.inSampleSize = (int)scale;
-                    Log.e("ImageParser", "Subsample: "+opts.inSampleSize);
-                }
-			}
+            BitmapFactory.Options opts = getResizeOpts(image, screenWidth, resize);
             return new JBitmapDrawable(BitmapFactory.decodeFile(image.getAbsolutePath(), opts));
 		}catch(OutOfMemoryError e){
 			System.out.println("ImageParser OOM exception");
@@ -252,6 +223,50 @@ public class ImageParser {
         }
         opts.inTempStorage = new byte[32768]; //32kb
         return opts;
+    }
+
+    private static BitmapFactory.Options getResizeOpts(File image, int screenWidth, boolean resize){
+
+        BitmapFactory.Options opts;
+
+        if (resize){
+            try {
+                FileInputStream fis = new FileInputStream(image);
+                opts = getResizeOpts(fis, screenWidth, resize);
+                fis.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+                opts = getRealOpts();
+            }
+        }else{
+            opts = getRealOpts();
+        }
+
+        return opts;
+
+    }
+
+    private static BitmapFactory.Options getResizeOpts(InputStream fis, int screenWidth, boolean resize){
+
+        BitmapFactory.Options opts = getRealOpts();
+
+        if (resize){
+            Point p = getImageSize(fis);
+            if (screenWidth == 0) screenWidth = p.x;
+            float scale = (float) p.x / (float) screenWidth;
+            if (scale > 1) {
+                if (scale < 4) {
+                    scale = 4;
+                } else {
+                    scale = (float) Math.ceil(Math.log(scale) / Math.log(4));
+                }
+                opts.inSampleSize = (int) scale;
+                Log.e("ImageParser", "Subsample: " + opts.inSampleSize);
+            }
+        }
+
+        return opts;
+
     }
 
     public static Point getScreenSize(Context c){
