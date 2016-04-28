@@ -17,6 +17,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -183,8 +184,9 @@ public class Nav extends AppCompatActivity
     }
 
     private void handleFileInput(Uri uri){ //TODO: check for storage permissions
-        String filePath = uri.toString();
-        File f = new File(filePath);
+        File f = new File(uri.getPath());
+        String filePath = f.getAbsolutePath();
+        Log.i("Nav", "Trying to load: "+filePath);
         boolean supported = ImageParser.isSupportedFile(f);
 
         if (!supported){
