@@ -74,7 +74,11 @@ public class ReadFragment extends Fragment {
         String fileName = b.getString(ARG_FILE, "");
         Log.i("FLA", "Create: "+fileName);
         int page = b.getInt(ARG_PAGE, -1);
+        reset(fileName, page);
 
+    }
+
+    public void reset(String fileName, int page){
         try {
 
             if (fileName.length() == 0 || page < 0)
@@ -135,7 +139,7 @@ public class ReadFragment extends Fragment {
         return jsv.getImageDrawable();
     }
 
-    public void next(){
+    public void next(View v){
 
         Context c;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -144,7 +148,7 @@ public class ReadFragment extends Fragment {
             c = getActivity();
         }
 
-        cache.next(c);
+        cache.next(v, c);
     }
 
     public void previous(){

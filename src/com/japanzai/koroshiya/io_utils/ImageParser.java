@@ -37,6 +37,14 @@ public class ImageParser {
             return f.isFile() && f.canRead() && f.length() > 0 && isSupportedImage(f);
         }
     };
+    public static final FilenameFilter fullFnf = new FilenameFilter() {
+        @Override
+        public boolean accept(File dir, String filename) {
+            File f = new File(dir, filename);
+            return isSupportedDirectory(f) ||
+                    (f.isFile() && f.canRead() && f.length() > 0 && (isSupportedImage(f) || ArchiveParser.isSupportedArchive(filename)));
+        }
+    };
 	   
     /**
      * Purpose: Checks to see if image is of a supported format
@@ -96,24 +104,23 @@ public class ImageParser {
 	 * Purpose: Parse a displayable object from a stream.
 	 * @param is InputStream to parse a file from.
 	 * 			Could be InputFileStream, ByteArrayInputStream, etc.
-	 * @param inWidth Width at which to extract the image
-	 * @param inHeight Height at which to extract the image
+	 * @param imageSize Height/Width of image
 	 * @return Return a JBitmapDrawable object to be displayed.
 	 * */
-    public static JBitmapDrawable parseImageFromDisk(InputStream is, int inWidth, int inHeight, int screenWidth, boolean resize){
+    public static JBitmapDrawable parseImageFromDisk(InputStream is, Point imageSize, int screenWidth, boolean resize){
 
         try{
 
-            Log.e("ImageParser", "InWidth: "+inWidth);
-            Log.e("ImageParser", "InHeight: "+inHeight);
+            Log.e("ImageParser", "InWidth: "+imageSize.x);
+            Log.e("ImageParser", "InHeight: "+imageSize.y);
             Log.e("ImageParser", "Width: "+screenWidth);
-            BitmapFactory.Options opts = getResizeOpts(is, screenWidth, resize);
+            BitmapFactory.Options opts = getResizeOpts(imageSize, screenWidth, resize);
             JBitmapDrawable b = new JBitmapDrawable(BitmapFactory.decodeStream(new BufferedInputStream(is), null, opts));
-            if (inWidth == 0 || inHeight == 0){
-                inWidth = b.getWidth();
-                inHeight = b.getHeight();
+            if (imageSize.x == 0 || imageSize.y == 0){
+                imageSize.x = b.getWidth();
+                imageSize.y = b.getHeight();
             }
-            b.setDimensions(inWidth, inHeight);
+            b.setDimensions(imageSize.x, imageSize.y);
 
             return b;
 
@@ -122,6 +129,7 @@ public class ImageParser {
             System.gc();
             return null;
         }catch (Exception ex){
+            ex.printStackTrace();
             return null;
         }
 
@@ -164,21 +172,6 @@ public class ImageParser {
 
     }
 
-	public static JBitmapDrawable parseImageFromDisk(File image, int screenWidth, boolean resize){
-
-		try{
-            BitmapFactory.Options opts = getResizeOpts(image, screenWidth, resize);
-            return new JBitmapDrawable(BitmapFactory.decodeFile(image.getAbsolutePath(), opts));
-		}catch(OutOfMemoryError e){
-			System.out.println("ImageParser OOM exception");
-			System.gc();
-			return null;
-		}catch (Exception ex){
-			return null;
-		}
-		
-	}
-
     /**
      * Parses an image from the InputStream passed in, but doesn't extract it.
      * Instead, its height and width are returned.
@@ -191,19 +184,6 @@ public class ImageParser {
         BitmapFactory.Options opts = getSampleOpts();
         BufferedInputStream bis = new BufferedInputStream(is);
         BitmapFactory.decodeStream(bis, null, opts);
-        return new Point(opts.outWidth, opts.outHeight);
-
-    }
-
-    /**
-     * Parses an image from the InputStream passed in, but doesn't extract it.
-     * Instead, its height and width are returned.
-     * @return Point containing the width and height of the image parsed
-     * */
-    public static Point getImageSize(File f){
-
-        BitmapFactory.Options opts = getSampleOpts();
-        BitmapFactory.decodeFile(f.getAbsolutePath(), opts);
         return new Point(opts.outWidth, opts.outHeight);
 
     }
@@ -232,7 +212,8 @@ public class ImageParser {
         if (resize){
             try {
                 FileInputStream fis = new FileInputStream(image);
-                opts = getResizeOpts(fis, screenWidth, resize);
+                Point p = getImageSize(fis);
+                opts = getResizeOpts(p, screenWidth, resize);
                 fis.close();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -246,12 +227,11 @@ public class ImageParser {
 
     }
 
-    private static BitmapFactory.Options getResizeOpts(InputStream fis, int screenWidth, boolean resize){
+    private static BitmapFactory.Options getResizeOpts(Point p, int screenWidth, boolean resize){
 
         BitmapFactory.Options opts = getRealOpts();
 
         if (resize){
-            Point p = getImageSize(fis);
             if (screenWidth == 0) screenWidth = p.x;
             float scale = (float) p.x / (float) screenWidth;
             if (scale > 1) {

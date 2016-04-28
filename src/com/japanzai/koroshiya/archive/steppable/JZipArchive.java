@@ -1,6 +1,7 @@
 package com.japanzai.koroshiya.archive.steppable;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.ref.SoftReference;
@@ -104,28 +105,28 @@ public class JZipArchive extends SteppableArchive{
 
         try {
 
-            if (this.progressive) {
-                if (f.exists() || ArchiveParser.writeStreamToDisk(this.tempDir, zip.getInputStream(zipEntry), name)) {
-                    temp = ImageParser.parseImageFromDisk(f, width, resize);
-                }
-            } else {
-                InputStream is = null;
-                try {
-                    is = zip.getInputStream(zipEntry);
-                    Point p = ImageParser.getImageSize(is);
-
-                    is = zip.getInputStream(zipEntry);
-                    temp = ImageParser.parseImageFromDisk(is, p.x, p.y, width, resize);
-
-                    is.close();
-                    is = null;
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } finally {
-                    if (is != null) {
-                        is.close();
+            InputStream is = null;
+            try {
+                if (this.progressive) {
+                    if (f.exists() || ArchiveParser.writeStreamToDisk(this.tempDir, zip.getInputStream(zipEntry), name)) {
+                        is = new FileInputStream(f);
+                        Point p = ImageParser.getImageSize(is);
+                        is = new FileInputStream(f);
+                        temp = ImageParser.parseImageFromDisk(is, p, width, resize);
                     }
+                } else {
+                        is = zip.getInputStream(zipEntry);
+                        Point p = ImageParser.getImageSize(is);
+                        is = zip.getInputStream(zipEntry);
+                        temp = ImageParser.parseImageFromDisk(is, p, width, resize);
+                }
+                is.close();
+                is = null;
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                if (is != null) {
+                    is.close();
                 }
             }
 

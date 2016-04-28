@@ -2,8 +2,11 @@ package com.japanzai.koroshiya;
 
 import android.content.Context;
 import android.os.Build;
+import android.support.design.widget.Snackbar;
 import android.util.Log;
+import android.view.View;
 
+import com.japanzai.koroshiya.activities.Nav;
 import com.japanzai.koroshiya.archive.steppable.SteppableArchive;
 import com.japanzai.koroshiya.async.DecodeArchiveStreamAsync;
 import com.japanzai.koroshiya.async.DecodeAsync;
@@ -43,6 +46,8 @@ public class ReadCache {
         }else{
             c = fragment.getActivity();
         }
+
+        //TODO: check if in recent list? Or just leave that in ReadFragment
 
         if (ArchiveParser.isSupportedArchive(f.getAbsolutePath())){
             archive = ArchiveParser.parseArchive(f, c);
@@ -146,7 +151,7 @@ public class ReadCache {
     }
 
 
-    public void next(Context c){
+    public void next(View v, Context c){
 
         if (currentPage < getTotalPages() - 1) {
             Log.i("ReadCache", "Trying to go to next page");
@@ -163,6 +168,24 @@ public class ReadCache {
 
         }else{
             Log.i("ReadCache", "Trying to go to next chapter");
+            File parent = f.getParentFile();
+            if (parent.canRead()){
+                File[] files = parent.listFiles(ImageParser.fullFnf);
+                int foundAtIndex = -1, totalIndex = 0;
+                for (File file : files) {
+                    if (file.getAbsolutePath().equals(f.getAbsolutePath())){
+                        foundAtIndex = totalIndex;
+                    }
+                    totalIndex++;
+                }
+                if (foundAtIndex == -1 || foundAtIndex == totalIndex - 1){
+                    //TODO: display message, end of chapter
+                    Snackbar.make(v, "End of chapter - No more chapters found", Snackbar.LENGTH_SHORT).show();
+                }else{
+                    File file = files[foundAtIndex + 1];
+                    fragment.reset(file.getAbsolutePath(), 0);
+                }
+            }
             //TODO: try to go to next chapter
         }
 

@@ -29,21 +29,17 @@ public class DecodeBitmapFileAsync extends DecodeAsync {
         File[] files = f.listFiles(ImageParser.fnf);
 
         if (files.length > page || page < 0) {
-
             f = files[page];
-
             try {
-
-                InputStream is = new FileInputStream(f);
-                Point size = ImageParser.getImageSize(is);
+                boolean resize = SettingsManager.getDynamicResizing(c);
+                FileInputStream is = new FileInputStream(f);
+                Point pt = ImageParser.getImageSize(is);
 
                 is = new FileInputStream(f);
-                temp = ImageParser.parseImageFromDisk(is, size.x, size.y, p.x, SettingsManager.getDynamicResizing(c));
-
+                temp = ImageParser.parseImageFromDisk(is, pt, p.x, resize);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
-
         }
 
         return new SoftReference<>(temp);

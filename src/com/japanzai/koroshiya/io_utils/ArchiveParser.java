@@ -19,10 +19,11 @@ import com.japanzai.koroshiya.archive.steppable.SteppableArchive;
 public abstract class ArchiveParser {
 
 	public static final byte[] BUFFER = new byte[8192];
+    private static final String[] supportedArchives = {".zip", ".cbz", ".rar", ".cbr"};
 
     public static boolean isSupportedArchive(String s){
         File f = new File(s);
-        return f.isFile() && (isSupportedZipArchive(s) || isSupportedRarArchive(s)) && f.length() > 0;
+        return f.isFile() && isSupported(s, supportedArchives) && f.length() > 0;
     }
 	public static boolean isSupportedZipArchive(String s){
     	return isSupported(s, new String[]{".zip", ".cbz"});

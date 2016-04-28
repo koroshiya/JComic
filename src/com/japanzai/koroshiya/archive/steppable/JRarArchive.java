@@ -70,27 +70,29 @@ public class JRarArchive extends SteppableArchive{
 
         try {
 
-            if (this.progressive) {
-                if (!f.exists()) {
-                    extractFileToDisk(i, tempDir);
-                }
+            try {
 
-                p = ImageParser.getImageSize(f);
-                is = new FileInputStream(f);
-                temp = ImageParser.parseImageFromDisk(is, p.x, p.y, width, resize);
-            } else {
+                if (this.progressive) {
+                    if (!f.exists()) {
+                        extractFileToDisk(i, tempDir);
+                    }
 
-                try {
+                    is = new FileInputStream(f);
+                    p = ImageParser.getImageSize(is);
+
+                    is = new FileInputStream(f);
+                    temp = ImageParser.parseImageFromDisk(is, p, width, resize);
+                } else {
 
                     is = rar.getInputStream(entry);
                     p = ImageParser.getImageSize(is);
 
                     is = rar.getInputStream(entry);
-                    temp = ImageParser.parseImageFromDisk(is, p.x, p.y, width, resize);
-
-                } catch (IOException e) {
-                    e.printStackTrace();
+                    temp = ImageParser.parseImageFromDisk(is, p, width, resize);
                 }
+
+            } catch (IOException e) {
+                e.printStackTrace();
             }
 
             if (is != null) {
