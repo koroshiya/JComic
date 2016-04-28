@@ -92,13 +92,13 @@ public class GestureListener extends GestureDetector.SimpleOnGestureListener imp
                 if (startx > x2) {
                     readFragment.next(jsv);
                 } else if (pageStartx == jsv.getLeft()) { //In case getLeft and getRight are the same (ie. no horizontal scroll)
-                    readFragment.previous();
+                    readFragment.previous(jsv);
                 }
             }
         } else if (pageStartx == jsv.getLeft()) {
             Log.i("GL", "Left");
             if ((Math.abs(startx - x2) > Math.abs(starty - y2)) && startx < x2) {
-                readFragment.previous();
+                readFragment.previous(jsv);
             }
         } else {
             Log.i("GL", "Scroll");

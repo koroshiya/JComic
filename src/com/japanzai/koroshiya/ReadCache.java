@@ -6,7 +6,6 @@ import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.View;
 
-import com.japanzai.koroshiya.activities.Nav;
 import com.japanzai.koroshiya.archive.steppable.SteppableArchive;
 import com.japanzai.koroshiya.async.DecodeArchiveStreamAsync;
 import com.japanzai.koroshiya.async.DecodeAsync;
@@ -173,13 +172,13 @@ public class ReadCache {
                 File[] files = parent.listFiles(ImageParser.fullFnf);
                 int foundAtIndex = -1, totalIndex = 0;
                 for (File file : files) {
+                    Log.i("ReadCache", "Comparing "+file.getAbsolutePath()+" to "+f.getAbsolutePath());
                     if (file.getAbsolutePath().equals(f.getAbsolutePath())){
                         foundAtIndex = totalIndex;
                     }
                     totalIndex++;
                 }
                 if (foundAtIndex == -1 || foundAtIndex == totalIndex - 1){
-                    //TODO: display message, end of chapter
                     Snackbar.make(v, "End of chapter - No more chapters found", Snackbar.LENGTH_SHORT).show();
                 }else{
                     File file = files[foundAtIndex + 1];
@@ -191,7 +190,7 @@ public class ReadCache {
 
     }
 
-    public void previous(Context c){
+    public void previous(View v, Context c){
 
         if (currentPage > 0) {
             Log.i("ReadCache", "Trying to go to previous page");
@@ -210,6 +209,24 @@ public class ReadCache {
 
         }else{
             Log.i("ReadCache", "Trying to go to previous chapter");
+            File parent = f.getParentFile();
+            if (parent.canRead()){
+                File[] files = parent.listFiles(ImageParser.fullFnf);
+                int foundAtIndex = 0, totalIndex = 0;
+                for (File file : files) {
+                    Log.i("ReadCache", "Comparing "+file.getAbsolutePath()+" to "+f.getAbsolutePath());
+                    if (file.getAbsolutePath().equals(f.getAbsolutePath())){
+                        foundAtIndex = totalIndex;
+                    }
+                    totalIndex++;
+                }
+                if (foundAtIndex == 0){
+                    Snackbar.make(v, "Start of chapter - No previous chapters found", Snackbar.LENGTH_SHORT).show();
+                }else{
+                    File file = files[foundAtIndex - 1];
+                    fragment.reset(file.getAbsolutePath(), 0);
+                }
+            }
             //TODO: try to go to previous chapter
         }
 

@@ -151,7 +151,7 @@ public class ReadFragment extends Fragment {
         cache.next(v, c);
     }
 
-    public void previous(){
+    public void previous(View v){
 
         Context c;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -160,7 +160,7 @@ public class ReadFragment extends Fragment {
             c = getActivity();
         }
 
-        cache.previous(c);
+        cache.previous(v, c);
     }
 
 }

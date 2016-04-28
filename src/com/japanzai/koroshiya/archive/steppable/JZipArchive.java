@@ -95,7 +95,7 @@ public class JZipArchive extends SteppableArchive{
         JImage j = this.cache.get(i);
         ZipEntry zipEntry = (ZipEntry)j.getImage();
         String name = j.getName();
-		File f = new File(tempDir + "/" + name);
+		File f = new File(tempDir, name);
 		
 		if (!this.tempDir.exists()){
 			this.tempDir.mkdirs();
@@ -120,8 +120,6 @@ public class JZipArchive extends SteppableArchive{
                         is = zip.getInputStream(zipEntry);
                         temp = ImageParser.parseImageFromDisk(is, p, width, resize);
                 }
-                is.close();
-                is = null;
             } catch (IOException e) {
                 e.printStackTrace();
             } finally {
