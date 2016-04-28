@@ -64,13 +64,9 @@
             android:title="@string/setting_orientation_title"
             android:summary="@string/setting_orientation"
             />-->
-        <ListPreference
+        <CheckBoxPreference
             android:defaultValue="@string/performance_setting_resize_default"
-            android:entries="@array/performance_setting_resize_mode"
-            android:entryValues="@array/general_setting_resize_values"
             android:key="@string/pref_dynamic_resizing"
-            android:negativeButtonText="@null"
-            android:positiveButtonText="@null"
             android:title="@string/setting_resize_title"
             android:summary="@string/setting_resize"
             />

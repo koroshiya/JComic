@@ -54,7 +54,7 @@ public class JRarArchive extends SteppableArchive{
     }
 
     @Override
-	public SoftReference<JBitmapDrawable> parseImage(int i, int width, int resize) {
+	public SoftReference<JBitmapDrawable> parseImage(int i, int width, boolean resize) {
 
 		FileHeader entry = (FileHeader)getEntry(i);
 		String name = entry.getFileNameString();

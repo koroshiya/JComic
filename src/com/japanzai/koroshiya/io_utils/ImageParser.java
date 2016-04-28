@@ -99,7 +99,7 @@ public class ImageParser {
 	 * @param inHeight Height at which to extract the image
 	 * @return Return a JBitmapDrawable object to be displayed.
 	 * */
-    public static JBitmapDrawable parseImageFromDisk(InputStream is, int inWidth, int inHeight, int width, int resize){
+    public static JBitmapDrawable parseImageFromDisk(InputStream is, int inWidth, int inHeight, int screenWidth, boolean resize){
 
         BitmapFactory.Options opts = getRealOpts();
 
@@ -107,13 +107,19 @@ public class ImageParser {
 
             Log.e("ImageParser", "InWidth: "+inWidth);
             Log.e("ImageParser", "InHeight: "+inHeight);
-            Log.e("ImageParser", "Width: "+width);
+            Log.e("ImageParser", "Width: "+screenWidth);
 
-            if (resize != 0){
-                if (width == 0) width = inWidth;
-                width = inWidth / width;
-                if (!(resize == 2 && width < 1)){
-                    opts.inSampleSize = width;
+            if (resize){
+                if (screenWidth == 0) screenWidth = inWidth;
+                float scale = (float)inWidth / (float)screenWidth;
+                if (scale > 1){
+                    if (scale < 4){
+                        scale = 4;
+                    }else{
+                        scale = (float)Math.ceil(Math.log(scale)/Math.log(4));
+                    }
+                    opts.inSampleSize = (int)scale;
+                    Log.e("ImageParser", "Subsample: "+opts.inSampleSize);
                 }
             }
             JBitmapDrawable b = new JBitmapDrawable(BitmapFactory.decodeStream(new BufferedInputStream(is), null, opts));
@@ -172,18 +178,24 @@ public class ImageParser {
 
     }
 
-	public static JBitmapDrawable parseImageFromDisk(File image, int width, int resize){
+	public static JBitmapDrawable parseImageFromDisk(File image, int screenWidth, boolean resize){
 		
 		BitmapFactory.Options opts = getRealOpts();
 
 		try{
-			if (resize != 0){
+			if (resize){
 				Point p = getImageSize(new FileInputStream(image));
-                if (width == 0) width = p.x;
-				width = p.x / width;
-				if (!(resize == 2 && width < 1)){
-					opts.inSampleSize = width;
-				}
+                if (screenWidth == 0) screenWidth = p.x;
+                float scale = (float)p.x / (float)screenWidth;
+                if (scale > 1){
+                    if (scale < 4){
+                        scale = 4;
+                    }else{
+                        scale = (float)Math.ceil(Math.log(scale)/Math.log(4));
+                    }
+                    opts.inSampleSize = (int)scale;
+                    Log.e("ImageParser", "Subsample: "+opts.inSampleSize);
+                }
 			}
             return new JBitmapDrawable(BitmapFactory.decodeFile(image.getAbsolutePath(), opts));
 		}catch(OutOfMemoryError e){
@@ -208,7 +220,7 @@ public class ImageParser {
         BitmapFactory.Options opts = getSampleOpts();
         BufferedInputStream bis = new BufferedInputStream(is);
         BitmapFactory.decodeStream(bis, null, opts);
-        return new Point(opts.outWidth * 4, opts.outHeight * 4);
+        return new Point(opts.outWidth, opts.outHeight);
 
     }
 
@@ -221,21 +233,13 @@ public class ImageParser {
 
         BitmapFactory.Options opts = getSampleOpts();
         BitmapFactory.decodeFile(f.getAbsolutePath(), opts);
-        return new Point(opts.outWidth * 4, opts.outHeight * 4);
+        return new Point(opts.outWidth, opts.outHeight);
 
     }
 
     private static BitmapFactory.Options getSampleOpts(){
         BitmapFactory.Options opts = new BitmapFactory.Options();
         opts.inJustDecodeBounds = true;
-        opts.inPreferQualityOverSpeed = false;
-        opts.inDither = false;
-        opts.inSampleSize = 4;
-        if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.LOLLIPOP){
-            opts.inPurgeable = true;
-            opts.inInputShareable = true;
-        }
-        opts.inTempStorage = new byte[32768]; //32kb
         return opts;
     }
 

@@ -7,7 +7,7 @@
     <string name="setting_zoom">How and how far to zoom images by default while reading</string>
     <string name="setting_backlight">Keep screen on while reading</string>
     <string name="setting_fullscreen">Read comics in fullscreen mode</string>
-    <string name="setting_resize">Dynamic resizing</string>
+    <string name="setting_resize">Scale down images that are larger than your device</string>
     <string name="version">Version: %s</string>
     <string name="setting_cache_on_startup">Cache on startup</string>
     <string name="setting_keep_zoom_page_change">Keep zoom on page change</string>
@@ -29,11 +29,6 @@
         <item>Scale to Height</item>
         <item>Scale to Width</item>
     </string-array>
-    <string-array name="performance_setting_resize_mode">
-        <item>Disabled</item>
-        <item>Enabled</item>
-        <item>Only if image is too big</item>
-    </string-array>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -46,9 +41,9 @@
     <string name="setting_fullscreen_title">Fullscreen</string>
     <string name="setting_keep_zoom_page_change_title">Keep Zoom</string>
     <string name="setting_zoom_title">Default Zoom</string>
-    <string name="setting_resize_title">Resize Mode</string>
+    <string name="setting_resize_title">Resize large images</string>
     <string name="setting_cache_on_startup_title">Cache On Start</string>
-    <string name="performance_setting_resize_default">2</string>
+    <string name="performance_setting_resize_default">true</string>
     <string name="general_setting_default_zoom_default">0</string>
     <string name="general_setting_max_recent_default">10</string>
     <string name="source">Source: https://github.com/koroshiya/JComic</string>

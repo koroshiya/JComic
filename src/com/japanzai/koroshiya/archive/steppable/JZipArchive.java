@@ -89,7 +89,7 @@ public class JZipArchive extends SteppableArchive{
     }
 
 	@Override
-	public SoftReference<JBitmapDrawable> parseImage(int i, int width, int resizeMode){
+	public SoftReference<JBitmapDrawable> parseImage(int i, int width, boolean resize){
 
         JImage j = this.cache.get(i);
         ZipEntry zipEntry = (ZipEntry)j.getImage();
@@ -106,7 +106,7 @@ public class JZipArchive extends SteppableArchive{
 
             if (this.progressive) {
                 if (f.exists() || ArchiveParser.writeStreamToDisk(this.tempDir, zip.getInputStream(zipEntry), name)) {
-                    temp = ImageParser.parseImageFromDisk(f, width, resizeMode);
+                    temp = ImageParser.parseImageFromDisk(f, width, resize);
                 }
             } else {
                 InputStream is = null;
@@ -115,7 +115,7 @@ public class JZipArchive extends SteppableArchive{
                     Point p = ImageParser.getImageSize(is);
 
                     is = zip.getInputStream(zipEntry);
-                    temp = ImageParser.parseImageFromDisk(is, p.x, p.y, width, resizeMode);
+                    temp = ImageParser.parseImageFromDisk(is, p.x, p.y, width, resize);
 
                     is.close();
                     is = null;

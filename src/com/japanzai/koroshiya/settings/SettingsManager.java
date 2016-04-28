@@ -154,8 +154,10 @@ public abstract class SettingsManager {
         return Integer.parseInt(getPreferences(c).getString(c.getString(R.string.pref_zoom_index), Integer.toString(ZOOM_AUTO)));
     }
 
-    public static int getDynamicResizing(Context c){
-        return Integer.parseInt(getPreferences(c).getString(c.getString(R.string.pref_dynamic_resizing), c.getString(R.string.performance_setting_resize_default)));
+    public static boolean getDynamicResizing(Context c){
+        String key = c.getString(R.string.pref_dynamic_resizing);
+        boolean defaultVal = Boolean.parseBoolean(c.getString(R.string.performance_setting_resize_default));
+        return getPreferences(c).getBoolean(key, defaultVal);
     }
 
     public static int getMaxRecent(Context c){
