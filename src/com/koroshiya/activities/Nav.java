@@ -65,6 +65,8 @@ public class Nav extends AppCompatActivity
         if (i.getData() != null){
             Uri uri = i.getData();
             handleFileInput(uri);
+        }else{
+            onNavigationDrawerItemSelected(READ);
         }
 
     }
