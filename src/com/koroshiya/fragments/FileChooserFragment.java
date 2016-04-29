@@ -36,6 +36,9 @@ public class FileChooserFragment extends Fragment {
                 String filePath = b.getString(ReadFragment.ARG_FILE);
                 int page = b.getInt(ReadFragment.ARG_PAGE);
                 ((Nav) getActivity()).fileChooserCallback(filePath, page);
+            }else if (b.get("selected") != null){
+                String filePath = b.getString("selected");
+                ((Nav) getActivity()).fileChooserMultiCallback(filePath);
             }
 
             return false;
