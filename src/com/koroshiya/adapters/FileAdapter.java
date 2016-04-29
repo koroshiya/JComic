@@ -13,6 +13,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 
+import com.koroshiya.fragments.ReadFragment;
 import com.koroshiya.io_utils.ArchiveParser;
 import com.koroshiya.io_utils.ImageParser;
 import com.koroshiya.io_utils.StorageHelper;
@@ -103,8 +104,8 @@ public abstract class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewH
                     }
                 }
             }
-            b.putString("file", f.getAbsolutePath());
-            b.putInt("page", i);
+            b.putString(ReadFragment.ARG_FILE, f.getAbsolutePath());
+            b.putInt(ReadFragment.ARG_PAGE, i);
             m.setData(b);
             permCallback.handleMessage(m);
         }
