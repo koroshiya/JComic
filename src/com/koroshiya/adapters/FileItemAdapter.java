@@ -1,6 +1,7 @@
 package com.koroshiya.adapters;
 
 import android.content.Context;
+import android.os.Environment;
 import android.os.Handler;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
@@ -24,6 +25,10 @@ public class FileItemAdapter extends FileAdapter {
     }
 
     public void setData(Context c){
+
+        if (!curdir.exists() || !curdir.isDirectory() || !curdir.canRead()){
+            this.curdir = Environment.getExternalStorageDirectory();
+        }
 
         items.clear();
 
