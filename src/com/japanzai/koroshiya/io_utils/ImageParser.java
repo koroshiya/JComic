@@ -13,10 +13,8 @@ import com.japanzai.koroshiya.controls.JBitmapDrawable;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.Locale;
 
@@ -152,12 +150,14 @@ public class ImageParser {
 
             int targetWidth = (int)Math.floor(imgWidth * scale);
             int targetHeight = (int)Math.floor(imgHeight * scale);
+            int scaledNum = (int)Math.floor(1.0 / scale);
+            opts.inSampleSize = (int)Math.pow(2, Math.ceil(Math.log(scaledNum)/Math.log(2)));
             Log.i("IP", "Target width: "+targetWidth);
             Log.i("IP", "Target height: "+targetHeight);
-            Log.i("IP", "Scale: "+scale);
-            //opts.inSampleSize = (int)Math.floor(1.0 / scale);
-            opts.outHeight = targetHeight;
-            opts.outWidth = targetWidth;
+            Log.w("IP", "Scale: "+scale);
+            Log.i("IP", "Samplesize: "+opts.inSampleSize);
+            //opts.outHeight = targetHeight;
+            //opts.outWidth = targetWidth;
 
             Bitmap b = BitmapFactory.decodeStream(new BufferedInputStream(is), null, opts);
             FileOutputStream fos = new FileOutputStream(targetFile);
@@ -205,28 +205,6 @@ public class ImageParser {
         return opts;
     }
 
-    private static BitmapFactory.Options getResizeOpts(File image, int screenWidth, boolean resize){
-
-        BitmapFactory.Options opts;
-
-        if (resize){
-            try {
-                FileInputStream fis = new FileInputStream(image);
-                Point p = getImageSize(fis);
-                opts = getResizeOpts(p, screenWidth, resize);
-                fis.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-                opts = getRealOpts();
-            }
-        }else{
-            opts = getRealOpts();
-        }
-
-        return opts;
-
-    }
-
     private static BitmapFactory.Options getResizeOpts(Point p, int screenWidth, boolean resize){
 
         BitmapFactory.Options opts = getRealOpts();
@@ -235,12 +213,7 @@ public class ImageParser {
             if (screenWidth == 0) screenWidth = p.x;
             float scale = (float) p.x / (float) screenWidth;
             if (scale > 1) {
-                if (scale < 4) {
-                    scale = 4;
-                } else {
-                    scale = (float) Math.ceil(Math.log(scale) / Math.log(4));
-                }
-                opts.inSampleSize = (int) scale;
+                opts.inSampleSize = (int)Math.pow(2, Math.ceil(Math.log(scale)/Math.log(2)));
                 Log.e("ImageParser", "Subsample: " + opts.inSampleSize);
             }
         }
