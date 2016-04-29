@@ -31,7 +31,6 @@ public class ReadFragment extends Fragment {
 
     private JScrollView jsv;
     private ReadCache cache;
-    private Recent recent;
 
     public ReadFragment() {
         // Required empty public constructor

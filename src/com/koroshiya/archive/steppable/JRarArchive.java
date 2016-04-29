@@ -12,7 +12,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.ref.SoftReference;
-import java.util.ArrayList;
 import java.util.List;
 
 import de.innosystec.unrar.Archive;
@@ -125,20 +124,7 @@ public class JRarArchive extends SteppableArchive{
 
 	}
 
-	@Override
-	public ArrayList<String> peekAtContents() {
-		
-		ArrayList<String> names = new ArrayList<>();
-		
-		for (int i = 0; i < getTotalPages(); i++){
-			names.add(((FileHeader)getEntry(i)).getFileNameString());
-		}
-		
-		return names;
-		
-	}
-
-	public Archive getArchive() {
+    public Archive getArchive() {
 		return this.rar;
 	}
 

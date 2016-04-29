@@ -48,7 +48,7 @@ public abstract class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewH
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.setDataOnView(holder, position);
+        holder.setDataOnView(position);
     }
 
     public abstract void setData(Context c);
@@ -125,22 +125,13 @@ public abstract class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewH
         }
     }
 
-    /*protected void scrollToTop(){
-        Message message = new Message();
-        Bundle bundle = new Bundle();
-        bundle.putString(ARG_SCROLL, "top");
-        message.setData(bundle);
-        permCallback.handleMessage(message);
-    }*/
-
-
     public abstract class ViewHolder extends RecyclerView.ViewHolder{
 
         public ViewHolder(View v) {
             super(v);
         }
 
-        public abstract void setDataOnView(ViewHolder holder, final int position);
+        public abstract void setDataOnView(final int position);
     }
 
 }

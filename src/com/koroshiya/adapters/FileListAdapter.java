@@ -57,7 +57,7 @@ public class FileListAdapter extends FileAdapter {
         }
 
         @Override
-        public void setDataOnView(FileAdapter.ViewHolder holder, int position) {
+        public void setDataOnView(int position) {
 
             final Recent p = getItem(position);
             String t = p.getPath();

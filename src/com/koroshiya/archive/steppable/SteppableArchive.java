@@ -67,11 +67,6 @@ public abstract class SteppableArchive {
         Collections.sort(this.cache);
     }
 
-    /**
-     * @return Returns the names of files within.
-     * */
-    public abstract ArrayList<String> peekAtContents();
-
     public abstract SoftReference<JBitmapDrawable> parseImage(int i, int width, boolean resize);
 
     public abstract void close();

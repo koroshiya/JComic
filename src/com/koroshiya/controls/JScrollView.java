@@ -73,8 +73,4 @@ public class JScrollView extends TwoDScrollView {
 
 	}
 
-	public void clearCache(){
-        getJImageView().setImageDrawable(null);
-	}
-	
 }

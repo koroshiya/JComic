@@ -25,10 +25,8 @@ public abstract class ArchiveParser {
         File f = new File(s);
         return f.isFile() && isSupported(s, supportedArchives) && f.length() > 0;
     }
-	public static boolean isSupportedZipArchive(String s){
-    	return isSupported(s, new String[]{".zip", ".cbz"});
-    }
-	public static boolean isSupportedRarArchive(String s){
+
+    public static boolean isSupportedRarArchive(String s){
     	return isSupported(s, new String[]{".rar", ".cbr"});
     }
 	

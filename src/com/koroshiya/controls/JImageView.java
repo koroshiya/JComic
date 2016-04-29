@@ -21,8 +21,8 @@ public class JImageView extends AppCompatImageView {
 	private int currentHeight;
 	private double currentZoom = -1;
 	private double inheritedZoom = 1d;
-    private boolean manualZoom;
-    private Point p;
+    private final boolean manualZoom;
+    private final Point p;
 	
 	public JImageView(Context context) {
 		this(context, null);
@@ -171,14 +171,6 @@ public class JImageView extends AppCompatImageView {
 		}
 		
 	}
-	
-	/**
-	 * @return Double representing the current zoom ratio
-	 * */
-	public double getZoom(){
-		return this.currentZoom;
-	}
-	
-	
-	
+
+
 }

@@ -12,8 +12,8 @@ import com.koroshiya.activities.NavigationDrawerFragment;
 
 public class MenuDrawerAdapter extends RecyclerView.Adapter<MenuDrawerAdapter.ViewHolder> {
 
-    private MainMenuItem[] items;
-    private NavigationDrawerFragment.NavigationDrawerCallbacks callbacks;
+    private final MainMenuItem[] items;
+    private final NavigationDrawerFragment.NavigationDrawerCallbacks callbacks;
 
     public MenuDrawerAdapter(NavigationDrawerFragment.NavigationDrawerCallbacks mCallbacks, MainMenuItem[] items) {
         this.items = items;

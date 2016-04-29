@@ -5,7 +5,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.ref.SoftReference;
-import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.zip.CRC32;
 import java.util.zip.ZipEntry;
@@ -13,7 +12,6 @@ import java.util.zip.ZipFile;
 
 import android.content.Context;
 import android.graphics.Point;
-import android.util.Log;
 
 import com.koroshiya.controls.JBitmapDrawable;
 import com.koroshiya.io_utils.ArchiveParser;
@@ -135,22 +133,6 @@ public class JZipArchive extends SteppableArchive{
     	return new SoftReference<>(temp);
     	
     }
-
-	@Override
-	public ArrayList<String> peekAtContents() {
-
-		ArrayList<String> names = new ArrayList<>();
-        Log.d("JZipArchive", "Scanning zip archive");
-		
-		for (int i = 0; i < getTotalPages(); i++){
-			String name = this.cache.get(i).getName();
-			names.add(name);
-            Log.d("JZipArchive", "Zip entry " + i + ": " + name);
-        }
-		
-		return names;
-		
-	}
 
     @Override
     public void close(){}
