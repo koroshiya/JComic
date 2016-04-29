@@ -5,4 +5,4 @@
           android:choiceMode="singleChoice"
           android:divider="@android:color/transparent"
           android:dividerHeight="0dp"
-          tools:context="com.japanzai.koroshiya.activities.NavigationDrawerFragment"/>
+          tools:context="com.koroshiya.activities.NavigationDrawerFragment"/>

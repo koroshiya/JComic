@@ -13,7 +13,7 @@
         android:layout_height="150dp"
         android:gravity="center_horizontal"
         />
-    <com.japanzai.koroshiya.controls.EllipsizingTextView
+    <com.koroshiya.controls.EllipsizingTextView
         android:id="@+id/row_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

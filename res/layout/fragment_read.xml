@@ -1,13 +1,13 @@
-<com.japanzai.koroshiya.controls.JScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:id="@+id/read_fragment_jscrollview"
-    tools:context="com.japanzai.koroshiya.fragments.ReadFragment"
+<com.koroshiya.controls.JScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+                                    xmlns:tools="http://schemas.android.com/tools"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:id="@+id/read_fragment_jscrollview"
+                                    tools:context="com.koroshiya.fragments.ReadFragment"
     >
-    <com.japanzai.koroshiya.controls.JImageView
+    <com.koroshiya.controls.JImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/read_fragment_jimageview"
         />
-</com.japanzai.koroshiya.controls.JScrollView>
+</com.koroshiya.controls.JScrollView>

@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.japanzai.koroshiya.activities.Nav"
+    tools:context="com.koroshiya.activities.Nav"
     android:layout_gravity="start"
     >
 
@@ -20,7 +20,7 @@
          the container. -->
     <fragment
         android:id="@+id/navigation_drawer"
-        android:name="com.japanzai.koroshiya.activities.NavigationDrawerFragment"
+        android:name="com.koroshiya.activities.NavigationDrawerFragment"
         android:layout_width="@dimen/navigation_drawer_width"
         android:layout_height="match_parent"
         android:layout_gravity="start"

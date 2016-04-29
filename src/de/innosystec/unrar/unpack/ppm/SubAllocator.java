@@ -17,7 +17,7 @@
  */
 package de.innosystec.unrar.unpack.ppm;
 
-import com.japanzai.koroshiya.BuildConfig;
+import com.koroshiya.BuildConfig;
 
 import java.util.Arrays;
 

@@ -9,5 +9,5 @@
     android:rowHeight="170dp"
     android:layout_marginTop="20dp"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".activities.Nav"
+    tools:context="com.koroshiya.activities.Nav"
     />

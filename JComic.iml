@@ -32,6 +32,7 @@
       <sourceFolder url="file://$MODULE_DIR$/build-types/debug/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/build-types/debug/jni" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/build-types/debug/rs" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/build-types/debug/shaders" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/testDebug/res" type="java-test-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/testDebug/resources" type="java-test-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/testDebug/assets" type="java-test-resource" />
@@ -39,6 +40,7 @@
       <sourceFolder url="file://$MODULE_DIR$/src/testDebug/java" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/testDebug/jni" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/testDebug/rs" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/testDebug/shaders" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/res" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/lib" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src" type="java-resource" />
@@ -46,6 +48,7 @@
       <sourceFolder url="file://$MODULE_DIR$/lib" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/jni" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/main/shaders" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/androidTest/res" type="java-test-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/androidTest/resources" type="java-test-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/androidTest/assets" type="java-test-resource" />
@@ -53,6 +56,7 @@
       <sourceFolder url="file://$MODULE_DIR$/src/androidTest/java" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/androidTest/jni" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/androidTest/rs" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/androidTest/shaders" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/test/res" type="java-test-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/test/resources" type="java-test-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/test/assets" type="java-test-resource" />
@@ -60,6 +64,7 @@
       <sourceFolder url="file://$MODULE_DIR$/src/test/java" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/test/jni" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/test/rs" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/test/shaders" isTestSource="true" />
     </content>
     <content url="file:///tmp/Android/JComic">
       <sourceFolder url="file:///tmp/Android/JComic/generated/source/r/debug" isTestSource="false" generated="true" />
@@ -90,6 +95,7 @@
       <excludeFolder url="file:///tmp/Android/JComic/intermediates/incremental" />
       <excludeFolder url="file:///tmp/Android/JComic/intermediates/incremental-classes" />
       <excludeFolder url="file:///tmp/Android/JComic/intermediates/incremental-runtime-classes" />
+      <excludeFolder url="file:///tmp/Android/JComic/intermediates/incremental-safeguard" />
       <excludeFolder url="file:///tmp/Android/JComic/intermediates/incremental-verifier" />
       <excludeFolder url="file:///tmp/Android/JComic/intermediates/instant-run-support" />
       <excludeFolder url="file:///tmp/Android/JComic/intermediates/jniLibs" />
@@ -98,6 +104,7 @@
       <excludeFolder url="file:///tmp/Android/JComic/intermediates/res" />
       <excludeFolder url="file:///tmp/Android/JComic/intermediates/restart-dex" />
       <excludeFolder url="file:///tmp/Android/JComic/intermediates/rs" />
+      <excludeFolder url="file:///tmp/Android/JComic/intermediates/shaders" />
       <excludeFolder url="file:///tmp/Android/JComic/intermediates/symbols" />
       <excludeFolder url="file:///tmp/Android/JComic/intermediates/transforms" />
       <excludeFolder url="file:///tmp/Android/JComic/outputs" />
