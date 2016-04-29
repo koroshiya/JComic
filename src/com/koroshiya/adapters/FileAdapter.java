@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.support.design.widget.Snackbar;
@@ -30,7 +29,7 @@ public abstract class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewH
 
     public FileAdapter(Context c, Handler.Callback permCallback, boolean isRecent) {
         this.permCallback = permCallback;
-        this.curdir = Environment.getExternalStorageDirectory(); // TODO: Query preferences
+        this.curdir = SettingsManager.getLastDirectory(c);
         this.isRecent = isRecent;
         setData(c);
     }

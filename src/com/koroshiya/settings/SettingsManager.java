@@ -3,6 +3,7 @@ package com.koroshiya.settings;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.view.Window;
 import android.view.WindowManager;
@@ -35,7 +36,7 @@ public abstract class SettingsManager {
 
 	private static final ArrayList<Recent> recentAndFavorite = new ArrayList<>();
 
-    private static final String RECENT_FILE = "recent.json";
+    private static final String CACHE_FILE = "cache.json";
 
     public static final int ZOOM_AUTO = 0;
     public static final int ZOOM_FULL = 1;
@@ -45,32 +46,90 @@ public abstract class SettingsManager {
     private SettingsManager(){
     }
 
-    private static void fillRecent(Context c){
-        File rFile = new File(c.getCacheDir(), RECENT_FILE);
+    private static JSONObject getJSONCache(Context c){
 
-        if (rFile.exists() && rFile.length() > 0){
+        File cFile = new File(c.getCacheDir(), CACHE_FILE);
+
+        if (cFile.exists() && cFile.length() > 0){
             try {
-                FileInputStream fis = new FileInputStream(rFile);
+                FileInputStream fis = new FileInputStream(cFile);
                 FileChannel fc = fis.getChannel();
                 MappedByteBuffer bb = fc.map(FileChannel.MapMode.READ_ONLY, 0, fc.size());
 
                 String jsonStr = Charset.defaultCharset().decode(bb).toString();
 
                 //Log.i("SM", new String(jsonStr));
-                JSONArray jsonArray = new JSONArray(jsonStr);
-                int len = jsonArray.length();
-                for (int i = 0; i < len; i++){
-                    try {
-                        JSONObject jsonObject = jsonArray.getJSONObject(i);
-                        Recent r = new Recent(jsonObject);
-                        recentAndFavorite.add(r);
-                    }catch(JSONException jse){
-                        jse.printStackTrace();
-                    }
-                }
+                return new JSONObject(jsonStr);
             } catch (JSONException | IOException e) {
                 e.printStackTrace();
-                rFile.delete();
+                cFile.delete();
+            }
+
+        }
+
+        return new JSONObject();
+
+    }
+
+    private static void writeJSONCache(Context c, JSONObject jsonObject){
+
+        File rFile = new File(c.getCacheDir(), CACHE_FILE);
+
+        try {
+            FileOutputStream fos = new FileOutputStream(rFile);
+            fos.write(jsonObject.toString().getBytes());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public static File getLastDirectory(Context c){
+
+        JSONObject jsonObject = getJSONCache(c);
+        File tmp = null;
+
+        if (jsonObject != null){
+            try {
+                String key = c.getString(R.string.st_last_directory);
+                if (jsonObject.has(key)){
+                    tmp = new File(jsonObject.getString(key));
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        }
+
+        if (tmp == null || !tmp.exists() || !tmp.isDirectory() || !tmp.canRead()){
+            tmp = Environment.getExternalStorageDirectory();
+        }
+
+        return tmp;
+
+    }
+
+    private static void fillRecent(Context c){
+
+        JSONObject root = getJSONCache(c);
+
+        if (root != null){
+            try {
+                if (root.has("recent")) {
+                    JSONArray jsonArray = root.getJSONArray("recent");
+                    int len = jsonArray.length();
+                    for (int i = 0; i < len; i++) {
+                        try {
+                            JSONObject jsonObject = jsonArray.getJSONObject(i);
+                            Recent r = new Recent(jsonObject);
+                            recentAndFavorite.add(r);
+                        } catch (JSONException jse) {
+                            jse.printStackTrace();
+                        }
+                    }
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
 
             ArrayList<Long> uuids = new ArrayList<>();
@@ -292,11 +351,14 @@ public abstract class SettingsManager {
 	
 	private static void saveRecentList(Context c){
 
-        File rFile = new File(c.getCacheDir(), RECENT_FILE);
+        JSONObject jsonObject = getJSONCache(c);
 
-        if (recentAndFavorite.size() == 0){
-            if (rFile.exists()) rFile.delete();
-        }else {
+        String key = c.getString(R.string.st_recent);
+        if (jsonObject.has(key)){
+            jsonObject.remove(key);
+        }
+
+        if (recentAndFavorite.size() > 0){
 
             JSONArray arr = new JSONArray();
             for (Recent r : recentAndFavorite) {
@@ -307,14 +369,34 @@ public abstract class SettingsManager {
                 }
             }
             try {
-                FileOutputStream fos = new FileOutputStream(rFile);
-                fos.write(arr.toString().getBytes());
-            } catch (IOException e) {
+                jsonObject.put(key, arr);
+            } catch (JSONException e) {
                 e.printStackTrace();
             }
 
         }
 
+        writeJSONCache(c, jsonObject);
+
 	}
+
+    public static void setLastDirectory(Context c, File lastDir){
+
+        JSONObject obj = getJSONCache(c);
+        String key = c.getString(R.string.st_last_directory);
+
+        if (obj.has(key)) {
+            obj.remove(key);
+        }
+
+        try {
+            obj.put(key, lastDir.getAbsolutePath());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        writeJSONCache(c, obj);
+
+    }
 	
 }
