@@ -1,7 +1,7 @@
 package com.japanzai.koroshiya.adapters;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Handler;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.LinearLayoutCompat;
@@ -59,17 +59,18 @@ public class FileListAdapter extends FileAdapter {
         @Override
         public void setDataOnView(FileAdapter.ViewHolder holder, int position) {
 
-            Drawable d;
             final Recent p = getItem(position);
             String t = p.getPath();
             final File f = new File(t);
 
             File thumb = new File(cacheDir, p.getUuid() + ".webp");
-
             Log.i("FLA", "Creating image from: "+thumb.getAbsolutePath());
-            d = Drawable.createFromPath(thumb.getAbsolutePath());
-            if (d == null){
-                Log.i("FLA", "Failed to decode...");
+
+            if (thumb.exists() && thumb.isFile() && thumb.canRead()){
+                Log.i("FLA", "Image size: "+thumb.length());
+                Uri uri = Uri.fromFile(thumb);
+                iv.setImageURI(uri);
+            }else{
                 int resId;
                 if (f.isDirectory()){
                     resId = R.drawable.file_directory;
@@ -79,10 +80,7 @@ public class FileListAdapter extends FileAdapter {
                     resId = R.drawable.file_zip;
                 }
                 iv.setImageResource(resId);
-            }else{
-                iv.setImageDrawable(d);
             }
-
 
             if (f.isFile()){
                 t = f.getName();
