@@ -113,8 +113,13 @@ public abstract class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewH
 
     public void up(View v){
         if (this.curdir.getParentFile() != null){
-            this.curdir = this.curdir.getParentFile();
-            this.setData(v.getContext());
+            File dir = this.curdir.getParentFile();
+            if (dir.canRead()) {
+                this.curdir = dir;
+                this.setData(v.getContext());
+            }else{
+                Snackbar.make(v, "Cannot read parent directory - Permission denied", Snackbar.LENGTH_SHORT).show();
+            }
         }else{
             Snackbar.make(v, "Cannot go up any further", Snackbar.LENGTH_SHORT).show();
         }
