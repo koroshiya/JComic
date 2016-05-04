@@ -47,6 +47,12 @@
             android:title="@string/setting_hideactionbar_title"
             android:summary="@string/setting_hideactionbar"
             />
+        <CheckBoxPreference
+            android:defaultValue="@string/st_immersive_default"
+            android:key="@string/st_immersive"
+            android:title="@string/setting_immersive_title"
+            android:summary="@string/setting_immersive"
+            />
     </PreferenceCategory>
     <PreferenceCategory android:title="Performance Settings">
         <CheckBoxPreference

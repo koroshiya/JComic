@@ -79,5 +79,9 @@
     <string name="st_hideactionbar_default">true</string>
     <string name="setting_hideactionbar_title">Action Bar</string>
     <string name="setting_hideactionbar">Hide action bar when reading</string>
+    <string name="st_immersive_default">true</string>
+    <string name="st_immersive">immersive</string>
+    <string name="setting_immersive_title">Immersive Mode</string>
+    <string name="setting_immersive">Hides navigation menu, pull-down menu, and action bar. Overrides other fullscreen settings. Not fully supported on Android 4</string>
 
 </resources>
