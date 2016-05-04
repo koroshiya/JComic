@@ -36,6 +36,9 @@ android {
         versionName "3.0.00"
         vectorDrawables.useSupportLibrary = true
     }
+    dataBinding {
+        enabled = true
+    }
 }
 
 dependencies {

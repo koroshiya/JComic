@@ -9,15 +9,13 @@ import android.os.Message;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.koroshiya.R;
 import com.koroshiya.activities.Nav;
 import com.koroshiya.adapters.FileItemAdapter;
+import com.koroshiya.adapters.FilePathAdapter;
 
 public class FileChooserFragment extends Fragment {
 
@@ -39,16 +37,14 @@ public class FileChooserFragment extends Fragment {
             }else if (b.get("selected") != null){
                 String filePath = b.getString("selected");
                 ((Nav) getActivity()).fileChooserMultiCallback(filePath);
+            }else if (b.get(FilePathAdapter.ARG_FILE_PATH_CHUNK) != null){
+                String filePath = b.getString(FilePathAdapter.ARG_FILE_PATH_CHUNK);
+                goToPath(filePath);
             }
 
             return false;
         }
     };
-
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -66,33 +62,27 @@ public class FileChooserFragment extends Fragment {
         RecyclerView rgv = (RecyclerView) rootView.findViewById(R.id.file_chooser_recycler_view);
         rgv.setLayoutManager(new LinearLayoutManager(c));
         FileItemAdapter fia = new FileItemAdapter(c, callback);
-        rgv.setAdapter(fia);
+        rgv.setAdapter(fia); //
+
+        RecyclerView bread = (RecyclerView) rootView.findViewById(R.id.file_chooser_breadcrumbs);
+        bread.setLayoutManager(new LinearLayoutManager(c, LinearLayoutManager.HORIZONTAL, false));
+        FilePathAdapter fpa = new FilePathAdapter(fia.getCurdir(), callback);
+        bread.setAdapter(fpa);
 
         return rootView;
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.file_chooser_menu, menu);
-        super.onCreateOptionsMenu(menu, inflater);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_up:
-                goUp();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
-    private void goUp(){
+    private void goToPath(String path){
         View view = getActivity().findViewById(R.id.file_chooser_recycler_view);
         RecyclerView lvc = (RecyclerView) view;
         FileItemAdapter fia = (FileItemAdapter) lvc.getAdapter();
-        fia.up(view);
+        if (fia.setPath(view, path)){
+            RecyclerView bread = (RecyclerView) getActivity().findViewById(R.id.file_chooser_breadcrumbs);
+            FilePathAdapter fpa = (FilePathAdapter) bread.getAdapter();
+            fpa.setNewPath(path);
+            fpa.notifyDataSetChanged();
+            bread.invalidateItemDecorations();
+        }
     }
 
 }

@@ -27,6 +27,9 @@ import java.util.Arrays;
 public abstract class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
 
     protected final boolean isRecent;
+    final ArrayList<Recent> items = new ArrayList<>();
+    protected File curdir;
+    protected final Handler.Callback permCallback;
 
     public FileAdapter(Context c, Handler.Callback permCallback, boolean isRecent) {
         this.permCallback = permCallback;
@@ -35,9 +38,9 @@ public abstract class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewH
         setData(c);
     }
 
-    final ArrayList<Recent> items = new ArrayList<>();
-    protected File curdir;
-    protected final Handler.Callback permCallback;
+    public File getCurdir(){
+        return this.curdir;
+    }
 
     //public static final String ARG_SCROLL = "scroll";
 
@@ -80,8 +83,13 @@ public abstract class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewH
                 Snackbar.make(v, "Cannot read file/folder - Permission denied", Snackbar.LENGTH_SHORT).show();
             }
         }else if (f.isDirectory() && !forceReturn){
-            this.curdir = f;
-            this.setData(c);
+
+            Message m = new Message();
+            Bundle b = new Bundle();
+            b.putString(FilePathAdapter.ARG_FILE_PATH_CHUNK, f.getAbsolutePath());
+            m.setData(b);
+            permCallback.handleMessage(m);
+
         }else{
             int i = 0;
             Message m = new Message();
@@ -111,18 +119,21 @@ public abstract class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewH
         }
     }
 
-    public void up(View v){
-        if (this.curdir.getParentFile() != null){
-            File dir = this.curdir.getParentFile();
+    public boolean setPath(View v, String path){
+        if (path != null){
+            File dir = new File(path);
             if (dir.canRead()) {
                 this.curdir = dir;
                 this.setData(v.getContext());
+                //TODO: scroll to top
+                return true;
             }else{
-                Snackbar.make(v, "Cannot read parent directory - Permission denied", Snackbar.LENGTH_SHORT).show();
+                Snackbar.make(v, "Cannot read directory - Permission denied", Snackbar.LENGTH_SHORT).show();
             }
         }else{
-            Snackbar.make(v, "Cannot go up any further", Snackbar.LENGTH_SHORT).show();
+            Snackbar.make(v, "Invalid path", Snackbar.LENGTH_SHORT).show();
         }
+        return false;
     }
 
     public abstract class ViewHolder extends RecyclerView.ViewHolder{
