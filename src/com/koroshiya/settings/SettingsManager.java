@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Environment;
 import android.preference.PreferenceManager;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -195,6 +197,28 @@ public abstract class SettingsManager {
             }
         }catch (Exception | Error e){
             e.printStackTrace();
+        }
+    }
+
+    public static void setActionBarHidden(Activity act, boolean hideBar){
+
+        hideBar = hideBar && getPreferences(act).getBoolean(act.getString(R.string.st_hideactionbar), Boolean.parseBoolean(act.getString(R.string.st_hideactionbar_default)));
+
+        ActionBar actionBar = ((AppCompatActivity)act).getSupportActionBar();
+        if (actionBar != null) {
+
+            boolean showing = actionBar.isShowing();
+
+            if (hideBar) {
+                if (showing) {
+                    actionBar.hide(); //TODO: add setting for this - What to do to go back? Leave back key?
+                    //TODO: add setting to hide navigation menu, if soft menu, whereupon tap brings it up
+                    //TODO: timeout for soft menu?
+                }
+            }else if (!showing){
+                actionBar.show();
+            }
+
         }
     }
 

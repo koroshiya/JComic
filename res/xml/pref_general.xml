@@ -2,12 +2,6 @@
 
     <PreferenceCategory android:title="General Settings">
         <CheckBoxPreference
-            android:defaultValue="@string/st_fullscreen_default"
-            android:key="@string/st_fullscreen"
-            android:title="@string/setting_fullscreen_title"
-            android:summary="@string/setting_fullscreen"
-            />
-        <CheckBoxPreference
             android:defaultValue="@string/st_backlight_default"
             android:key="@string/st_backlight"
             android:title="@string/setting_backlight_title"
@@ -38,6 +32,20 @@
             android:positiveButtonText="@null"
             android:title="@string/setting_zoom_title"
             android:summary="@string/setting_zoom"
+            />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="Fullscreen Settings">
+        <CheckBoxPreference
+            android:defaultValue="@string/st_fullscreen_default"
+            android:key="@string/st_fullscreen"
+            android:title="@string/setting_fullscreen_title"
+            android:summary="@string/setting_fullscreen"
+            />
+        <CheckBoxPreference
+            android:defaultValue="@string/st_hideactionbar_default"
+            android:key="@string/st_hideactionbar"
+            android:title="@string/setting_hideactionbar_title"
+            android:summary="@string/setting_hideactionbar"
             />
     </PreferenceCategory>
     <PreferenceCategory android:title="Performance Settings">

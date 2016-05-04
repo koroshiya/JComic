@@ -5,6 +5,8 @@ import android.app.Fragment;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -114,6 +116,7 @@ public class ReadFragment extends Fragment {
         Activity act = getActivity();
         SettingsManager.setBacklightAlwaysOn(act, true);
         SettingsManager.setFullScreen(act, true);
+        SettingsManager.setActionBarHidden(act, true);
     }
 
     @Override
@@ -121,12 +124,12 @@ public class ReadFragment extends Fragment {
         Activity act = getActivity();
         SettingsManager.setBacklightAlwaysOn(act, false);
         SettingsManager.setFullScreen(act, false);
+        SettingsManager.setActionBarHidden(act, false);
+
         if (cache != null) {
             cache.close();
         }
         super.onDetach();
-
-        //TODO: save current page and such
     }
 
     public void setImage(JBitmapDrawable drawable){
