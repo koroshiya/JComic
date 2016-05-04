@@ -52,8 +52,6 @@ public class FilePathAdapter extends RecyclerView.Adapter<FilePathAdapter.ViewHo
 
         if (oldPath.startsWith(this.currentDir)){
             currentChunk = currentDir.split("/").length - 1;
-            if (currentChunk == -1) currentChunk = 0; //For /
-            Log.i("FPA", "Setting currentchunk to "+currentChunk);
         }else {
             splitVals = currentDir.split("/");
             currentChunk = splitVals.length - 1;
@@ -97,7 +95,7 @@ public class FilePathAdapter extends RecyclerView.Adapter<FilePathAdapter.ViewHo
             POJOStringField label = new POJOStringField(chunk);
             binding.setVariable(BR.label, label);
 
-            if (position == currentChunk){
+            if (position == currentChunk || (position == 0 && currentChunk == -1)){ //Check -1 for root
                 //Set color
                 int color = ContextCompat.getColor(v.getContext(), R.color.cardview_dark_background);
                 AppCompatTextView actv = (AppCompatTextView) v.getChildAt(0);
