@@ -34,7 +34,7 @@
             android:summary="@string/setting_zoom"
             />
     </PreferenceCategory>
-    <PreferenceCategory android:title="Fullscreen Settings">
+    <PreferenceCategory android:title="Fullscreen Mode">
         <CheckBoxPreference
             android:defaultValue="@string/st_fullscreen_default"
             android:key="@string/st_fullscreen"

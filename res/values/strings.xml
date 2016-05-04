@@ -6,7 +6,7 @@
     <string name="up_directory">Up</string>
     <string name="setting_zoom">How and how far to zoom images by default while reading</string>
     <string name="setting_backlight">Keep screen on while reading</string>
-    <string name="setting_fullscreen">Read comics in fullscreen mode</string>
+    <string name="setting_fullscreen">Hide the system pull-down menu when reading</string>
     <string name="setting_resize">Scale down images that are larger than your device</string>
     <string name="version">Version: %s</string>
     <string name="setting_cache_on_startup">Cache on startup</string>
@@ -38,7 +38,7 @@
     <!-- Example General settings -->
 
     <string name="setting_backlight_title">Keep Backlight On</string>
-    <string name="setting_fullscreen_title">Fullscreen</string>
+    <string name="setting_fullscreen_title">Pull-down Menu</string>
     <string name="setting_keep_zoom_page_change_title">Keep Zoom</string>
     <string name="setting_zoom_title">Default Zoom</string>
     <string name="setting_resize_title">Resize large images</string>
@@ -58,7 +58,7 @@
     <string name="pref_cache_rar_files_default">false</string>
     <string name="pref_cache_on_start_default">true</string>
     <string name="st_backlight_default">false</string>
-    <string name="st_fullscreen_default">false</string>
+    <string name="st_fullscreen_default">true</string>
     <string name="pref_keep_zoom_on_page_change_default">false</string>
     <string name="pref_delete_less_recent">deleteLessRecent</string>
     <string name="pref_delete_less_recent_default">false</string>
@@ -77,7 +77,7 @@
     <string name="st_recent">recent</string>
     <string name="st_hideactionbar">hideActionBar</string>
     <string name="st_hideactionbar_default">true</string>
-    <string name="setting_hideactionbar_title">Actionbar</string>
+    <string name="setting_hideactionbar_title">Action Bar</string>
     <string name="setting_hideactionbar">Hide action bar when reading</string>
 
 </resources>
