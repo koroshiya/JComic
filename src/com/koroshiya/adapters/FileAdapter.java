@@ -125,7 +125,6 @@ public abstract class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewH
             if (dir.canRead()) {
                 this.curdir = dir;
                 this.setData(v.getContext());
-                //TODO: scroll to top
                 return true;
             }else{
                 Snackbar.make(v, "Cannot read directory - Permission denied", Snackbar.LENGTH_SHORT).show();

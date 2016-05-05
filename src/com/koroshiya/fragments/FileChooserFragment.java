@@ -63,7 +63,7 @@ public class FileChooserFragment extends Fragment {
         RecyclerView rgv = (RecyclerView) rootView.findViewById(R.id.file_chooser_recycler_view);
         rgv.setLayoutManager(new LinearLayoutManager(c));
         FileItemAdapter fia = new FileItemAdapter(c, callback);
-        rgv.setAdapter(fia); //
+        rgv.setAdapter(fia);
 
         RecyclerView bread = (RecyclerView) rootView.findViewById(R.id.file_chooser_breadcrumbs);
         bread.setLayoutManager(new LinearLayoutManager(c, LinearLayoutManager.HORIZONTAL, false));
@@ -88,6 +88,7 @@ public class FileChooserFragment extends Fragment {
             if (goingBack){
                 fia.setPath(view, fpa.getCurrentDir());
             }
+            lvc.getLayoutManager().scrollToPosition(0);
             return success;
         }
         return true;
