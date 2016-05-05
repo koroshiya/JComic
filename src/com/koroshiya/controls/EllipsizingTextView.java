@@ -36,6 +36,7 @@ public class EllipsizingTextView extends AppCompatTextView {
         this(context, attrs, 0);
     }
 
+    @SuppressWarnings("ResourceType")
     public EllipsizingTextView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
 
