@@ -39,7 +39,8 @@ public class FileChooserFragment extends Fragment {
                 ((Nav) getActivity()).fileChooserMultiCallback(filePath);
             }else if (b.get(FilePathAdapter.ARG_FILE_PATH_CHUNK) != null){
                 String filePath = b.getString(FilePathAdapter.ARG_FILE_PATH_CHUNK);
-                goToPath(filePath);
+                boolean goingBack = b.getBoolean(FilePathAdapter.ARG_GOING_BACK, false);
+                goToPath(filePath, goingBack);
             }
 
             return false;
@@ -72,17 +73,24 @@ public class FileChooserFragment extends Fragment {
         return rootView;
     }
 
-    private void goToPath(String path){
+    public boolean goToPath(String path, boolean goingBack){
         View view = getActivity().findViewById(R.id.file_chooser_recycler_view);
         RecyclerView lvc = (RecyclerView) view;
         FileItemAdapter fia = (FileItemAdapter) lvc.getAdapter();
-        if (fia.setPath(view, path)){
+        if (goingBack || fia.setPath(view, path)){
             RecyclerView bread = (RecyclerView) getActivity().findViewById(R.id.file_chooser_breadcrumbs);
             FilePathAdapter fpa = (FilePathAdapter) bread.getAdapter();
-            fpa.setNewPath(path);
-            fpa.notifyDataSetChanged();
-            bread.invalidateItemDecorations();
+            boolean success = fpa.setNewPath(path, goingBack); //TODO: scroll to top
+            if (success) {
+                fpa.notifyDataSetChanged();
+                bread.invalidateItemDecorations();
+            }
+            if (goingBack){
+                fia.setPath(view, fpa.getCurrentDir());
+            }
+            return success;
         }
+        return true;
     }
 
 }

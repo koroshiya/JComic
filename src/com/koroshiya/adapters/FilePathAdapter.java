@@ -21,41 +21,74 @@ import com.koroshiya.R;
 import com.koroshiya.pojo.POJOStringField;
 
 import java.io.File;
+import java.util.ArrayList;
 
 public class FilePathAdapter extends RecyclerView.Adapter<FilePathAdapter.ViewHolder> {
 
     private String[] splitVals;
     private String currentDir;
     private int currentChunk;
+    private ArrayList<String> pathHistory = new ArrayList<>();
+    private ArrayList<Integer> chunkHistory = new ArrayList<>();
     private final Handler.Callback permCallback;
 
     public static final String ARG_FILE_PATH_CHUNK = "filepathchunk";
+    public static final String ARG_GOING_BACK = "history";
 
     public FilePathAdapter(File filepath, Handler.Callback permCallback) {
         this.currentDir = filepath.getAbsolutePath();
         this.splitVals = currentDir.split("/");
         this.currentChunk = splitVals.length - 1;
         this.permCallback = permCallback;
+        this.pathHistory.add(currentDir);
+        this.chunkHistory.add(currentChunk);
     }
 
-    public void setNewPath(String path){
-        currentDir = path;
+    public String getCurrentDir(){
+        return this.currentDir;
+    }
 
-        String oldPath = "";
-        for (int i = 0; i < splitVals.length; i++) {
-            oldPath += splitVals[i] + "/";
-        }
-        if (oldPath.length() > 1) oldPath = oldPath.substring(0, oldPath.length() - 1); //remove trailing slash
+    public boolean setNewPath(String path, boolean goingBack){
 
-        Log.i("FPA", "Comparing "+oldPath+" to "+currentDir);
+        if (goingBack){
+            if (pathHistory.size() > 1 && chunkHistory.size() > 1){
+                int len = pathHistory.size();
+                pathHistory.remove(len - 1);
+                currentDir = pathHistory.get(len - 2);
 
-
-        if (oldPath.startsWith(this.currentDir)){
-            currentChunk = currentDir.split("/").length - 1;
+                len = chunkHistory.size();
+                chunkHistory.remove(len - 1);
+                currentChunk = chunkHistory.get(len - 2);
+            }else{
+                return false;
+            }
         }else {
-            splitVals = currentDir.split("/");
-            currentChunk = splitVals.length - 1;
+            currentDir = path;
+
+            String oldPath = "";
+            for (int i = 0; i < splitVals.length; i++) {
+                oldPath += splitVals[i] + "/";
+            }
+            if (oldPath.length() > 1)
+                oldPath = oldPath.substring(0, oldPath.length() - 1); //remove trailing slash
+
+            Log.i("FPA", "Comparing " + oldPath + " to " + currentDir);
+
+
+            if (oldPath.startsWith(this.currentDir)) {
+                currentChunk = currentDir.split("/").length - 1;
+            } else {
+                splitVals = currentDir.split("/");
+                currentChunk = splitVals.length - 1;
+            }
+
+            chunkHistory.add(currentChunk);
+            pathHistory.add(currentDir);
+
         }
+
+        return true;
+
     }
 
     @Override
@@ -131,6 +164,7 @@ public class FilePathAdapter extends RecyclerView.Adapter<FilePathAdapter.ViewHo
                         Message m = new Message();
                         Bundle b = new Bundle();
                         b.putString(ARG_FILE_PATH_CHUNK, path);
+                        b.putBoolean(ARG_GOING_BACK, false);
                         m.setData(b);
                         permCallback.handleMessage(m);
 

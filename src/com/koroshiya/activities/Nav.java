@@ -171,6 +171,14 @@ public class Nav extends AppCompatActivity
             mNavigationDrawerFragment.closeDrawer();
         }else{
             FragmentManager fm = this.getFragmentManager();
+            Fragment frag = fm.findFragmentById(R.id.container);
+
+            if (frag instanceof FileChooserFragment){
+                FileChooserFragment fca = ((FileChooserFragment) frag);
+                if (fca.goToPath(null, true)){
+                    return;
+                }
+            }
             if (fm.getBackStackEntryCount() == 1) {
                 super.onBackPressed();
             } else {
