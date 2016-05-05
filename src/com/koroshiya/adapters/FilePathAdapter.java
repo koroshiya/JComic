@@ -37,7 +37,11 @@ public class FilePathAdapter extends RecyclerView.Adapter<FilePathAdapter.ViewHo
 
     public FilePathAdapter(File filepath, Handler.Callback permCallback) {
         this.currentDir = filepath.getAbsolutePath();
-        this.splitVals = currentDir.split("/");
+        if (this.currentDir.length() > 1) {
+            this.splitVals = currentDir.split("/");
+        }else{
+            this.splitVals = new String[]{"/"};
+        }
         this.currentChunk = splitVals.length - 1;
         this.permCallback = permCallback;
         this.pathHistory.add(currentDir);
