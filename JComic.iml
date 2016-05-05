@@ -104,6 +104,7 @@
       <excludeFolder url="file:///tmp/Android/JComic/intermediates/instant-run-support" />
       <excludeFolder url="file:///tmp/Android/JComic/intermediates/jniLibs" />
       <excludeFolder url="file:///tmp/Android/JComic/intermediates/manifests" />
+      <excludeFolder url="file:///tmp/Android/JComic/intermediates/pre-dexed" />
       <excludeFolder url="file:///tmp/Android/JComic/intermediates/reload-dex" />
       <excludeFolder url="file:///tmp/Android/JComic/intermediates/res" />
       <excludeFolder url="file:///tmp/Android/JComic/intermediates/restart-dex" />
