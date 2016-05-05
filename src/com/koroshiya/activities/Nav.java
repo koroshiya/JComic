@@ -22,7 +22,6 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.koroshiya.R;
-import com.koroshiya.fragments.CreditsFragment;
 import com.koroshiya.fragments.FileChooserFragment;
 import com.koroshiya.fragments.FileChooserMultiFragment;
 import com.koroshiya.fragments.ReadFragment;
@@ -69,7 +68,10 @@ public class Nav extends AppCompatActivity
         if (resId == R.string.error_report){
             Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/koroshiya/JComic/issues"));
             startActivity(browserIntent);
-        }else {
+        } else if (resId == R.string.credits){
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/koroshiya/JComic/blob/master/Contributions.md"));
+            startActivity(browserIntent);
+        } else {
             FragmentManager fm = getFragmentManager();
             Fragment frag;
             View v = findViewById(R.id.navigation_drawer);
@@ -118,9 +120,6 @@ public class Nav extends AppCompatActivity
                     }else{
                         frag = new FileChooserFragment();
                     }
-                    break;
-                case R.string.credits:
-                    frag = new CreditsFragment();
                     break;
                 default:
                     Snackbar.make(v, "Not implemented yet", Snackbar.LENGTH_SHORT).show();
