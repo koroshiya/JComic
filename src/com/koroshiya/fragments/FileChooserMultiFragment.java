@@ -4,28 +4,15 @@ import android.app.Fragment;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.koroshiya.R;
-import com.koroshiya.activities.Nav;
-import com.koroshiya.adapters.FileItemAdapter;
 import com.koroshiya.adapters.FileItemMultiAdapter;
-import com.koroshiya.io_utils.ImageParser;
-import com.koroshiya.settings.SettingsManager;
-import com.koroshiya.settings.classes.Recent;
-
-import java.io.File;
-import java.util.ArrayList;
 
 public class FileChooserMultiFragment extends Fragment {
 
@@ -63,12 +50,6 @@ public class FileChooserMultiFragment extends Fragment {
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        //inflater.inflate(R.menu.file_chooser_multi_menu, menu); //TODO: add menu
-        super.onCreateOptionsMenu(menu, inflater);
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             default:
@@ -76,7 +57,7 @@ public class FileChooserMultiFragment extends Fragment {
         }
     }
 
-    public static FileChooserMultiFragment newInstance(String file, Context c) {
+    public static FileChooserMultiFragment newInstance(String file) {
         FileChooserMultiFragment fragment = new FileChooserMultiFragment();
         Bundle b = new Bundle();
         b.putString(ARG_SELECTED, file);

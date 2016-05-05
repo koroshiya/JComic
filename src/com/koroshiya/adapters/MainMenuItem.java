@@ -2,20 +2,20 @@ package com.koroshiya.adapters;
 
 public class MainMenuItem{
 
-    private final String str;
-    private final int i;
+    private final int strResId;
+    private final int imgResId;
 
-    public MainMenuItem(String str, int i){
-        this.str = str;
-        this.i = i;
+    public MainMenuItem(int strResId, int imgResId){
+        this.strResId = strResId;
+        this.imgResId = imgResId;
     }
 
-    public String getText(){
-        return this.str;
+    public int getStrResId(){
+        return this.strResId;
     }
 
-    public int getResId(){
-        return this.i;
+    public int getImageResId(){
+        return this.imgResId;
     }
 
 }

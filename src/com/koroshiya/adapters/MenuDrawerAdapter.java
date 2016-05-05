@@ -50,8 +50,8 @@ public class MenuDrawerAdapter extends RecyclerView.Adapter<MenuDrawerAdapter.Vi
         public void setDataOnView(final int position){
             MainMenuItem rowItem = items[position];
 
-            imageView.setImageResource(rowItem.getResId());
-            textView.setText(rowItem.getText());
+            imageView.setImageResource(rowItem.getImageResId());
+            textView.setText(rowItem.getStrResId());
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

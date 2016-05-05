@@ -3,7 +3,6 @@
     <string name="app_name">JComic</string>
     <string name="author">Author: Koroshiya</string>
     <string name="contributions">Third-party contributions: https://github.com/koroshiya/JComic/blob/master/Contributions.md</string>
-    <string name="up_directory">Up</string>
     <string name="setting_zoom">How and how far to zoom images by default while reading</string>
     <string name="setting_backlight">Keep screen on while reading</string>
     <string name="setting_fullscreen">Hide the system pull-down menu when reading</string>
@@ -83,5 +82,12 @@
     <string name="st_immersive">immersive</string>
     <string name="setting_immersive_title">Immersive Mode</string>
     <string name="setting_immersive">Hides navigation menu, pull-down menu, and action bar. Overrides other fullscreen settings. Not fully supported on Android 4</string>
+    <string name="error_report">Report Error</string>
+    <string name="credits">Credits</string>
+    <string name="change_settings">Change settings</string>
+    <string name="favorites">Favorites</string>
+    <string name="recently_read">Recently Read</string>
+    <string name="continue_reading">Continue reading</string>
+    <string name="select_comic">Select comic</string>
 
 </resources>

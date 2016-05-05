@@ -56,14 +56,13 @@ public class NavigationDrawerFragment extends Fragment {
     private boolean mUserLearnedDrawer;
 
     private final MainMenuItem[] mainMenuItems = new MainMenuItem[]{
-            new MainMenuItem("Select comic", R.drawable.ic_book),
-            new MainMenuItem("Continue reading", R.drawable.bookmark),
-            new MainMenuItem("Recently Read", R.drawable.list_unordered),
-            new MainMenuItem("Favorites", R.drawable.ic_star_border_black_24dp),
-            new MainMenuItem("Change settings", R.drawable.ic_settings_24dp),
-            new MainMenuItem("Get help", R.drawable.ic_info_black_24dp),
-            new MainMenuItem("Credits", R.drawable.ic_account_circle_24dp),
-            new MainMenuItem("Report Error", R.drawable.ic_report_problem_24dp)
+            new MainMenuItem(R.string.select_comic, R.drawable.ic_book),
+            new MainMenuItem(R.string.continue_reading, R.drawable.bookmark),
+            new MainMenuItem(R.string.recently_read, R.drawable.list_unordered),
+            new MainMenuItem(R.string.favorites, R.drawable.ic_star_border_black_24dp),
+            new MainMenuItem(R.string.change_settings, R.drawable.ic_settings_24dp),
+            new MainMenuItem(R.string.credits, R.drawable.ic_account_circle_24dp),
+            new MainMenuItem(R.string.error_report, R.drawable.ic_report_problem_24dp)
     };
 
     public NavigationDrawerFragment() {
@@ -180,7 +179,8 @@ public class NavigationDrawerFragment extends Fragment {
             mDrawerLayout.closeDrawer(mFragmentContainerView);
         }
         if (mCallbacks != null){
-            mCallbacks.onNavigationDrawerItemSelected(position);
+            int resId = mainMenuItems[position].getStrResId();
+            mCallbacks.onNavigationDrawerItemSelected(resId);
         }
     }
 

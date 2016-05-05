@@ -38,14 +38,6 @@ import java.io.File;
 public class Nav extends AppCompatActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks, ActivityCompat.OnRequestPermissionsResultCallback {
 
-    private final int READ = 0;
-    private final int CONTINUE = 1;
-    private final int RECENT = 2;
-    private final int FAVORITES = 3;
-    private final int SETTINGS = 4;
-    private final int CREDITS = 5;
-    private final int REPORT_ERROR = 6;
-
     private NavigationDrawerFragment mNavigationDrawerFragment;
 
     @Override
@@ -67,14 +59,14 @@ public class Nav extends AppCompatActivity
             Uri uri = i.getData();
             handleFileInput(uri);
         }else{
-            onNavigationDrawerItemSelected(READ);
+            onNavigationDrawerItemSelected(R.string.select_comic);
         }
 
     }
 
     @Override
-    public void onNavigationDrawerItemSelected(int position) {
-        if (position == REPORT_ERROR){
+    public void onNavigationDrawerItemSelected(int resId) {
+        if (resId == R.string.error_report){
             Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/koroshiya/JComic/issues"));
             startActivity(browserIntent);
         }else {
@@ -83,18 +75,18 @@ public class Nav extends AppCompatActivity
             View v = findViewById(R.id.navigation_drawer);
             if (v == null) return;
 
-            switch (position){
-                case SETTINGS:
+            switch (resId){
+                case R.string.change_settings:
                     frag = new SettingFragment();
                     break;
-                case CONTINUE:
+                case R.string.continue_reading:
                     frag = ReadFragment.newInstance(null, -1, this);
                     if (frag == null){
                         Snackbar.make(v, "No recent comics found", Snackbar.LENGTH_SHORT).show();
                         return;
                     }
                     break;
-                case RECENT:
+                case R.string.recently_read:
                     if (SettingsManager.getRecentAndFavorites(this, true).size() > 0){
                         frag = new RecentFragment();
                         Bundle b = new Bundle();
@@ -105,7 +97,7 @@ public class Nav extends AppCompatActivity
                         return;
                     }
                     break;
-                case FAVORITES:
+                case R.string.favorites:
                     if (SettingsManager.getRecentAndFavorites(this, false).size() > 0){
                         frag = new RecentFragment();
                         Bundle b = new Bundle();
@@ -116,7 +108,7 @@ public class Nav extends AppCompatActivity
                         return;
                     }
                     break;
-                case READ:
+                case R.string.select_comic:
                     if (!StorageHelper.isExternalStorageReadable()){
                         Snackbar.make(v, "External storage not readable", Snackbar.LENGTH_SHORT).show();
                         return;
@@ -127,7 +119,7 @@ public class Nav extends AppCompatActivity
                         frag = new FileChooserFragment();
                     }
                     break;
-                case CREDITS:
+                case R.string.credits:
                     frag = new CreditsFragment();
                     break;
                 default:
@@ -157,7 +149,7 @@ public class Nav extends AppCompatActivity
     }
 
     public void fileChooserMultiCallback(String filePath){
-        Fragment frag = FileChooserMultiFragment.newInstance(filePath, this);
+        Fragment frag = FileChooserMultiFragment.newInstance(filePath);
         FragmentManager fm = this.getFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
         ft.replace(R.id.container, frag);
@@ -261,7 +253,7 @@ public class Nav extends AppCompatActivity
         if (notGranted){
             openSettingsPage("You must give JComic storage permissions");
         }else{
-            onNavigationDrawerItemSelected(READ);
+            onNavigationDrawerItemSelected(R.string.select_comic);
         }
     }
 
