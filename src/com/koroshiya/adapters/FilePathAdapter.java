@@ -52,6 +52,10 @@ public class FilePathAdapter extends RecyclerView.Adapter<FilePathAdapter.ViewHo
         return this.currentDir;
     }
 
+    public int getCurrentChunk(){
+        return this.currentChunk;
+    }
+
     public boolean setNewPath(String path, boolean goingBack){
 
         if (goingBack){

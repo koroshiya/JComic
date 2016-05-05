@@ -84,11 +84,18 @@ public class FileChooserFragment extends Fragment {
             if (success) {
                 fpa.notifyDataSetChanged();
                 bread.invalidateItemDecorations();
+
+                int chunk = fpa.getCurrentChunk();
+                if (chunk > 0) {
+                    bread.scrollToPosition(chunk);
+                }else{
+                    bread.getLayoutManager().scrollToPosition(0); //Purposely different than lvc's implementation
+                }
             }
             if (goingBack){
                 fia.setPath(view, fpa.getCurrentDir());
             }
-            lvc.getLayoutManager().scrollToPosition(0);
+            lvc.scrollToPosition(0);
             return success;
         }
         return true;
