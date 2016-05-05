@@ -1,5 +1,7 @@
 package com.koroshiya.archive.steppable;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.text.Collator;
 import java.util.Locale;
 
@@ -37,7 +39,7 @@ public class JImage implements Comparable<JImage>{
 	}
 
 	@Override
-	public int compareTo(JImage another) {
+	public int compareTo(@NotNull JImage another) {
 		return myCollator.compare(this.name, another.getName());
 	}
 	

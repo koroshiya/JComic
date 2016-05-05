@@ -1,18 +1,12 @@
 <resources>
 
     <string name="app_name">JComic</string>
-    <string name="author">Author: Koroshiya</string>
-    <string name="contributions">Third-party contributions: https://github.com/koroshiya/JComic/blob/master/Contributions.md</string>
     <string name="setting_zoom">How and how far to zoom images by default while reading</string>
     <string name="setting_backlight">Keep screen on while reading</string>
     <string name="setting_fullscreen">Hide the system pull-down menu when reading</string>
     <string name="setting_resize">Scale down images that are larger than your device</string>
-    <string name="version">Version: %s</string>
     <string name="setting_cache_on_startup">Cache on startup</string>
     <string name="setting_keep_zoom_page_change">Keep zoom on page change</string>
-    <string name="rating">Enjoying this app? Let me know what you think by rating and/or reviewing JComic.\nEncountered problems? Please send an error report instead and help me improve JComic.</string>
-    <string name="rating_button">Rate/Review</string>
-    <string name="error_button">Report error</string>
     <string name="setting_cache_rar">Cache RAR files*</string>
     <string name="setting_cache_rar_warning">*Warning: attempting to cache some RAR files can cause lock-ups.</string>
     <string-array name="general_setting_max_recent">
@@ -45,7 +39,6 @@
     <string name="performance_setting_resize_default">true</string>
     <string name="general_setting_default_zoom_default">0</string>
     <string name="general_setting_max_recent_default">10</string>
-    <string name="source">Source: https://github.com/koroshiya/JComic</string>
     <string name="st_fullscreen">fullscreen</string>
     <string name="st_backlight">keepBacklightOn</string>
     <string name="pref_max_recent">maxRecent</string>

@@ -183,17 +183,6 @@ public class Nav extends AppCompatActivity
         requestPermissions(new String[]{permission}, 0);
     }
 
-
-    public void creditsBtnRateApp(View v){
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.japanzai.koroshiya"));
-        startActivity(intent);
-    }
-
-    public void creditsBtnReportError(View v){
-        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/koroshiya/JComic/issues"));
-        startActivity(browserIntent);
-    }
-
     private void handleFileInput(Uri uri){ //TODO: check for storage permissions
         File f = new File(uri.getPath());
         String filePath = f.getAbsolutePath();

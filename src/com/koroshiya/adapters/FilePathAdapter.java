@@ -28,8 +28,8 @@ public class FilePathAdapter extends RecyclerView.Adapter<FilePathAdapter.ViewHo
     private String[] splitVals;
     private String currentDir;
     private int currentChunk;
-    private ArrayList<String> pathHistory = new ArrayList<>();
-    private ArrayList<Integer> chunkHistory = new ArrayList<>();
+    private final ArrayList<String> pathHistory = new ArrayList<>();
+    private final ArrayList<Integer> chunkHistory = new ArrayList<>();
     private final Handler.Callback permCallback;
 
     public static final String ARG_FILE_PATH_CHUNK = "filepathchunk";
