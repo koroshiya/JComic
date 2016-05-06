@@ -187,7 +187,7 @@ public abstract class SettingsManager {
 		}
 	}
 
-    public static void setFullScreen(Activity act, boolean enableFullscreen){
+    private static void setFullScreen(Activity act, boolean enableFullscreen){
         enableFullscreen = enableFullscreen && getPreferences(act).getBoolean(act.getString(R.string.st_fullscreen), Boolean.parseBoolean(act.getString(R.string.st_fullscreen_default)));
         try{
             int flag = WindowManager.LayoutParams.FLAG_FULLSCREEN;
@@ -202,7 +202,7 @@ public abstract class SettingsManager {
         }
     }
 
-    public static void setActionBarHidden(Activity act, boolean hideBar){
+    private static void setActionBarHidden(Activity act, boolean hideBar){
 
         hideBar = hideBar && getPreferences(act).getBoolean(act.getString(R.string.st_hideactionbar), Boolean.parseBoolean(act.getString(R.string.st_hideactionbar_default)));
 
@@ -224,9 +224,9 @@ public abstract class SettingsManager {
         }
     }
 
-    public static void setImmersiveMode(Activity act, boolean setImmersive){
+    public static void setImmersiveMode(Activity act, boolean enabled){
 
-        setImmersive = setImmersive && getPreferences(act).getBoolean(act.getString(R.string.st_immersive), Boolean.parseBoolean(act.getString(R.string.st_immersive_default)));
+        boolean setImmersive = enabled && getPreferences(act).getBoolean(act.getString(R.string.st_immersive), Boolean.parseBoolean(act.getString(R.string.st_immersive_default)));
 
         View decorView = act.getWindow().getDecorView();
         if (setImmersive) {
@@ -246,8 +246,12 @@ public abstract class SettingsManager {
             }
 
             decorView.setSystemUiVisibility(flags); //TODO: on tap, show nav?
-        }else{
-            decorView.setSystemUiVisibility(0);
+        }else {
+            setFullScreen(act, enabled);
+            setActionBarHidden(act, enabled);
+            if (!enabled){
+                decorView.setSystemUiVisibility(0);
+            }
         }
     }
 

@@ -113,8 +113,6 @@ public class ReadFragment extends Fragment {
         super.onAttach(context);
         Activity act = getActivity();
         SettingsManager.setBacklightAlwaysOn(act, true);
-        SettingsManager.setFullScreen(act, true);
-        SettingsManager.setActionBarHidden(act, true);
         SettingsManager.setImmersiveMode(act, true);
     }
 
@@ -122,8 +120,6 @@ public class ReadFragment extends Fragment {
     public void onDetach() {
         Activity act = getActivity();
         SettingsManager.setBacklightAlwaysOn(act, false);
-        SettingsManager.setFullScreen(act, false);
-        SettingsManager.setActionBarHidden(act, false);
         SettingsManager.setImmersiveMode(act, false);
 
         if (cache != null) {
