@@ -6,6 +6,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -50,7 +51,7 @@ public class FileChooserFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        Context c;
+        final Context c;
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             c = getContext();
@@ -62,13 +63,22 @@ public class FileChooserFragment extends Fragment {
 
         RecyclerView rgv = (RecyclerView) rootView.findViewById(R.id.file_chooser_recycler_view);
         rgv.setLayoutManager(new LinearLayoutManager(c));
-        FileItemAdapter fia = new FileItemAdapter(c, callback);
+        final FileItemAdapter fia = new FileItemAdapter(c, callback);
         rgv.setAdapter(fia);
 
         RecyclerView bread = (RecyclerView) rootView.findViewById(R.id.file_chooser_breadcrumbs);
         bread.setLayoutManager(new LinearLayoutManager(c, LinearLayoutManager.HORIZONTAL, false));
         FilePathAdapter fpa = new FilePathAdapter(fia.getCurdir(), callback);
         bread.setAdapter(fpa);
+
+        final SwipeRefreshLayout srl = (SwipeRefreshLayout) rootView.findViewById(R.id.file_chooser_swiperefreshlayout);
+        srl.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                fia.setData(c);
+                srl.setRefreshing(false);
+            }
+        });
 
         return rootView;
     }
