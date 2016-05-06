@@ -57,7 +57,7 @@ public class Nav extends AppCompatActivity
         if (i.getData() != null){
             Uri uri = i.getData();
             handleFileInput(uri);
-        }else{
+        }else if (savedInstanceState == null){
             onNavigationDrawerItemSelected(R.string.select_comic);
         }
 
