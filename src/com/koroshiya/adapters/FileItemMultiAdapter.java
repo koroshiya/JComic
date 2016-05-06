@@ -1,16 +1,19 @@
 package com.koroshiya.adapters;
 
 import android.content.Context;
+import android.databinding.DataBindingUtil;
+import android.databinding.ViewDataBinding;
 import android.graphics.Color;
 import android.support.v7.widget.AppCompatImageView;
-import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.koroshiya.BR;
 import com.koroshiya.R;
 import com.koroshiya.io_utils.ImageParser;
+import com.koroshiya.pojo.POJOStringField;
 import com.koroshiya.settings.SettingsManager;
 import com.koroshiya.settings.classes.Recent;
 
@@ -70,14 +73,16 @@ public class FileItemMultiAdapter extends FileAdapter {
 
         private final CardView cardview;
         private final AppCompatImageView imageview;
-        private final AppCompatTextView textview;
+
+        private final ViewDataBinding binding;
 
         public ViewHolder(View v) {
             super(v);
 
             cardview = (CardView) v.findViewById(R.id.list_item_multi_rv_card_view);
             imageview = (AppCompatImageView) v.findViewById(R.id.list_item_multi_rv_image_view);
-            textview = (AppCompatTextView) v.findViewById(R.id.list_item_multi_rv_text_view);
+
+            binding = DataBindingUtil.bind(v);
 
         }
 
@@ -123,7 +128,8 @@ public class FileItemMultiAdapter extends FileAdapter {
             int last = t.lastIndexOf('/');
             String val = t.substring(last + 1);
 
-            textview.setText(val);
+            POJOStringField label = new POJOStringField(val);
+            binding.setVariable(BR.label, label);
 
         }
     }
