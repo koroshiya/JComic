@@ -163,15 +163,21 @@ public class Nav extends AppCompatActivity
         }else{
             FragmentManager fm = this.getFragmentManager();
             Fragment frag = fm.findFragmentById(R.id.container);
+            boolean isFcf = frag instanceof FileChooserFragment;
 
-            if (frag instanceof FileChooserFragment){
+            if (isFcf){
                 FileChooserFragment fca = ((FileChooserFragment) frag);
                 if (fca.goToPath(null, true)){
                     return;
                 }
             }
             if (fm.getBackStackEntryCount() == 1) {
-                super.onBackPressed();
+                if (isFcf){
+                    super.onBackPressed();
+                }else {
+                    fm.popBackStackImmediate();
+                    onNavigationDrawerItemSelected(R.string.select_comic);
+                }
             } else {
                 fm.popBackStackImmediate();
             }
