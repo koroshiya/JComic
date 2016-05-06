@@ -1,6 +1,8 @@
 package com.koroshiya.adapters;
 
 import android.content.Context;
+import android.databinding.DataBindingUtil;
+import android.databinding.ViewDataBinding;
 import android.net.Uri;
 import android.os.Handler;
 import android.support.v7.widget.AppCompatImageView;
@@ -10,9 +12,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.koroshiya.BR;
 import com.koroshiya.R;
 import com.koroshiya.controls.EllipsizingTextView;
 import com.koroshiya.io_utils.ImageParser;
+import com.koroshiya.pojo.POJOStringField;
 import com.koroshiya.settings.SettingsManager;
 import com.koroshiya.settings.classes.Recent;
 
@@ -44,15 +48,17 @@ public class FileListAdapter extends FileAdapter {
     public class ViewHolder extends FileAdapter.ViewHolder{
 
         final LinearLayoutCompat llc;
-        final EllipsizingTextView tv;
         final AppCompatImageView iv;
+
+        private final ViewDataBinding binding;
 
         public ViewHolder(View v) {
             super(v);
 
             llc = (LinearLayoutCompat) v.findViewById(R.id.row_llc);
-            tv = (EllipsizingTextView) llc.findViewById(R.id.row_text);
             iv = (AppCompatImageView) llc.findViewById(R.id.row_img);
+
+            binding = DataBindingUtil.bind(v);
 
         }
 
@@ -86,7 +92,8 @@ public class FileListAdapter extends FileAdapter {
                 t = f.getName();
             }
 
-            tv.setText(t);
+            POJOStringField label = new POJOStringField(t);
+            binding.setVariable(BR.label, label);
 
             llc.setOnClickListener(new View.OnClickListener() {
                 @Override

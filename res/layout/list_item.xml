@@ -1,26 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.LinearLayoutCompat
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="150dp"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:layout_margin="20dp"
-    android:id="@+id/row_llc"
-    >
-    <android.support.v7.widget.AppCompatImageView
-        android:id="@+id/row_img"
-        android:layout_width="match_parent"
-        android:layout_height="150dp"
-        android:gravity="center_horizontal"
-        />
-    <com.koroshiya.controls.EllipsizingTextView
-        android:id="@+id/row_text"
-        android:layout_width="match_parent"
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <data>
+        <variable name="label" type="com.koroshiya.pojo.POJOStringField"/>
+    </data>
+    <android.support.v7.widget.LinearLayoutCompat
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
-        android:padding="5dp"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:gravity="center_horizontal"
-        android:maxLines="3"
-        android:minLines="1"
-        android:ellipsize="start" />
-</android.support.v7.widget.LinearLayoutCompat>
+        android:orientation="vertical"
+        android:layout_margin="20dp"
+        android:id="@+id/row_llc"
+        >
+        <android.support.v7.widget.AppCompatImageView
+            android:id="@+id/row_img"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:gravity="center_horizontal"
+            />
+        <com.koroshiya.controls.EllipsizingTextView
+            android:id="@+id/row_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:gravity="center_horizontal"
+            android:maxLines="3"
+            android:minLines="1"
+            android:ellipsize="start"
+            android:text="@={label.stringField}"/>
+    </android.support.v7.widget.LinearLayoutCompat>
+</layout>
