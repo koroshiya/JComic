@@ -7,14 +7,29 @@
     android:layout_height="match_parent"
     tools:context="com.koroshiya.activities.Nav"
     android:layout_gravity="start"
-    >
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <!-- As the main content view, the view below consumes the entire
-         space available using match_parent in both dimensions. -->
     <FrameLayout
-        android:id="@+id/container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/colorPrimary"
+            android:elevation="4dp"
+            android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+
+        <!-- As the main content view, the view below consumes the entire
+             space available using match_parent in both dimensions. -->
+        <FrameLayout
+            android:id="@+id/container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+    </FrameLayout>
 
     <!-- The drawer is given a fixed width in dp and extends the full height of
          the container. -->

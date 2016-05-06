@@ -202,9 +202,9 @@ public abstract class SettingsManager {
         }
     }
 
-    private static void setActionBarHidden(Activity act, boolean hideBar){
+    private static void setActionBarHidden(Activity act, boolean hideBar, boolean override){
 
-        hideBar = hideBar && getPreferences(act).getBoolean(act.getString(R.string.st_hideactionbar), Boolean.parseBoolean(act.getString(R.string.st_hideactionbar_default)));
+        hideBar = override || (hideBar && getPreferences(act).getBoolean(act.getString(R.string.st_hideactionbar), Boolean.parseBoolean(act.getString(R.string.st_hideactionbar_default))));
 
         ActionBar actionBar = ((AppCompatActivity)act).getSupportActionBar();
         if (actionBar != null) {
@@ -246,9 +246,10 @@ public abstract class SettingsManager {
             }
 
             decorView.setSystemUiVisibility(flags); //TODO: on tap, show nav?
+            setActionBarHidden(act, enabled, true);
         }else {
             setFullScreen(act, enabled);
-            setActionBarHidden(act, enabled);
+            setActionBarHidden(act, enabled, false);
             if (!enabled){
                 decorView.setSystemUiVisibility(0);
             }
