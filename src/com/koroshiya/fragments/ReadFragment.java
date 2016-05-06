@@ -2,6 +2,7 @@ package com.koroshiya.fragments;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
@@ -31,10 +32,7 @@ public class ReadFragment extends Fragment {
 
     private JScrollView jsv;
     private ReadCache cache;
-
-    public ReadFragment() {
-        // Required empty public constructor
-    }
+    private ProgressDialog progressDialog;
 
     public static ReadFragment newInstance(String file, int page, Context c) {
         ReadFragment fragment = new ReadFragment();
@@ -105,7 +103,18 @@ public class ReadFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState){
+
+        progressDialog = new ProgressDialog(getActivity());
+        progressDialog.setTitle("Loading comic");
+        progressDialog.show();
+
         cache.parseInitial(view.getContext());
+    }
+
+    public void hideProgress(){
+        if (progressDialog != null && progressDialog.isShowing()){
+            progressDialog.hide();
+        }
     }
 
     @Override

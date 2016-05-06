@@ -95,6 +95,7 @@ public class ReadCache {
             case CACHE_DIRECT:
                 fragment.setImage(image.get());
                 setThumb(image);
+                fragment.hideProgress();
 
                 break;
             case CACHE_FORWARD:
