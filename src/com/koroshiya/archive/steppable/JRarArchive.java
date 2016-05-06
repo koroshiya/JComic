@@ -76,8 +76,12 @@ public class JRarArchive extends SteppableArchive{
                         extractFileToDisk(i, tempDir);
                     }
 
-                    is = new FileInputStream(f);
-                    p = ImageParser.getImageSize(is);
+                    try {
+                        p = ImageParser.getImageSize(f);
+                    }catch(IOException ioe){
+                        is = new FileInputStream(f);
+                        p = ImageParser.getImageSize(is);
+                    }
 
                     is = new FileInputStream(f);
                     temp = ImageParser.parseImageFromDisk(is, p, width, resize);

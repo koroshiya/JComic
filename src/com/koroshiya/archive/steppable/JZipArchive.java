@@ -107,8 +107,13 @@ public class JZipArchive extends SteppableArchive{
             try {
                 if (this.progressive) {
                     if (f.exists() || ArchiveParser.writeStreamToDisk(this.tempDir, zip.getInputStream(zipEntry), name)) {
-                        is = new FileInputStream(f);
-                        Point p = ImageParser.getImageSize(is);
+                        Point p;
+                        try {
+                            p = ImageParser.getImageSize(f);
+                        }catch(IOException ioe){
+                            is = new FileInputStream(f);
+                            p = ImageParser.getImageSize(is);
+                        }
                         is = new FileInputStream(f);
                         temp = ImageParser.parseImageFromDisk(is, p, width, resize);
                     }

@@ -11,6 +11,7 @@ import com.koroshiya.settings.SettingsManager;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.lang.ref.SoftReference;
 
 public class DecodeBitmapFileAsync extends DecodeAsync {
@@ -31,12 +32,18 @@ public class DecodeBitmapFileAsync extends DecodeAsync {
             f = files[page];
             try {
                 boolean resize = SettingsManager.getDynamicResizing(c);
-                FileInputStream is = new FileInputStream(f);
-                Point pt = ImageParser.getImageSize(is);
+                Point pt;
+                FileInputStream is;
+                try {
+                    pt = ImageParser.getImageSize(f);
+                } catch (IOException e) {
+                    is = new FileInputStream(f);
+                    pt = ImageParser.getImageSize(is);
+                }
 
                 is = new FileInputStream(f);
                 temp = ImageParser.parseImageFromDisk(is, pt, p.x, resize);
-            } catch (FileNotFoundException e) {
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         }

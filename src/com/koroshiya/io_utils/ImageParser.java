@@ -13,8 +13,10 @@ import com.koroshiya.controls.JBitmapDrawable;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Locale;
 
@@ -172,6 +174,16 @@ public class ImageParser {
 
     }
 
+    public static Point getImageSize(File f) throws IOException {
+
+        if (f != null && f.getName().toLowerCase().endsWith(".png")){
+            return getPNGSize(f);
+        }else {
+            throw new IOException("Not a PNG file");
+        }
+
+    }
+
     /**
      * Parses an image from the InputStream passed in, but doesn't extract it.
      * Instead, its height and width are returned.
@@ -179,13 +191,36 @@ public class ImageParser {
      * 			Could be InputFileStream, ByteArrayInputStream, etc.
      * @return Point containing the width and height of the image parsed
      * */
-    public static Point getImageSize(InputStream is){
+    public static Point getImageSize(InputStream is) {
 
         BitmapFactory.Options opts = getSampleOpts();
         BufferedInputStream bis = new BufferedInputStream(is);
         BitmapFactory.decodeStream(bis, null, opts);
         return new Point(opts.outWidth, opts.outHeight);
 
+    }
+
+    private static Point getPNGSize(File f) throws IOException {
+
+        FileInputStream is = new FileInputStream(f);
+
+        int width, height;
+        byte[] b137 = new byte[0];
+        is.read(b137, 0, 24);
+
+        if ((b137[0] & 0xFF) == 137 && (b137[1] & 0xFF) == 80 && (b137[2] & 0xFF) == 78){
+            height = Byte2PosInt(b137[22],b137[23]);
+            width = Byte2PosInt(b137[18],b137[19]);
+        }else{
+            throw new IOException("Invalid PNG file");
+        }
+
+        return new Point(width, height);
+
+    }
+
+    private static Integer Byte2PosInt(byte Byte08, byte Byte00) {
+        return ((Byte08 & 0xFF) * 256) | ((Byte00 & 0xFF));
     }
 
     private static BitmapFactory.Options getSampleOpts(){
