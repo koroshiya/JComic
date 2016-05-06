@@ -9,7 +9,7 @@
     android:layout_gravity="start"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <FrameLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -27,9 +27,10 @@
         <FrameLayout
             android:id="@+id/container"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            android:layout_below="@+id/toolbar"/>
 
-    </FrameLayout>
+    </RelativeLayout>
 
     <!-- The drawer is given a fixed width in dp and extends the full height of
          the container. -->
