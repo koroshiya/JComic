@@ -32,6 +32,7 @@ public class ReadCache {
     private SoftReference<JBitmapDrawable> cacheForward = new SoftReference<>(null);
     private SoftReference<JBitmapDrawable> cacheBackward = new SoftReference<>(null);
     private Recent recent;
+    private boolean parsingInitial = true;
 
     public static final int CACHE_DIRECT = 0;
     public static final int CACHE_FORWARD = 1;
@@ -72,7 +73,6 @@ public class ReadCache {
 
     public void parseInitial(Context c){
         parseImage(c, CACHE_DIRECT, currentPage);
-        cacheNext(c);
     }
 
     private void parseImage(Context c, int cacheType, int page){
@@ -96,6 +96,11 @@ public class ReadCache {
                 fragment.setImage(image.get());
                 setThumb(image);
                 fragment.hideProgress();
+
+                if (parsingInitial){
+                    cacheNext(fragment.getActivity());
+                    parsingInitial = false;
+                }
 
                 break;
             case CACHE_FORWARD:
