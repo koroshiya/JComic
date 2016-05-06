@@ -204,7 +204,7 @@ public class Nav extends AppCompatActivity
                     }
                 }
                 fileChooserCallback(filePath, i);
-            }else if (ArchiveParser.isSupportedArchive(filePath)){
+            }else if (ArchiveParser.isSupportedArchive(f)){
                 fileChooserCallback(filePath, 0);
             }else if (ImageParser.isSupportedDirectory(f)){
                 fileChooserCallback(filePath, 0);

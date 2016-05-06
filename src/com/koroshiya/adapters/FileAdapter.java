@@ -94,7 +94,7 @@ public abstract class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewH
             int i = 0;
             Message m = new Message();
             Bundle b = new Bundle();
-            if (f.isDirectory() || ArchiveParser.isSupportedArchive(f.getAbsolutePath())) {
+            if (f.isDirectory() || ArchiveParser.isSupportedArchive(f)) {
                 Recent recent = SettingsManager.getRecentAndFavorite(c, f.getAbsolutePath(), true);
                 if (recent != null) i = recent.getPageNumber();
             }else{

@@ -315,7 +315,7 @@ public abstract class SettingsManager {
                 int totalPages;
                 String path = recent.getPath();
                 File f = new File(path);
-                if (ArchiveParser.isSupportedArchive(path)){
+                if (ArchiveParser.isSupportedArchive(f)){
                     try {
                         SteppableArchive a = ArchiveParser.parseArchive(f, c);
                         totalPages = a.getTotalPages();

@@ -21,18 +21,17 @@ public abstract class ArchiveParser {
 	public static final byte[] BUFFER = new byte[8192];
     private static final String[] supportedArchives = {".zip", ".cbz", ".rar", ".cbr"};
 
-    public static boolean isSupportedArchive(String s){
-        File f = new File(s);
-        return f.isFile() && isSupported(s, supportedArchives) && f.length() > 0;
+    public static boolean isSupportedArchive(File f){
+        return f.isFile() && isSupported(f, supportedArchives) && f.length() > 0;
     }
 
-    public static boolean isSupportedRarArchive(String s){
-    	return isSupported(s, new String[]{".rar", ".cbr"});
+    public static boolean isSupportedRarArchive(File f){
+    	return isSupported(f, new String[]{".rar", ".cbr"});
     }
 	
-	public static boolean isSupported(String name, String[] exts){
+	public static boolean isSupported(File f, String[] exts){
 		
-		name = name.toLowerCase(Locale.getDefault());
+		String name = f.getName().toLowerCase(Locale.getDefault());
     	for (String ext : exts) if (name.endsWith(ext)) return true;
     	return false;
     	

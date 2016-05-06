@@ -40,7 +40,7 @@ public class ImageParser {
         public boolean accept(File dir, String filename) {
             File f = new File(dir, filename);
             return isSupportedDirectory(f) ||
-                    (f.isFile() && f.canRead() && f.length() > 0 && (isSupportedImage(f) || ArchiveParser.isSupportedArchive(filename)));
+                    (f.isFile() && f.canRead() && f.length() > 0 && (isSupportedImage(f) || ArchiveParser.isSupportedArchive(f)));
         }
     };
 	   
@@ -63,7 +63,7 @@ public class ImageParser {
 
         return f != null && f.exists() && (
                 (f.isDirectory() && f.list(fnf).length > 0) ||
-                (f.length() > 0 && (ArchiveParser.isSupportedArchive(f.getAbsolutePath()) || ImageParser.isSupportedImage(f)))
+                (f.length() > 0 && (ArchiveParser.isSupportedArchive(f) || ImageParser.isSupportedImage(f)))
         );
 
     }

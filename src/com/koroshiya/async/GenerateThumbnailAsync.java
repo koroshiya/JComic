@@ -38,7 +38,7 @@ public class GenerateThumbnailAsync extends AsyncTask<String, String, Boolean> {
                     File[] files = srcFile.listFiles(ImageParser.fnf);
                     File f = files[0];
                     is = new FileInputStream(f);
-                } else if (ArchiveParser.isSupportedArchive(src)) {
+                } else if (ArchiveParser.isSupportedArchive(srcFile)) {
                     SteppableArchive sa = ArchiveParser.parseArchive(srcFile, c);
                     if (sa != null) is = sa.getStream(0);
                 } else {
