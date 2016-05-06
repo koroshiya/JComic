@@ -31,7 +31,7 @@ android {
         minSdkVersion 14
         targetSdkVersion 23
         versionCode 58
-        versionName "3.0.02"
+        versionName "3.0.03"
         vectorDrawables.useSupportLibrary = true
     }
     dataBinding {
