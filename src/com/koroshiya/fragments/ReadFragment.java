@@ -87,7 +87,7 @@ public class ReadFragment extends Fragment {
             cache = new ReadCache(file, page, this);
         } catch (IOException e) {
             e.printStackTrace();
-            ((Nav)getActivity()).onNavigationDrawerItemSelected(0);
+            ((Nav)getActivity()).selectNavItem(R.id.nav_select_comic);
         }
     }
 

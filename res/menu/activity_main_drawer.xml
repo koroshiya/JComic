@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item android:id="@+id/nav_select_comic" android:icon="@drawable/ic_book" android:title="@string/select_comic"/>
+        <item android:id="@+id/nav_continue_reading" android:icon="@drawable/bookmark" android:title="@string/continue_reading"/>
+        <item android:id="@+id/nav_recently_read" android:icon="@drawable/list_unordered" android:title="@string/recently_read"/>
+        <item android:id="@+id/nav_favorites" android:icon="@drawable/ic_star_border_black_24dp" android:title="@string/favorites"/>
+        <item android:id="@+id/nav_change_settings" android:icon="@drawable/ic_settings_24dp" android:title="@string/change_settings"/>
+        <item android:id="@+id/nav_credits" android:icon="@drawable/ic_account_circle_24dp" android:title="@string/credits"/>
+        <item android:id="@+id/nav_error_report" android:icon="@drawable/ic_report_problem_24dp" android:title="@string/error_report"/>
+    </group>
+
+</menu>

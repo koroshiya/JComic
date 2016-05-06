@@ -12,13 +12,17 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.View;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.koroshiya.R;
@@ -35,9 +39,9 @@ import com.koroshiya.settings.SettingsManager;
 import java.io.File;
 
 public class Nav extends AppCompatActivity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks, ActivityCompat.OnRequestPermissionsResultCallback {
+        implements NavigationView.OnNavigationItemSelectedListener {
 
-    private NavigationDrawerFragment mNavigationDrawerFragment;
+    private DrawerLayout drawer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,97 +49,117 @@ public class Nav extends AppCompatActivity
 
         setContentView(R.layout.activity_nav2);
 
-        mNavigationDrawerFragment = (NavigationDrawerFragment)
-                getFragmentManager().findFragmentById(R.id.navigation_drawer);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
-        mNavigationDrawerFragment.setUp(
-                R.id.navigation_drawer,
-                (DrawerLayout) findViewById(R.id.drawer_layout)
-        );
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView mNavigationDrawerFragment = (NavigationView) findViewById(R.id.nav_view);
+        if (mNavigationDrawerFragment != null) mNavigationDrawerFragment.setNavigationItemSelectedListener(this);
 
         Intent i = getIntent();
         if (i.getData() != null){
             Uri uri = i.getData();
             handleFileInput(uri);
         }else if (savedInstanceState == null){
-            onNavigationDrawerItemSelected(R.string.select_comic);
+            selectNavItem(R.id.nav_select_comic);
         }
 
     }
 
     @Override
-    public void onNavigationDrawerItemSelected(int resId) {
-        if (resId == R.string.error_report){
+    public boolean onNavigationItemSelected(MenuItem item) {
+
+        int resId = item.getItemId();
+        return selectNavItem(resId);
+
+    }
+
+    public boolean selectNavItem (int resId){
+
+        boolean success = true;
+
+        if (resId == R.id.nav_error_report){
             Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/koroshiya/JComic/issues"));
             startActivity(browserIntent);
-        } else if (resId == R.string.credits){
+        } else if (resId == R.id.nav_credits){
             Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/koroshiya/JComic/blob/master/Contributions.md"));
             startActivity(browserIntent);
         } else {
             FragmentManager fm = getFragmentManager();
-            Fragment frag;
-            View v = findViewById(R.id.navigation_drawer);
-            if (v == null) return;
+            Fragment frag = null;
 
-            switch (resId){
-                case R.string.change_settings:
-                    frag = new SettingFragment();
-                    break;
-                case R.string.continue_reading:
-                    frag = ReadFragment.newInstance(null, -1, this);
-                    if (frag == null){
-                        Snackbar.make(v, "No recent comics found", Snackbar.LENGTH_SHORT).show();
-                        return;
-                    }
-                    break;
-                case R.string.recently_read:
-                    if (SettingsManager.getRecentAndFavorites(this, true).size() > 0){
-                        frag = new RecentFragment();
-                        Bundle b = new Bundle();
-                        b.putBoolean(RecentFragment.ARG_RECENT, true);
-                        frag.setArguments(b);
-                    }else{
-                        Snackbar.make(v, "No recent comics found", Snackbar.LENGTH_SHORT).show();
-                        return;
-                    }
-                    break;
-                case R.string.favorites:
-                    if (SettingsManager.getRecentAndFavorites(this, false).size() > 0){
-                        frag = new RecentFragment();
-                        Bundle b = new Bundle();
-                        b.putBoolean(RecentFragment.ARG_RECENT, false);
-                        frag.setArguments(b);
-                    }else{
-                        Snackbar.make(v, "No favorites found", Snackbar.LENGTH_SHORT).show();
-                        return;
-                    }
-                    break;
-                case R.string.select_comic:
-                    if (!StorageHelper.isExternalStorageReadable()){
-                        Snackbar.make(v, "External storage not readable", Snackbar.LENGTH_SHORT).show();
-                        return;
-                    }else if (!hasStoragePermission()){
-                        askStoragePermission();
-                        return;
-                    }else{
-                        frag = new FileChooserFragment();
-                    }
-                    break;
-                default:
-                    Snackbar.make(v, "Not implemented yet", Snackbar.LENGTH_SHORT).show();
-                    return;
+            if (drawer == null){
+                success = false;
+            }else {
+
+                switch (resId) {
+                    case R.id.nav_change_settings:
+                        frag = new SettingFragment();
+                        break;
+                    case R.id.nav_continue_reading:
+                        frag = ReadFragment.newInstance(null, -1, this);
+                        if (frag == null) {
+                            Snackbar.make(drawer, "No recent comics found", Snackbar.LENGTH_SHORT).show();
+                            success = false;
+                        }
+                        break;
+                    case R.id.nav_recently_read:
+                        if (SettingsManager.getRecentAndFavorites(this, true).size() > 0) {
+                            frag = new RecentFragment();
+                            Bundle b = new Bundle();
+                            b.putBoolean(RecentFragment.ARG_RECENT, true);
+                            frag.setArguments(b);
+                        } else {
+                            Snackbar.make(drawer, "No recent comics found", Snackbar.LENGTH_SHORT).show();
+                            success = false;
+                        }
+                        break;
+                    case R.id.nav_favorites:
+                        if (SettingsManager.getRecentAndFavorites(this, false).size() > 0) {
+                            frag = new RecentFragment();
+                            Bundle b = new Bundle();
+                            b.putBoolean(RecentFragment.ARG_RECENT, false);
+                            frag.setArguments(b);
+                        } else {
+                            Snackbar.make(drawer, "No favorites found", Snackbar.LENGTH_SHORT).show();
+                            success = false;
+                        }
+                        break;
+                    case R.id.nav_select_comic:
+                        if (!StorageHelper.isExternalStorageReadable()) {
+                            Snackbar.make(drawer, "External storage not readable", Snackbar.LENGTH_SHORT).show();
+                            success = false;
+                        } else if (!hasStoragePermission()) {
+                            askStoragePermission();
+                            success = false;
+                        } else {
+                            frag = new FileChooserFragment();
+                        }
+                        break;
+                    default:
+                        Snackbar.make(drawer, "Not implemented yet", Snackbar.LENGTH_SHORT).show();
+                        success = false;
+                }
+
+                if (frag != null) {
+                    FragmentTransaction ft = fm.beginTransaction();
+                    ft.replace(R.id.container, frag);
+                    ft.addToBackStack(null);
+                    ft.commit();
+                }
             }
-
-            FragmentTransaction ft = fm.beginTransaction();
-            ft.replace(R.id.container, frag);
-            ft.addToBackStack(null);
-            ft.commit();
         }
-    }
 
-    @Override
-    public void selectNavDrawerItem(int position){
-        mNavigationDrawerFragment.selectItem(position);
+        if (success && drawer != null && drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        }
+
+        return success;
     }
 
     public void fileChooserCallback(String filePath, int page){
@@ -158,8 +182,8 @@ public class Nav extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        if (mNavigationDrawerFragment.isDrawerOpen()) {
-            mNavigationDrawerFragment.closeDrawer();
+        if (drawer != null && drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
         }else{
             FragmentManager fm = this.getFragmentManager();
             Fragment frag = fm.findFragmentById(R.id.container);
@@ -176,7 +200,7 @@ public class Nav extends AppCompatActivity
                     super.onBackPressed();
                 }else {
                     fm.popBackStackImmediate();
-                    onNavigationDrawerItemSelected(R.string.select_comic);
+                    selectNavItem(R.id.nav_select_comic);
                 }
             } else {
                 fm.popBackStackImmediate();
@@ -247,7 +271,7 @@ public class Nav extends AppCompatActivity
         if (notGranted){
             openSettingsPage("You must give JComic storage permissions");
         }else{
-            onNavigationDrawerItemSelected(R.string.select_comic);
+            selectNavItem(R.id.nav_select_comic);
         }
     }
 

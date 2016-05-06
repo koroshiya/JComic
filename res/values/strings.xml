@@ -82,5 +82,6 @@
     <string name="recently_read">Recently Read</string>
     <string name="continue_reading">Continue reading</string>
     <string name="select_comic">Select comic</string>
+    <string name="github_url">https://github.com/koroshiya/JComic</string>
 
 </resources>

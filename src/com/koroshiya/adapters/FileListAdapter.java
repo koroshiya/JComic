@@ -14,7 +14,6 @@ import android.view.ViewGroup;
 
 import com.koroshiya.BR;
 import com.koroshiya.R;
-import com.koroshiya.controls.EllipsizingTextView;
 import com.koroshiya.io_utils.ImageParser;
 import com.koroshiya.pojo.POJOStringField;
 import com.koroshiya.settings.SettingsManager;
