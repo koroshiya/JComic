@@ -6,6 +6,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
@@ -20,9 +21,11 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import com.koroshiya.R;
@@ -59,7 +62,22 @@ public class Nav extends AppCompatActivity
         toggle.syncState();
 
         NavigationView mNavigationDrawerFragment = (NavigationView) findViewById(R.id.nav_view);
-        if (mNavigationDrawerFragment != null) mNavigationDrawerFragment.setNavigationItemSelectedListener(this);
+        if (mNavigationDrawerFragment != null){
+            mNavigationDrawerFragment.setNavigationItemSelectedListener(this);
+
+            View v = mNavigationDrawerFragment.getHeaderView(0);
+
+            AppCompatTextView actv = (AppCompatTextView) v.findViewById(R.id.nav_header_main_title);
+            if (actv != null){
+                try {
+                    PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+                    String version = pInfo.versionName;
+                    actv.setText(String.format("Version - %s", version));
+                } catch (PackageManager.NameNotFoundException e) {
+                    actv.setVisibility(View.GONE);
+                }
+            }
+        }
 
         Intent i = getIntent();
         if (i.getData() != null){
