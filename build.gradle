@@ -3,7 +3,6 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 23
     buildToolsVersion "23.0.3"
-
     sourceSets {
         main {
             manifest.srcFile 'AndroidManifest.xml'
@@ -27,13 +26,12 @@ android {
         debug.setRoot('build-types/debug')
         release.setRoot('build-types/release')
     }
-
     defaultConfig {
         applicationId "com.koroshiya.jcomic"
         minSdkVersion 14
         targetSdkVersion 23
         versionCode 58
-        versionName "3.0.01"
+        versionName "3.0.02"
         vectorDrawables.useSupportLibrary = true
     }
     dataBinding {
