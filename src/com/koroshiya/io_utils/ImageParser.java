@@ -205,7 +205,7 @@ public class ImageParser {
         FileInputStream is = new FileInputStream(f);
 
         int width, height;
-        byte[] b137 = new byte[0];
+        byte[] b137 = new byte[24];
         is.read(b137, 0, 24);
 
         if ((b137[0] & 0xFF) == 137 && (b137[1] & 0xFF) == 80 && (b137[2] & 0xFF) == 78){
