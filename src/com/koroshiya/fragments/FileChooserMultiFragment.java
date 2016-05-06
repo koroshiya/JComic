@@ -4,7 +4,6 @@ import android.app.Fragment;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -42,7 +41,6 @@ public class FileChooserMultiFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_file_list_multi, container, false);
 
         RecyclerView rgv = (RecyclerView) rootView.findViewById(R.id.file_chooser_multi_recycler_view);
-        rgv.setLayoutManager(new LinearLayoutManager(c));
         FileItemMultiAdapter fia = new FileItemMultiAdapter(c, fileName);
         rgv.setAdapter(fia);
 

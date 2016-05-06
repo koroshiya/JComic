@@ -62,7 +62,6 @@ public class FileChooserFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_file_list, container, false);
 
         RecyclerView rgv = (RecyclerView) rootView.findViewById(R.id.file_chooser_recycler_view);
-        rgv.setLayoutManager(new LinearLayoutManager(c));
         final FileItemAdapter fia = new FileItemAdapter(c, callback);
         rgv.setAdapter(fia);
 
@@ -90,7 +89,7 @@ public class FileChooserFragment extends Fragment {
         if (goingBack || fia.setPath(view, path)){
             RecyclerView bread = (RecyclerView) getActivity().findViewById(R.id.file_chooser_breadcrumbs);
             FilePathAdapter fpa = (FilePathAdapter) bread.getAdapter();
-            boolean success = fpa.setNewPath(path, goingBack); //TODO: scroll to top
+            boolean success = fpa.setNewPath(path, goingBack);
             if (success) {
                 fpa.notifyDataSetChanged();
                 bread.invalidateItemDecorations();
