@@ -182,10 +182,10 @@ public class ReadCache {
                     Snackbar.make(v, "End of chapter - No more chapters found", Snackbar.LENGTH_SHORT).show();
                 }else{
                     File file = files[foundAtIndex + 1];
+                    Snackbar.make(v, "Opening next chapter - "+file.getName(), Snackbar.LENGTH_SHORT).show();
                     fragment.reset(file.getAbsolutePath(), 0);
                 }
             }
-            //TODO: try to go to next chapter
         }
 
     }
@@ -224,10 +224,10 @@ public class ReadCache {
                     Snackbar.make(v, "Start of chapter - No previous chapters found", Snackbar.LENGTH_SHORT).show();
                 }else{
                     File file = files[foundAtIndex - 1];
+                    Snackbar.make(v, "Opening previous chapter - "+file.getName(), Snackbar.LENGTH_SHORT).show();
                     fragment.reset(file.getAbsolutePath(), 0);
                 }
             }
-            //TODO: try to go to previous chapter
         }
 
     }
