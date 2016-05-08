@@ -43,7 +43,7 @@ public class JZipArchive extends SteppableArchive{
 		if (getTotalPages() > 0){
             super.sort();
 		}else {
-			throw new IOException();
+			throw new IOException("No supported images in "+new File(path).getName());
 		}
 		
 	}

@@ -196,8 +196,7 @@ public class ReadCache {
                     String s = fileNames.get(foundAtIndex + 1);
                     Snackbar.make(v, "Opening next chapter - "+s, Snackbar.LENGTH_SHORT).show();
                     File file = new File(parent, s);
-                    fragment.reset(file.getAbsolutePath(), 0);
-                    fragment.showProgress(c);
+                    fragment.reset(file.getAbsolutePath(), 0, true);
                 }
             }
         }
@@ -243,8 +242,7 @@ public class ReadCache {
                     String s = fileNames.get(foundAtIndex - 1);
                     Snackbar.make(v, "Opening previous chapter - "+s, Snackbar.LENGTH_SHORT).show();
                     File file = new File(parent, s);
-                    fragment.reset(file.getAbsolutePath(), 0);
-                    fragment.showProgress(c);
+                    fragment.reset(file.getAbsolutePath(), 0, true);
                 }
             }
         }

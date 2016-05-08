@@ -6,6 +6,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -71,11 +72,11 @@ public class ReadFragment extends Fragment {
         String fileName = b.getString(ARG_FILE, "");
         Log.i("FLA", "Create: "+fileName);
         int page = b.getInt(ARG_PAGE, -1);
-        reset(fileName, page);
+        reset(fileName, page, false);
 
     }
 
-    public void reset(String fileName, int page){
+    public void reset(String fileName, int page, boolean startImmediately){
         try {
 
             if (fileName.length() == 0 || page < 0)
@@ -83,7 +84,12 @@ public class ReadFragment extends Fragment {
 
             File file = new File(fileName);
             cache = new ReadCache(file, page, this);
+
+            if (startImmediately) showProgress(getActivity());
+
         } catch (IOException e) {
+            View v = getActivity().findViewById(R.id.drawer_layout);
+            if (v != null) Snackbar.make(v, e.getLocalizedMessage(), Snackbar.LENGTH_LONG).show();
             e.printStackTrace();
             ((Nav)getActivity()).selectNavItem(R.id.nav_select_comic);
         }
@@ -107,11 +113,17 @@ public class ReadFragment extends Fragment {
     }
 
     public void showProgress(Context c){
-        progressDialog = new ProgressDialog(getActivity());
-        progressDialog.setTitle("Loading comic");
-        progressDialog.show();
+        if (cache != null) {
+            progressDialog = new ProgressDialog(getActivity());
+            progressDialog.setTitle("Loading comic");
+            progressDialog.show();
 
-        cache.parseInitial(c);
+            cache.parseInitial(c);
+        }else{
+            View v = getActivity().findViewById(R.id.drawer_layout);
+            if (v != null) Snackbar.make(v, "Can't read current comic - Cache empty", Snackbar.LENGTH_LONG).show();
+            ((Nav)getActivity()).selectNavItem(R.id.nav_select_comic);
+        }
     }
 
     public void hideProgress(){
