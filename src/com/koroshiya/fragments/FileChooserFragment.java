@@ -91,15 +91,7 @@ public class FileChooserFragment extends Fragment {
             FilePathAdapter fpa = (FilePathAdapter) bread.getAdapter();
             boolean success = fpa.setNewPath(path, goingBack);
             if (success) {
-                fpa.notifyDataSetChanged();
-                bread.invalidateItemDecorations();
-
-                int chunk = fpa.getCurrentChunk();
-                if (chunk > 0) {
-                    bread.scrollToPosition(chunk);
-                }else{
-                    bread.getLayoutManager().scrollToPosition(0); //Purposely different than lvc's implementation
-                }
+                resetFilePathScrollPosition();
             }
             if (goingBack){
                 fia.setPath(view, fpa.getCurrentDir());
@@ -108,6 +100,29 @@ public class FileChooserFragment extends Fragment {
             return success;
         }
         return true;
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        resetFilePathScrollPosition();
+    }
+
+    private void resetFilePathScrollPosition(){
+
+        RecyclerView bread = (RecyclerView) getActivity().findViewById(R.id.file_chooser_breadcrumbs);
+        FilePathAdapter fpa = (FilePathAdapter) bread.getAdapter();
+
+        fpa.notifyDataSetChanged();
+        bread.invalidateItemDecorations();
+
+        int chunk = fpa.getCurrentChunk();
+        if (chunk > 0) {
+            bread.scrollToPosition(chunk);
+        }else{
+            bread.getLayoutManager().scrollToPosition(0); //Purposely different than lvc's implementation
+        }
+
     }
 
 }
