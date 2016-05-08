@@ -49,7 +49,7 @@ public class GenerateThumbnailAsync extends AsyncTask<String, String, Boolean> {
                     return false;
                 }
 
-                ImageParser.createThumbnail(is, target, imgWidth, imgHeight, 128);
+                ImageParser.createThumbnail(is, target, imgWidth, imgHeight, 1024);
                 is.close();
                 return true;
             }catch (Exception e){
