@@ -120,19 +120,33 @@ public class ReadFragment extends Fragment {
         }
     }
 
+    private void applySettings(boolean enabled){
+        Activity act = getActivity();
+        SettingsManager.setBacklightAlwaysOn(act, enabled);
+        SettingsManager.setImmersiveMode(act, enabled);
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        applySettings(true);
+    }
+
+    @Override
+    public void onPause(){
+        applySettings(false);
+        super.onPause();
+    }
+
     @Override
     public void onAttach(Context context){
         super.onAttach(context);
-        Activity act = getActivity();
-        SettingsManager.setBacklightAlwaysOn(act, true);
-        SettingsManager.setImmersiveMode(act, true);
+        applySettings(true);
     }
 
     @Override
     public void onDetach() {
-        Activity act = getActivity();
-        SettingsManager.setBacklightAlwaysOn(act, false);
-        SettingsManager.setImmersiveMode(act, false);
+        applySettings(false);
 
         if (cache != null) {
             cache.close();
