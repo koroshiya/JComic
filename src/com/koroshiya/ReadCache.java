@@ -21,6 +21,9 @@ import com.koroshiya.settings.classes.Recent;
 import java.io.File;
 import java.io.IOException;
 import java.lang.ref.SoftReference;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 public class ReadCache {
 
@@ -175,11 +178,14 @@ public class ReadCache {
             Log.i("ReadCache", "Trying to go to next chapter");
             File parent = f.getParentFile();
             if (parent.canRead()){
-                File[] files = parent.listFiles(ImageParser.fullFnf);
+                String[] files = parent.list(ImageParser.fullFnf);
+                List<String> fileNames = Arrays.asList(files);
+                Collections.sort(fileNames);
+
                 int foundAtIndex = -1, totalIndex = 0;
-                for (File file : files) {
-                    Log.i("ReadCache", "Comparing "+file.getAbsolutePath()+" to "+f.getAbsolutePath());
-                    if (file.getAbsolutePath().equals(f.getAbsolutePath())){
+                for (String filename : fileNames) {
+                    Log.i("ReadCache", "Comparing "+filename+" to "+f.getName());
+                    if (filename.equals(f.getName())){
                         foundAtIndex = totalIndex;
                     }
                     totalIndex++;
@@ -187,8 +193,9 @@ public class ReadCache {
                 if (foundAtIndex == -1 || foundAtIndex == totalIndex - 1){
                     Snackbar.make(v, "End of chapter - No more chapters found", Snackbar.LENGTH_SHORT).show();
                 }else{
-                    File file = files[foundAtIndex + 1];
-                    Snackbar.make(v, "Opening next chapter - "+file.getName(), Snackbar.LENGTH_SHORT).show();
+                    String s = fileNames.get(foundAtIndex + 1);
+                    Snackbar.make(v, "Opening next chapter - "+s, Snackbar.LENGTH_SHORT).show();
+                    File file = new File(parent, s);
                     fragment.reset(file.getAbsolutePath(), 0);
                 }
             }
@@ -217,11 +224,14 @@ public class ReadCache {
             Log.i("ReadCache", "Trying to go to previous chapter");
             File parent = f.getParentFile();
             if (parent.canRead()){
-                File[] files = parent.listFiles(ImageParser.fullFnf);
+                String[] files = parent.list(ImageParser.fullFnf);
+                List<String> fileNames = Arrays.asList(files);
+                Collections.sort(fileNames);
+
                 int foundAtIndex = 0, totalIndex = 0;
-                for (File file : files) {
-                    Log.i("ReadCache", "Comparing "+file.getAbsolutePath()+" to "+f.getAbsolutePath());
-                    if (file.getAbsolutePath().equals(f.getAbsolutePath())){
+                for (String filename : fileNames) {
+                    Log.i("ReadCache", "Comparing "+filename+" to "+f.getName());
+                    if (filename.equals(f.getName())){
                         foundAtIndex = totalIndex;
                     }
                     totalIndex++;
@@ -229,8 +239,9 @@ public class ReadCache {
                 if (foundAtIndex == 0){
                     Snackbar.make(v, "Start of chapter - No previous chapters found", Snackbar.LENGTH_SHORT).show();
                 }else{
-                    File file = files[foundAtIndex - 1];
-                    Snackbar.make(v, "Opening previous chapter - "+file.getName(), Snackbar.LENGTH_SHORT).show();
+                    String s = fileNames.get(foundAtIndex - 1);
+                    Snackbar.make(v, "Opening previous chapter - "+s, Snackbar.LENGTH_SHORT).show();
+                    File file = new File(parent, s);
                     fragment.reset(file.getAbsolutePath(), 0);
                 }
             }
