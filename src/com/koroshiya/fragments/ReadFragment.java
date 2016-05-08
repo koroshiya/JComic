@@ -103,12 +103,15 @@ public class ReadFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState){
+        showProgress(view.getContext());
+    }
 
+    public void showProgress(Context c){
         progressDialog = new ProgressDialog(getActivity());
         progressDialog.setTitle("Loading comic");
         progressDialog.show();
 
-        cache.parseInitial(view.getContext());
+        cache.parseInitial(c);
     }
 
     public void hideProgress(){
