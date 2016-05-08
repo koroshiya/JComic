@@ -129,6 +129,7 @@ public class ReadFragment extends Fragment {
     public void hideProgress(){
         if (progressDialog != null && progressDialog.isShowing()){
             progressDialog.hide();
+            applySettings(true);
         }
     }
 
