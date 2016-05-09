@@ -93,6 +93,14 @@ public class ReadCache {
         return this.totalPages;
     }
 
+    public String getFileName(){
+        return this.f.getAbsolutePath();
+    }
+
+    public int getCurrentPage(){
+        return this.currentPage;
+    }
+
     public void setImage(SoftReference<JBitmapDrawable> image, int cacheType) {
         switch (cacheType){
             case CACHE_DIRECT:

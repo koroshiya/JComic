@@ -67,13 +67,7 @@ public class ReadFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        Bundle b = getArguments();
-        String fileName = b.getString(ARG_FILE, "");
-        Log.i("FLA", "Create: "+fileName);
-        int page = b.getInt(ARG_PAGE, -1);
-        reset(fileName, page, false);
-
+        readBundleArgs(getArguments());
     }
 
     public void reset(String fileName, int page, boolean startImmediately){
@@ -104,7 +98,18 @@ public class ReadFragment extends Fragment {
 
         jsv.setOnTouchListener(gestureListener);
 
+        readBundleArgs(savedInstanceState);
+
         return v;
+    }
+
+    private void readBundleArgs(Bundle b){
+        if (b != null) {
+            String fileName = b.getString(ARG_FILE, "");
+            Log.i("FLA", "Create: " + fileName);
+            int page = b.getInt(ARG_PAGE, -1);
+            reset(fileName, page, false);
+        }
     }
 
     @Override
@@ -124,6 +129,15 @@ public class ReadFragment extends Fragment {
             if (v != null) Snackbar.make(v, "Can't read current comic - Cache empty", Snackbar.LENGTH_LONG).show();
             ((Nav)getActivity()).selectNavItem(R.id.nav_select_comic);
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle b) {
+        if (cache != null) {
+            b.putString(ARG_FILE, cache.getFileName());
+            b.putInt(ARG_PAGE, cache.getCurrentPage());
+        }
+        super.onSaveInstanceState(b);
     }
 
     public void hideProgress(){
