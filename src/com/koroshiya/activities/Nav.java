@@ -30,7 +30,6 @@ import android.widget.Toast;
 
 import com.koroshiya.R;
 import com.koroshiya.fragments.FileChooserFragment;
-import com.koroshiya.fragments.FileChooserMultiFragment;
 import com.koroshiya.fragments.ReadFragment;
 import com.koroshiya.fragments.RecentFragment;
 import com.koroshiya.fragments.SettingFragment;
@@ -186,15 +185,6 @@ public class Nav extends AppCompatActivity
         FragmentTransaction ft = fm.beginTransaction();
         ft.replace(R.id.container, frag);
         ft.addToBackStack(null);
-        ft.commit();
-    }
-
-    public void fileChooserMultiCallback(String filePath){
-        Fragment frag = FileChooserMultiFragment.newInstance(filePath);
-        FragmentManager fm = this.getFragmentManager();
-        FragmentTransaction ft = fm.beginTransaction();
-        ft.replace(R.id.container, frag);
-        ft.addToBackStack(null); //TODO: remove?
         ft.commit();
     }
 

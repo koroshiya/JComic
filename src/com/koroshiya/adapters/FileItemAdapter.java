@@ -1,9 +1,7 @@
 package com.koroshiya.adapters;
 
 import android.content.Context;
-import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.CardView;
@@ -12,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.koroshiya.R;
-import com.koroshiya.fragments.FileChooserMultiFragment;
 import com.koroshiya.io_utils.ImageParser;
 import com.koroshiya.settings.SettingsManager;
 import com.koroshiya.settings.classes.Recent;
@@ -84,18 +81,6 @@ public class FileItemAdapter extends FileAdapter {
                     String fileName = p.getPath();
                     File f = new File(fileName);
                     setFile(f, v, false);
-                }
-            });
-
-            cardview.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    Message m = new Message();
-                    Bundle b = new Bundle();
-                    b.putString(FileChooserMultiFragment.ARG_SELECTED, t);
-                    m.setData(b);
-                    permCallback.handleMessage(m);
-                    return true;
                 }
             });
 
