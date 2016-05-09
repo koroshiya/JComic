@@ -119,10 +119,6 @@ public class ReadFragment extends Fragment {
 
     public void showProgress(Context c){
         if (cache != null) {
-            progressDialog = new ProgressDialog(getActivity());
-            progressDialog.setTitle("Loading comic");
-            progressDialog.show();
-
             cache.parseInitial(c);
         }else{
             View v = getActivity().findViewById(R.id.drawer_layout);
