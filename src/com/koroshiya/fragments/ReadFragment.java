@@ -2,7 +2,6 @@ package com.koroshiya.fragments;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
@@ -33,7 +32,6 @@ public class ReadFragment extends Fragment {
 
     private JScrollView jsv;
     private ReadCache cache;
-    private ProgressDialog progressDialog;
 
     public static ReadFragment newInstance(String file, int page, Context c) {
         ReadFragment fragment = new ReadFragment();
@@ -70,7 +68,7 @@ public class ReadFragment extends Fragment {
         readBundleArgs(getArguments());
     }
 
-    public void reset(String fileName, int page, boolean startImmediately){
+    public void reset(String fileName, int page, View v){
         try {
 
             if (fileName.length() == 0 || page < 0)
@@ -79,10 +77,10 @@ public class ReadFragment extends Fragment {
             File file = new File(fileName);
             cache = new ReadCache(file, page, this);
 
-            if (startImmediately) showProgress(getActivity());
+            if (v != null) cache.parseInitial(v.getContext(), v);
 
         } catch (IOException e) {
-            View v = getActivity().findViewById(R.id.drawer_layout);
+            v = getActivity().findViewById(R.id.drawer_layout);
             if (v != null) Snackbar.make(v, e.getLocalizedMessage(), Snackbar.LENGTH_LONG).show();
             e.printStackTrace();
             ((Nav)getActivity()).selectNavItem(R.id.nav_select_comic);
@@ -108,7 +106,7 @@ public class ReadFragment extends Fragment {
             String fileName = b.getString(ARG_FILE, "");
             Log.i("FLA", "Create: " + fileName);
             int page = b.getInt(ARG_PAGE, -1);
-            reset(fileName, page, false);
+            reset(fileName, page, null);
         }
     }
 
@@ -119,7 +117,7 @@ public class ReadFragment extends Fragment {
 
     public void showProgress(Context c){
         if (cache != null) {
-            cache.parseInitial(c);
+            cache.parseInitial(c, null);
         }else{
             View v = getActivity().findViewById(R.id.drawer_layout);
             if (v != null) Snackbar.make(v, "Can't read current comic - Cache empty", Snackbar.LENGTH_LONG).show();
@@ -137,10 +135,7 @@ public class ReadFragment extends Fragment {
     }
 
     public void hideProgress(){
-        if (progressDialog != null && progressDialog.isShowing()){
-            progressDialog.hide();
-            applySettings(true);
-        }
+        applySettings(true);
     }
 
     private void applySettings(boolean enabled){

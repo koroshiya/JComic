@@ -74,17 +74,17 @@ public class ReadCache {
 
     }
 
-    public void parseInitial(Context c){
-        parseImage(c, CACHE_DIRECT, currentPage);
+    public void parseInitial(Context c, View v){
+        parseImage(c, CACHE_DIRECT, currentPage, v);
     }
 
-    private void parseImage(Context c, int cacheType, int page){
+    private void parseImage(Context c, int cacheType, int page, View v){
         Log.i("parseImage", "page: "+page);
         DecodeAsync async;
         if (archive != null){
-            async = new DecodeArchiveStreamAsync(c, this, cacheType, archive);
+            async = new DecodeArchiveStreamAsync(c, this, cacheType, archive, v);
         }else {
-            async = new DecodeBitmapFileAsync(c, this, cacheType);
+            async = new DecodeBitmapFileAsync(c, this, cacheType, v);
         }
         async.execute(f.getAbsolutePath(), Integer.toString(page));
     }
@@ -101,15 +101,23 @@ public class ReadCache {
         return this.currentPage;
     }
 
-    public void setImage(SoftReference<JBitmapDrawable> image, int cacheType) {
+    public void setImage(SoftReference<JBitmapDrawable> image, int cacheType, String msg) {
         switch (cacheType){
             case CACHE_DIRECT:
                 fragment.setImage(image.get());
                 setThumb(image);
                 fragment.hideProgress();
 
-                if (parsingInitial){
+                if (cacheForward.get() == null || cacheBackward.get() == null){
                     cacheNext(fragment.getActivity());
+                }
+                if (parsingInitial){
+                    if (msg != null){
+                        View v = fragment.getActivity().findViewById(R.id.drawer_layout);
+                        if (v != null){
+                            Snackbar.make(v, msg, Snackbar.LENGTH_SHORT).show();
+                        }
+                    }
                     parsingInitial = false;
                 }
 
@@ -176,10 +184,10 @@ public class ReadCache {
 
             cacheBackward = new SoftReference<>(this.fragment.getImage());
             if (cacheForward != null && cacheForward.get() != null) {
-                setImage(cacheForward, CACHE_DIRECT);
+                setImage(cacheForward, CACHE_DIRECT, null);
                 cacheNext(c);
             } else {
-                parseInitial(c); //Parse current page and cache next page
+                parseInitial(c, v); //Parse current page and cache next page
             }
 
         }else{
@@ -204,7 +212,7 @@ public class ReadCache {
                     String s = fileNames.get(foundAtIndex + 1);
                     Snackbar.make(v, "Opening next chapter - "+s, Snackbar.LENGTH_SHORT).show();
                     File file = new File(parent, s);
-                    fragment.reset(file.getAbsolutePath(), 0, true);
+                    fragment.reset(file.getAbsolutePath(), 0, v);
                 }
             }
         }
@@ -221,10 +229,10 @@ public class ReadCache {
             cacheForward = new SoftReference<>(this.fragment.getImage());
             if (cacheBackward != null && cacheBackward.get() != null) {
                 Log.i("ReadCache", "bcache is filled");
-                setImage(cacheBackward, CACHE_DIRECT);
+                setImage(cacheBackward, CACHE_DIRECT, null);
             } else {
                 Log.i("ReadCache", "bcache is null");
-                parseImage(c, CACHE_DIRECT, currentPage); //Parse only current page
+                parseImage(c, CACHE_DIRECT, currentPage, v); //Parse only current page
             }
             cacheBackward = new SoftReference<>(null);
 
@@ -250,7 +258,7 @@ public class ReadCache {
                     String s = fileNames.get(foundAtIndex - 1);
                     Snackbar.make(v, "Opening previous chapter - "+s, Snackbar.LENGTH_SHORT).show();
                     File file = new File(parent, s);
-                    fragment.reset(file.getAbsolutePath(), 0, true);
+                    fragment.reset(file.getAbsolutePath(), 0, v);
                 }
             }
         }
@@ -267,7 +275,7 @@ public class ReadCache {
                     return; //TODO: implement rar check elsewhere? Background cache async?
                 }
             }
-            parseImage(c, CACHE_FORWARD, currentPage + 1);
+            parseImage(c, CACHE_FORWARD, currentPage + 1, null);
         }
     }
 

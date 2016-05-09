@@ -2,11 +2,11 @@ package com.koroshiya.async;
 
 import android.content.Context;
 import android.graphics.Point;
+import android.view.View;
 
 import com.koroshiya.ReadCache;
 import com.koroshiya.controls.JBitmapDrawable;
 import com.koroshiya.io_utils.ImageParser;
-import com.koroshiya.settings.SettingsManager;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -15,8 +15,8 @@ import java.lang.ref.SoftReference;
 
 public class DecodeBitmapFileAsync extends DecodeAsync {
 
-    public DecodeBitmapFileAsync(Context c, ReadCache cache, int cacheType){
-        super(c, cache, cacheType);
+    public DecodeBitmapFileAsync(Context c, ReadCache cache, int cacheType, View v){
+        super(c, cache, cacheType, v);
     }
 
     @Override
@@ -30,7 +30,6 @@ public class DecodeBitmapFileAsync extends DecodeAsync {
         if (files.length > page || page < 0) {
             f = files[page];
             try {
-                boolean resize = SettingsManager.getDynamicResizing(c);
                 Point pt;
                 FileInputStream is;
                 try {
