@@ -69,7 +69,7 @@ public class GestureListener extends GestureDetector.SimpleOnGestureListener imp
 
                 } else if (action == MotionEvent.ACTION_UP) {
                     Log.i("GL", "Up");
-                    up(event.getX(), event.getY());
+                    up(v, event.getX(), event.getY());
                 }
             }
 
@@ -82,7 +82,7 @@ public class GestureListener extends GestureDetector.SimpleOnGestureListener imp
 
     }
 
-    public void up(double x2, double y2) {
+    public void up(View v, double x2, double y2) {
 
         JImageView jiv = jsv.getJImageView();
         if (pageStartx == jsv.getRight() || pageStartx == jiv.getWidth() - jsv.getRight() || jsv.getRight() >= jiv.getWidth()) {
@@ -90,15 +90,15 @@ public class GestureListener extends GestureDetector.SimpleOnGestureListener imp
             if ((Math.abs(startx - x2) > Math.abs(starty - y2))) {
                 Log.i("GL", "Moving");
                 if (startx > x2) {
-                    readFragment.next(jsv);
+                    readFragment.next(v);
                 } else if (pageStartx == jsv.getLeft()) { //In case getLeft and getRight are the same (ie. no horizontal scroll)
-                    readFragment.previous(jsv);
+                    readFragment.previous(v);
                 }
             }
         } else if (pageStartx == jsv.getLeft()) {
             Log.i("GL", "Left");
             if ((Math.abs(startx - x2) > Math.abs(starty - y2)) && startx < x2) {
-                readFragment.previous(jsv);
+                readFragment.previous(v);
             }
         } else {
             Log.i("GL", "Scroll");
