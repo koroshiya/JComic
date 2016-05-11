@@ -269,7 +269,7 @@ public class ReadCache {
 
         cacheForward = new SoftReference<>(null);
 
-        if (getTotalPages() > currentPage + 1 && SettingsManager.isCacheOnStart(c)){
+        if (getTotalPages() > currentPage + 1 && (!parsingInitial || SettingsManager.isCacheOnStart(c))){
             if (ArchiveParser.isSupportedRarArchive(f)){
                 if (!SettingsManager.isCacheForRar(c)){
                     return; //TODO: implement rar check elsewhere? Background cache async?
