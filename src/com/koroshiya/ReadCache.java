@@ -50,8 +50,6 @@ public class ReadCache {
             c = fragment.getActivity();
         }
 
-        //TODO: check if in recent list? Or just leave that in ReadFragment
-
         if (ArchiveParser.isSupportedArchive(f)){
             archive = ArchiveParser.parseArchive(f, c);
             totalPages = archive.getTotalPages();
