@@ -364,6 +364,10 @@ public abstract class SettingsManager {
 
     public static ArrayList<Recent> getRecentAndFavorites(Context c, boolean isRecent){
 
+        if (recentAndFavorite.size() == 0){
+            fillRecent(c);
+        }
+
         int totalRecents = recentAndFavorite.size();
         ArrayList<Recent> data = new ArrayList<>();
         Recent r;
