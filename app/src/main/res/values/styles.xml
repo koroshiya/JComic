@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="@style/Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+    </style>
+
+    <style name="CardButton" parent="CardView.Light">
+        <item name="cardUseCompatPadding">true</item>
+        <item name="elevation">5dp</item>
+    </style>
+
+    <style name="WhiteButton" parent="@android:style/Widget.Button">
+        <item name="android:textColor">#000</item>
+        <item name="android:background">#FFF</item>
+        <item name="android:textAppearance">@android:style/TextAppearance.Holo.Medium</item>
+        <item name="android:padding">15dp</item>
+        <item name="android:clickable">true</item>
+    </style>
+
+</resources>

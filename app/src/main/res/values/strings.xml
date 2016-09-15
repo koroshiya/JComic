@@ -1,0 +1,91 @@
+<resources>
+
+    <string name="app_name">JComic</string>
+    <string name="setting_zoom">How and how far to zoom images by default while reading</string>
+    <string name="setting_backlight">Keep screen on while reading</string>
+    <string name="setting_fullscreen">Hide the system pull-down menu when reading</string>
+    <string name="setting_resize">Scale down images that are larger than your device</string>
+    <string name="setting_cache_on_startup">Cache on startup</string>
+    <string name="setting_keep_zoom_page_change">Keep zoom on page change</string>
+    <string name="setting_cache_rar">Cache RAR files*</string>
+    <string name="setting_cache_rar_warning">*Warning: attempting to cache some RAR files can cause lock-ups.</string>
+    <string-array name="general_setting_max_recent">
+        <item>0</item>
+        <item>10</item>
+        <item>25</item>
+        <item>50</item>
+        <item>999</item>
+    </string-array>
+    <string-array name="general_setting_default_zoom">
+        <item>Auto</item>
+        <item>Full size</item>
+        <item>Scale to Height</item>
+        <item>Scale to Width</item>
+    </string-array>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <!-- Strings related to Settings -->
+
+    <!-- Example General settings -->
+
+    <string name="setting_backlight_title">Keep Backlight On</string>
+    <string name="setting_fullscreen_title">Pull-down Menu</string>
+    <string name="setting_keep_zoom_page_change_title">Keep Zoom</string>
+    <string name="setting_zoom_title">Default Zoom</string>
+    <string name="setting_resize_title">Resize large images</string>
+    <string name="setting_cache_on_startup_title">Cache On Start</string>
+    <string name="performance_setting_resize_default">true</string>
+    <string name="general_setting_default_zoom_default">0</string>
+    <string name="general_setting_max_recent_default">10</string>
+    <string name="st_fullscreen">fullscreen</string>
+    <string name="st_backlight">keepBacklightOn</string>
+    <string name="pref_max_recent">maxRecent</string>
+    <string name="pref_keep_zoom_on_page_change">keepZoomOnPageChange</string>
+    <string name="pref_cache_rar_files">cacheRarFiles</string>
+    <string name="pref_cache_on_start">cacheOnStart</string>
+    <string name="pref_zoom_index">zoomIndex</string>
+    <string name="pref_dynamic_resizing">dynamicResizing</string>
+    <string name="pref_cache_rar_files_default">false</string>
+    <string name="pref_cache_on_start_default">true</string>
+    <string name="st_backlight_default">false</string>
+    <string name="st_fullscreen_default">true</string>
+    <string name="pref_keep_zoom_on_page_change_default">false</string>
+    <string name="pref_delete_less_recent">deleteLessRecent</string>
+    <string name="pref_delete_less_recent_default">false</string>
+    <string name="pref_delete_less_recent_title">Delete comics after reading</string>
+    <string name="pref_delete_less_recent_summary">When the recent list limit is reached, and a new entry is added, the removed entry will be deleted from disk</string>
+    <string name="pref_only_delete_folder_images">pref_only_delete_folder_images</string>
+    <string name="pref_only_delete_folder_images_default">true</string>
+    <string name="pref_only_delete_folder_images_title">Don\'t delete all folder contents</string>
+    <string name="pref_only_delete_folder_images_summary">When deleting a recent folder, only delete images, not archives or subfolders</string>
+    <string name="pref_only_delete_finished">pref_only_delete_finished</string>
+    <string name="pref_only_delete_finished_default">true</string>
+    <string name="pref_only_delete_finished_title">Only delete finished chapters</string>
+    <string name="pref_only_delete_finished_summary">Only delete items purged from the recent list if you were already on the last page of that chapter</string>
+    <string name="str_unsupported_file_type_or_unreadable_directory">Unsupported file type or unreadable directory</string>
+    <string name="st_last_directory">lastDirectory</string>
+    <string name="st_recent">recent</string>
+    <string name="st_hideactionbar">hideActionBar</string>
+    <string name="st_hideactionbar_default">true</string>
+    <string name="setting_hideactionbar_title">Action Bar</string>
+    <string name="setting_hideactionbar">Hide action bar when reading</string>
+    <string name="st_immersive_default">true</string>
+    <string name="st_immersive">immersive</string>
+    <string name="setting_immersive_title">Immersive Mode</string>
+    <string name="setting_immersive">Hides navigation menu, pull-down menu, and action bar. Overrides other fullscreen settings. Not fully supported on Android 4</string>
+    <string name="error_report">Report Error</string>
+    <string name="credits">Credits</string>
+    <string name="change_settings">Change settings</string>
+    <string name="favorites">Favorites</string>
+    <string name="recently_read">Recently Read</string>
+    <string name="continue_reading">Continue reading</string>
+    <string name="select_comic">Select comic</string>
+    <string name="github_url">https://github.com/koroshiya/JComic</string>
+    <string name="remove_everything_from_recent_list">Remove everything from recent list</string>
+    <string name="remove_from_recent_list">Remove from recent list</string>
+    <string name="breadcrumb">Breadcrumb</string>
+    <string name="bottom_sheet_title">Bottom sheet title</string>
+
+</resources>
