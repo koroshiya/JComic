@@ -3,6 +3,7 @@ bin/
 build/
 *.apk
 gradle/
+.gradle/
 .idea/
 gradlew
 gradlew.bat
