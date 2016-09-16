@@ -9,43 +9,28 @@
     android:layout_gravity="start"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <android.support.design.widget.CoordinatorLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="?attr/colorPrimary"
-                android:elevation="4dp"
-                android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
-
-            <!-- As the main content view, the view below consumes the entire
-                 space available using match_parent in both dimensions. -->
-            <FrameLayout
-                android:id="@+id/container"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_below="@+id/toolbar"/>
-
-        </RelativeLayout>
-
-        <android.support.v4.widget.NestedScrollView
-            android:id="@+id/bottom_sheet"
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:clipToPadding="true"
-            android:background="#FFBDBDBD"
-            app:layout_behavior="android.support.design.widget.BottomSheetBehavior"
-            />
+            android:background="?attr/colorPrimary"
+            android:elevation="4dp"
+            android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
 
-    </android.support.design.widget.CoordinatorLayout>
+        <!-- As the main content view, the view below consumes the entire
+             space available using match_parent in both dimensions. -->
+        <FrameLayout
+            android:id="@+id/container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/toolbar"/>
+
+    </RelativeLayout>
 
     <!-- The drawer is given a fixed width in dp and extends the full height of
          the container. -->

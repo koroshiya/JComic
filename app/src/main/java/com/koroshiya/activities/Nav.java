@@ -13,7 +13,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
-import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
@@ -26,7 +25,6 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -170,7 +168,6 @@ public class Nav extends AppCompatActivity
                 }
 
                 if (frag != null) {
-                    resetBottomSheet(true);
                     FragmentTransaction ft = fm.beginTransaction();
                     ft.replace(R.id.container, frag);
                     ft.addToBackStack(null);
@@ -180,8 +177,6 @@ public class Nav extends AppCompatActivity
         }
 
         if (success){
-            resetBottomSheet(false);
-
             if (drawer != null && drawer.isDrawerOpen(GravityCompat.START)) {
                 drawer.closeDrawer(GravityCompat.START);
             }
@@ -195,35 +190,10 @@ public class Nav extends AppCompatActivity
         selectNavItem(R.id.nav_continue_reading, filePath, page);
     }
 
-    private boolean isBottomSheetShowing(){
-
-        ViewGroup bottomSheet = (ViewGroup) findViewById(R.id.bottom_sheet);
-        if (bottomSheet != null) {
-            BottomSheetBehavior behavior = BottomSheetBehavior.from(bottomSheet);
-            return behavior.getState() == BottomSheetBehavior.STATE_EXPANDED;
-        }else{
-            return false;
-        }
-
-    }
-
-    private void resetBottomSheet(boolean removeViews){
-
-        ViewGroup bottomSheet = (ViewGroup) findViewById(R.id.bottom_sheet);
-        if (bottomSheet != null) {
-            if (removeViews) bottomSheet.removeAllViews();
-            BottomSheetBehavior behavior = BottomSheetBehavior.from(bottomSheet);
-            behavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-        }
-
-    }
-
     @Override
     public void onBackPressed() {
 
-        if (isBottomSheetShowing()) {
-            resetBottomSheet(false);
-        }else if (drawer != null && drawer.isDrawerOpen(GravityCompat.START)) {
+        if (drawer != null && drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         }else{
             FragmentManager fm = this.getFragmentManager();

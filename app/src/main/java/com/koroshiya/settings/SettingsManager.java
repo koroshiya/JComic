@@ -115,7 +115,7 @@ public abstract class SettingsManager {
 
     }
 
-    private static void fillRecent(Context c){
+    public static void fillRecent(Context c){
 
         JSONObject root = getJSONCache(c);
 

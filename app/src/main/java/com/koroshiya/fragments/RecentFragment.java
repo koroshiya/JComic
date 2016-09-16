@@ -6,14 +6,15 @@ import android.graphics.Point;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.design.widget.BottomSheetBehavior;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 import com.koroshiya.R;
 import com.koroshiya.activities.Nav;
@@ -43,7 +44,7 @@ public class RecentFragment extends Fragment {
         }else if (b.get(FileListAdapter.ARG_SHEET_FILE) != null){
             String filePath = b.getString(FileListAdapter.ARG_SHEET_FILE);
             int pageNo = b.getInt(FileListAdapter.ARG_SHEET_PAGE_NO);
-            showBottomSheet(filePath, pageNo);
+            showAlertPrompt(filePath, pageNo);
         }
 
         return false;
@@ -76,71 +77,57 @@ public class RecentFragment extends Fragment {
         return rgv;
     }
 
-    @Override
-    public void onResume(){
-        super.onResume();
-        instantiateBottomSheet();
-    }
+    private void showAlertPrompt(final String filePath, final int pageNo){
 
-    private void instantiateBottomSheet(){
+        RecyclerView rgv = (RecyclerView) getActivity().findViewById(R.id.file_chooser_grid_view);
 
-        //TODO: immersive mode seems to kill the bottom sheet's visibility
+        if (rgv != null && rgv.getAdapter() instanceof FileListAdapter) {
 
-        ViewGroup bottomSheet = (ViewGroup) getActivity().findViewById(R.id.bottom_sheet);
-        bottomSheet.removeAllViews();
+            final FileListAdapter fla = (FileListAdapter) rgv.getAdapter();
+            final Context c = rgv.getContext();
 
-        LayoutInflater inflater = LayoutInflater.from(getActivity());
-        inflater.inflate(R.layout.stub_file_chooser_bottom_sheet, bottomSheet, true);
+            File f = new File(filePath);
+            String names[] = {
+                    c.getString(R.string.continue_reading),
+                    c.getString(R.string.remove_from_recent_list),
+                    c.getString(R.string.remove_everything_from_recent_list)
+            };
 
-    }
+            ListView lv = new ListView(c);
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(c,android.R.layout.simple_list_item_1,names);
+            lv.setAdapter(adapter);
+            lv.setDividerHeight(20);
+            lv.setPadding(20,20,20,20);
 
-    private void showBottomSheet(final String filePath, final int pageNo){
+            AlertDialog alert = new AlertDialog.Builder(c)
+                    .setTitle(f.getName())
+                    .setView(lv)
+                    .create();
 
-        View bottomSheet = getActivity().findViewById(R.id.bottom_sheet);
+            lv.setOnItemClickListener((adapterView, view, position, id) -> {
 
-        if (bottomSheet != null) {
-            final BottomSheetBehavior mBottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
-
-            if (filePath != null) {
-
-                RecyclerView rgv = (RecyclerView) getActivity().findViewById(R.id.file_chooser_grid_view);
-
-                if (rgv != null && rgv.getAdapter() instanceof FileListAdapter) {
-
-                    final FileListAdapter fla = (FileListAdapter) rgv.getAdapter();
-                    final Context c = rgv.getContext();
-                    File f = new File(filePath);
-
-                    ((TextView)bottomSheet.findViewById(R.id.file_chooser_bottom_sheet_txt_title)).setText(f.getName());
-
-                    bottomSheet.findViewById(R.id.file_chooser_bottom_sheet_btn_continue_reading).setOnClickListener(v -> {
-                        mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-                        fla.continueReading(v, filePath);
-                    });
-
-                    bottomSheet.findViewById(R.id.file_chooser_bottom_sheet_btn_remove_item).setOnClickListener(v -> {
-                        mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                switch (position){
+                    case 0:
+                        fla.continueReading(rgv, filePath);
+                        break;
+                    case 1:
                         Recent recent = SettingsManager.getRecentAndFavorite(c, filePath, true);
                         if (recent != null) {
                             SettingsManager.removeRecentAndFavorite(c, recent);
                         }
                         fla.removeItem(pageNo);
-                    });
-
-                    bottomSheet.findViewById(R.id.file_chooser_bottom_sheet_btn_remove_all).setOnClickListener(v -> {
-                        mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                        break;
+                    case 2:
                         SettingsManager.removeRecentAndFavorites(c);
                         fla.removeAllItems();
-                    });
-
+                        break;
                 }
 
-                Log.i("test", "Showing sheet");
-                mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                alert.dismiss();
 
-            }else{
-                mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-            }
+            });
+
+            alert.show();
 
         }
 
