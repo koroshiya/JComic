@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="150dp"
         android:gravity="center_horizontal"
-        />
+        android:contentDescription="@string/thumbnail"/>
     <com.koroshiya.controls.EllipsizingTextView
         android:id="@+id/list_item_text"
         android:layout_width="match_parent"

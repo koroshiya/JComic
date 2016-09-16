@@ -18,16 +18,6 @@ android {
             enabled true
         }
     }
-    buildTypes {
-        debug{
-            //minifyEnabled true
-        }
-        release {
-            //minifyEnabled true
-            //shrinkResources true //Not yet working with jack
-            //proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-        }
-    }
     compileOptions {
         targetCompatibility 1.8
         sourceCompatibility 1.8
