@@ -86,9 +86,6 @@
     <string name="remove_everything_from_recent_list">Remove everything from recent list</string>
     <string name="remove_from_recent_list">Remove from recent list</string>
     <string name="breadcrumb">Breadcrumb</string>
-    <string name="bottom_sheet_title">Bottom sheet title</string>
     <string name="thumbnail">Thumbnail</string>
-    <string name="name_of_file">Name of file</string>
-    <string name="continue_from_page_x">Continue from page x</string>
 
 </resources>
