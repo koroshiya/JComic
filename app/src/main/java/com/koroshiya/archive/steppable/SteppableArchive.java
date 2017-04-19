@@ -1,6 +1,7 @@
 package com.koroshiya.archive.steppable;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.koroshiya.controls.JBitmapDrawable;
@@ -69,6 +70,7 @@ public abstract class SteppableArchive {
         Collections.sort(this.cache);
     }
 
+    @Nullable
     public abstract SoftReference<JBitmapDrawable> parseImage(int i, int width, boolean resize);
 
     public abstract void close();

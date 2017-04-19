@@ -2,6 +2,7 @@ package com.koroshiya.archive.steppable;
 
 import android.content.Context;
 import android.graphics.Point;
+import android.support.annotation.Nullable;
 
 import com.koroshiya.controls.JBitmapDrawable;
 import com.koroshiya.io_utils.ArchiveParser;
@@ -53,9 +54,12 @@ public class JRarArchive extends SteppableArchive{
     }
 
     @Override
+	@Nullable
 	public SoftReference<JBitmapDrawable> parseImage(int i, int width, boolean resize) {
 
 		FileHeader entry = (FileHeader)getEntry(i);
+		if (entry == null) return null;
+
 		String name = entry.getFileNameString();
 		name = name.substring(name.lastIndexOf('\\') + 1);
 		File f = new File(tempDir + "/" + name);
@@ -103,7 +107,7 @@ public class JRarArchive extends SteppableArchive{
             }
 
         }catch (IOException ioe){
-            return null;
+            ioe.printStackTrace();
         }
 
 		return new SoftReference<>(temp);
@@ -113,6 +117,8 @@ public class JRarArchive extends SteppableArchive{
 	private void extractFileToDisk(int i, File pathToExtractTo){
 
 		FileHeader header = (FileHeader) getEntry(i);
+		if (header == null) return;
+
 		String name = header.getFileNameString();
 		name = name.substring(name.lastIndexOf('\\') + 1);
 

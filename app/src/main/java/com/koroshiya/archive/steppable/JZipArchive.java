@@ -2,6 +2,7 @@ package com.koroshiya.archive.steppable;
 
 import android.content.Context;
 import android.graphics.Point;
+import android.support.annotation.Nullable;
 
 import com.koroshiya.controls.JBitmapDrawable;
 import com.koroshiya.io_utils.ArchiveParser;
@@ -88,6 +89,7 @@ public class JZipArchive extends SteppableArchive{
     }
 
 	@Override
+    @Nullable
 	public SoftReference<JBitmapDrawable> parseImage(int i, int width, boolean resize){
 
         JImage j = this.cache.get(i);
