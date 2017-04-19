@@ -499,9 +499,9 @@ public class TwoDScrollView extends FrameLayout {
      int viewRight = view.getRight();
  
      if (top < viewBottom && viewTop < bottom && left < viewRight && viewLeft < right) {
-       /**
+       /*
         * The focusable is in the target area, it is a candidate for focusing
-        **/
+        */
        final boolean viewIsFullyContained = (top < viewTop) && (viewBottom < bottom) && (left < viewLeft) && (viewRight < right);
        if (focusCandidate == null) {
          focusCandidate = view; //No candidate, take this one
