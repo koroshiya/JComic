@@ -87,5 +87,6 @@
     <string name="remove_from_recent_list">Remove from recent list</string>
     <string name="breadcrumb">Breadcrumb</string>
     <string name="thumbnail">Thumbnail</string>
+    <string name="you_must_give_jcomic_storage_permissions">You must give JComic storage permissions</string>
 
 </resources>

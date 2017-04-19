@@ -256,8 +256,8 @@ public class Nav extends AppCompatActivity
         }
     }
 
-    private void openSettingsPage(String msg){
-        Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
+    private void openSettingsPageStoragePermission(){
+        Toast.makeText(this, R.string.you_must_give_jcomic_storage_permissions, Toast.LENGTH_LONG).show();
         Intent intent = new Intent();
         intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
         Uri uri = Uri.fromParts("package", getPackageName(), null);
@@ -281,7 +281,7 @@ public class Nav extends AppCompatActivity
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         boolean notGranted = grantResults.length == 0 || grantResults[0] != PackageManager.PERMISSION_GRANTED;
         if (notGranted){
-            openSettingsPage("You must give JComic storage permissions");
+            openSettingsPageStoragePermission();
         }else{
             selectNavItem(R.id.nav_select_comic);
         }
