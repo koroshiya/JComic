@@ -35,8 +35,6 @@ public class FileItemAdapter extends FileAdapter {
             this.curdir = SettingsManager.getLastDirectory(c);
         }
 
-        ArrayList<Recent> recents = SettingsManager.getRecentAndFavorites(c, true);
-
         SettingsManager.setLastDirectory(c, this.curdir);
 
         items.clear();
@@ -46,18 +44,7 @@ public class FileItemAdapter extends FileAdapter {
             if ((s.isDirectory() || ImageParser.isSupportedFile(s)) && !s.isHidden()){tempList.add(s.getAbsolutePath());}
         }
         Collections.sort(tempList);
-        for (String obj : tempList){
-            Recent r = null;
-            for (Recent recent : recents) {
-                if (r == null && recent.getPath().equals(obj)){
-                    r = recent;
-                }
-            }
-            if (r == null) {
-                r = new Recent(obj, 0, 0);
-            }
-            items.add(r);
-        }
+        items.addAll(tempList);
 
         this.notifyDataSetChanged();
 
@@ -86,12 +73,10 @@ public class FileItemAdapter extends FileAdapter {
         @Override
         public void setDataOnView(int position) {
 
-            final Recent p = getItem(position);
-            final String t = p.getPath();
+            final String t = getItem(position);
 
             cardview.setOnClickListener(v -> {
-                String fileName = p.getPath();
-                File f = new File(fileName);
+                File f = new File(t);
                 setFile(f, v, false);
             });
 
@@ -116,13 +101,12 @@ public class FileItemAdapter extends FileAdapter {
                 textview.setText(val);
 
                 if (pageCount != null){
-                    long uuid = p.getUuid();
-                    if (uuid == 0){
+                    int pnum = Recent.getPageNumber(itemView.getContext(), t, -1);
+                    if (pnum == -1){
                         pageCount.setVisibility(View.GONE);
                         textview.setPadding(fifteenDp, fifteenDp, fifteenDp, fifteenDp);
                     }else{
-                        int pnum = p.getPageNumber();
-                        String msg = String.format(Locale.getDefault(), "Continue from page %d", pnum);
+                        String msg = String.format(Locale.getDefault(), "Continue from page %d", pnum + 1);
                         pageCount.setText(msg);
                         pageCount.setVisibility(View.VISIBLE);
                         textview.setPadding(fifteenDp, fifteenDp, fifteenDp, 0);

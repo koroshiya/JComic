@@ -20,7 +20,6 @@ import com.koroshiya.R;
 import com.koroshiya.activities.Nav;
 import com.koroshiya.adapters.FileListAdapter;
 import com.koroshiya.io_utils.ImageParser;
-import com.koroshiya.settings.SettingsManager;
 import com.koroshiya.settings.classes.Recent;
 
 import java.io.File;
@@ -28,6 +27,7 @@ import java.io.File;
 public class RecentFragment extends Fragment {
 
     public static final String ARG_RECENT = "recent";
+    private boolean isRecent = true;
 
     private final Handler.Callback callback = msg -> {
 
@@ -43,8 +43,7 @@ public class RecentFragment extends Fragment {
             ((Nav) getActivity()).fileChooserCallback(filePath, page);
         }else if (b.get(FileListAdapter.ARG_SHEET_FILE) != null){
             String filePath = b.getString(FileListAdapter.ARG_SHEET_FILE);
-            int pageNo = b.getInt(FileListAdapter.ARG_SHEET_PAGE_NO);
-            showAlertPrompt(filePath, pageNo);
+            showAlertPrompt(filePath);
         }
 
         return false;
@@ -54,7 +53,7 @@ public class RecentFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         Bundle b = getArguments();
-        boolean isRecent = b.getBoolean(ARG_RECENT, true);
+        isRecent = b.getBoolean(ARG_RECENT, true);
         Context c;
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -77,7 +76,7 @@ public class RecentFragment extends Fragment {
         return rgv;
     }
 
-    private void showAlertPrompt(final String filePath, final int pageNo){
+    private void showAlertPrompt(final String filePath){
 
         RecyclerView rgv = (RecyclerView) getActivity().findViewById(R.id.file_chooser_grid_view);
 
@@ -111,14 +110,11 @@ public class RecentFragment extends Fragment {
                         fla.continueReading(rgv, filePath);
                         break;
                     case 1:
-                        Recent recent = SettingsManager.getRecentAndFavorite(c, filePath, true);
-                        if (recent != null) {
-                            SettingsManager.removeRecentAndFavorite(c, recent);
-                        }
-                        fla.removeItem(pageNo);
+                        Recent.delete(c, filePath, isRecent);
+                        fla.removeItem(filePath);
                         break;
                     case 2:
-                        SettingsManager.removeRecentAndFavorites(c);
+                        Recent.delete(c, isRecent);
                         fla.removeAllItems();
                         break;
                 }

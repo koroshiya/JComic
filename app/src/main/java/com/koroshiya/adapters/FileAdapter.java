@@ -27,7 +27,7 @@ import java.util.Arrays;
 public abstract class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
 
     final boolean isRecent;
-    final ArrayList<Recent> items = new ArrayList<>();
+    final ArrayList<String> items = new ArrayList<>();
     File curdir;
     final Handler.Callback permCallback;
 
@@ -42,11 +42,17 @@ public abstract class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewH
         return this.curdir;
     }
 
-    public void removeItem(int pos){
-        if (pos < items.size()){
-            items.remove(pos);
+    public void removeItem(String path){
+        int pos = -1;
+        for (int i = 0; i < items.size(); i++) {
+            if (items.get(i).equals(path)){
+                pos = i;
+            }
         }
-        notifyItemRemoved(pos);
+        if (pos >= 0){
+            items.remove(pos);
+            notifyItemRemoved(pos);
+        }
     }
 
     public void removeAllItems(){
@@ -68,7 +74,7 @@ public abstract class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewH
 
     protected abstract void setData(Context c);
 
-    Recent getItem(int position) {
+    String getItem(int position) {
         return items.get(position);
     }
 
@@ -107,8 +113,7 @@ public abstract class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewH
             Message m = new Message();
             Bundle b = new Bundle();
             if (f.isDirectory() || ArchiveParser.isSupportedArchive(f)) {
-                Recent recent = SettingsManager.getRecentAndFavorite(c, f.getAbsolutePath(), true);
-                if (recent != null) i = recent.getPageNumber();
+                i = Recent.getPageNumber(c, f.getAbsolutePath(), 0);
             }else{
                 Log.d("ItemClickListener", "Processing item after " + f.getName());
                 File[] files = f.getParentFile().listFiles();

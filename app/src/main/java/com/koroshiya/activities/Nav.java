@@ -36,7 +36,7 @@ import com.koroshiya.fragments.SettingFragment;
 import com.koroshiya.io_utils.ArchiveParser;
 import com.koroshiya.io_utils.ImageParser;
 import com.koroshiya.io_utils.StorageHelper;
-import com.koroshiya.settings.SettingsManager;
+import com.koroshiya.settings.classes.Recent;
 
 import java.io.File;
 
@@ -130,7 +130,7 @@ public class Nav extends AppCompatActivity
                         }
                         break;
                     case R.id.nav_recently_read:
-                        if (SettingsManager.getRecentAndFavorites(this, true).size() > 0) {
+                        if (Recent.count(this, true) > 0) {
                             frag = new RecentFragment();
                             Bundle b = new Bundle();
                             b.putBoolean(RecentFragment.ARG_RECENT, true);
@@ -141,7 +141,7 @@ public class Nav extends AppCompatActivity
                         }
                         break;
                     case R.id.nav_favorites:
-                        if (SettingsManager.getRecentAndFavorites(this, false).size() > 0) {
+                        if (Recent.count(this, false) > 0) {
                             frag = new RecentFragment();
                             Bundle b = new Bundle();
                             b.putBoolean(RecentFragment.ARG_RECENT, false);

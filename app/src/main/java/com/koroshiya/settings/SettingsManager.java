@@ -18,19 +18,10 @@ import com.koroshiya.archive.steppable.SteppableArchive;
 import com.koroshiya.io_utils.ArchiveParser;
 import com.koroshiya.io_utils.ImageParser;
 import com.koroshiya.settings.classes.Recent;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.koroshiya.settings.classes.Setting;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.MappedByteBuffer;
-import java.nio.channels.FileChannel;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
 import java.util.Locale;
 
 /**
@@ -40,10 +31,6 @@ import java.util.Locale;
  * */
 public abstract class SettingsManager {
 
-	private static final ArrayList<Recent> recentAndFavorite = new ArrayList<>();
-
-    private static final String CACHE_FILE = "cache.json";
-
     public static final int ZOOM_AUTO = 0;
     public static final int ZOOM_FULL = 1;
     public static final int ZOOM_SCALE_HEIGHT = 2;
@@ -52,59 +39,14 @@ public abstract class SettingsManager {
     private SettingsManager(){
     }
 
-    private static JSONObject getJSONCache(Context c){
-
-        File cFile = new File(c.getCacheDir(), CACHE_FILE);
-
-        if (cFile.exists() && cFile.length() > 0){
-            try {
-                FileInputStream fis = new FileInputStream(cFile);
-                FileChannel fc = fis.getChannel();
-                MappedByteBuffer bb = fc.map(FileChannel.MapMode.READ_ONLY, 0, fc.size());
-
-                String jsonStr = Charset.defaultCharset().decode(bb).toString();
-
-                //Log.i("SM", new String(jsonStr));
-                return new JSONObject(jsonStr);
-            } catch (JSONException | IOException e) {
-                e.printStackTrace();
-                deleteFile(cFile);
-            }
-
-        }
-
-        return new JSONObject();
-
-    }
-
-    private static void writeJSONCache(Context c, JSONObject jsonObject){
-
-        File rFile = new File(c.getCacheDir(), CACHE_FILE);
-
-        try {
-            FileOutputStream fos = new FileOutputStream(rFile);
-            fos.write(jsonObject.toString().getBytes());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-    }
-
     public static File getLastDirectory(Context c){
 
-        JSONObject jsonObject = getJSONCache(c);
+        String key = c.getString(R.string.st_last_directory);
+        String value = Setting.getString(c, key);
         File tmp = null;
 
-        if (jsonObject != null){
-            try {
-                String key = c.getString(R.string.st_last_directory);
-                if (jsonObject.has(key)){
-                    tmp = new File(jsonObject.getString(key));
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
+        if (value != null){
+            tmp = new File(value);
         }
 
         if (tmp == null || !tmp.exists() || !tmp.isDirectory() || !tmp.canRead()){
@@ -113,61 +55,6 @@ public abstract class SettingsManager {
 
         return tmp;
 
-    }
-
-    private static void fillRecent(Context c){
-
-        JSONObject root = getJSONCache(c);
-
-        if (root != null){
-            try {
-                if (root.has("recent")) {
-                    JSONArray jsonArray = root.getJSONArray("recent");
-                    int len = jsonArray.length();
-                    for (int i = 0; i < len; i++) {
-                        try {
-                            JSONObject jsonObject = jsonArray.getJSONObject(i);
-                            Recent r = new Recent(jsonObject);
-                            recentAndFavorite.add(r);
-                        } catch (JSONException jse) {
-                            jse.printStackTrace();
-                        }
-                    }
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-            ArrayList<Long> uuids = new ArrayList<>();
-            int totalRecents = recentAndFavorite.size();
-            Recent r;
-            File f;
-            boolean found;
-
-            for (int i = totalRecents - 1; i >= 0; i--){
-                r = recentAndFavorite.get(i);
-                f = new File(r.getPath());
-                if (!ImageParser.isSupportedFile(f)){
-                    recentAndFavorite.remove(i);
-                }else{
-                    uuids.add(r.getUuid());
-                }
-            }
-
-            for (File file : c.getCacheDir().listFiles(ImageParser.fnf)){
-                if (file.getName().endsWith(".webp")){
-                    found = false;
-                    for (long i : uuids){
-                        if (file.getName().equals(Long.toString(i) + ".webp")){
-                            found = true;
-                            break;
-                        }
-                    }
-                    if (!found) deleteFile(file);
-                }
-            }
-
-        }
     }
 
     private static SharedPreferences getPreferences(Context c){
@@ -279,52 +166,14 @@ public abstract class SettingsManager {
         return getPreferences(c).getBoolean(key, defaultVal);
     }
 
-    private static int getMaxRecent(Context c){
+    public static int getMaxRecent(Context c){
         return Integer.parseInt(getPreferences(c).getString(c.getString(R.string.pref_max_recent), c.getString(R.string.general_setting_max_recent_default)));
     }
 
 
 
-    public static void removeRecentAndFavorite(Context c, Recent r){
 
-        boolean isRecent = isRecent(r);
-
-        for (int i = recentAndFavorite.size() - 1; i >= 0; i--){
-            Recent recent = recentAndFavorite.get(i);
-            if (isRecent(recent) == isRecent && recent.getPath().equals(r.getPath())){
-                recentAndFavorite.remove(i);
-                break;
-            }
-        }
-
-        saveRecentList(c);
-
-    }
-
-    public static void addRecentAndFavorite(Context c, Recent r){
-
-        boolean isRecent = isRecent(r);
-        int totalRecent = 0;
-        int max = getMaxRecent(c);
-
-        for (int i = recentAndFavorite.size() - 1; i >= 0; i--){
-            Recent recent = recentAndFavorite.get(i);
-            if (isRecent(recent) == isRecent && recent.getPath().equals(r.getPath())){
-                recentAndFavorite.remove(i);
-            }else if (isRecent(recent)){
-                if (totalRecent < max)
-                    totalRecent++;
-                else
-                    deleteRecent(i, c, recent);
-            }
-        }
-        recentAndFavorite.add(0, r);
-
-        saveRecentList(c);
-
-    }
-
-    private static void deleteRecent(int i, Context c, Recent recent){
+    public static void deleteRecent(Context c, Recent recent){
         SharedPreferences prefs = getPreferences(c);
         boolean deleteLessRecent = prefs.getBoolean(c.getString(R.string.pref_delete_less_recent), Boolean.parseBoolean(c.getString(R.string.pref_delete_less_recent_default)));
         boolean onlyDeleteFinishedChapters = prefs.getBoolean(c.getString(R.string.pref_only_delete_finished), Boolean.parseBoolean(c.getString(R.string.pref_only_delete_finished_default)));
@@ -376,112 +225,13 @@ public abstract class SettingsManager {
                 }
             }
         }
-        recentAndFavorite.remove(i);
+        recent.delete(c);
     }
-
-    public static void removeRecentAndFavorites(Context c){
-
-        recentAndFavorite.clear();
-        saveRecentList(c);
-
-    }
-
-    public static ArrayList<Recent> getRecentAndFavorites(Context c, boolean isRecent){
-
-        if (recentAndFavorite.size() == 0){
-            fillRecent(c);
-        }
-
-        int totalRecents = recentAndFavorite.size();
-        ArrayList<Recent> data = new ArrayList<>();
-        Recent r;
-        File f;
-
-        for (int i = totalRecents - 1; i >= 0; i--){
-            r = recentAndFavorite.get(i);
-            f = new File(r.getPath());
-            if (!ImageParser.isSupportedFile(f)){
-                recentAndFavorite.remove(i);
-            }else{
-                if (r.getPageNumber() >= 0 == isRecent){
-                    data.add(r);
-                }
-            }
-        }
-
-        if (totalRecents != data.size()){
-            saveRecentList(c);
-        }
-
-        return data;
-    }
-
-    public static Recent getRecentAndFavorite(Context c, String path, boolean isRecent){
-        if (recentAndFavorite.size() == 0){
-            fillRecent(c);
-        }
-        for (Recent r : recentAndFavorite){
-            if (isRecent(r) == isRecent && r.getPath().equals(path)){
-                return r;
-            }
-        }
-        return null;
-    }
-
-    /**
-     * Determine whether r is a recently read comic, or a favorite.
-     * */
-    private static boolean isRecent(Recent r){
-        return r.getPageNumber() >= 0;
-    }
-	
-	private static void saveRecentList(Context c){
-
-        JSONObject jsonObject = getJSONCache(c);
-
-        String key = c.getString(R.string.st_recent);
-        if (jsonObject.has(key)){
-            jsonObject.remove(key);
-        }
-
-        if (recentAndFavorite.size() > 0){
-
-            JSONArray arr = new JSONArray();
-            for (Recent r : recentAndFavorite) {
-                try {
-                    arr.put(r.toJSON());
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-            try {
-                jsonObject.put(key, arr);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-        }
-
-        writeJSONCache(c, jsonObject);
-
-	}
 
     public static void setLastDirectory(Context c, File lastDir){
 
-        JSONObject obj = getJSONCache(c);
         String key = c.getString(R.string.st_last_directory);
-
-        if (obj.has(key)) {
-            obj.remove(key);
-        }
-
-        try {
-            obj.put(key, lastDir.getAbsolutePath());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        writeJSONCache(c, obj);
+        Setting.insertOrUpdate(c, key, lastDir.getAbsolutePath());
 
     }
 

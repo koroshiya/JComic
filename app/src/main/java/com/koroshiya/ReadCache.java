@@ -141,11 +141,11 @@ public class ReadCache {
             }
 
             if (recent == null) {
-                recent = SettingsManager.getRecentAndFavorite(c, f.getAbsolutePath(), true);
+                recent = Recent.get(c, f.getAbsolutePath(), true);
             }
 
             if (recent != null) {
-                recent.setPageNumber(currentPage);
+                recent.setPageNumber(c, currentPage);
             } else {
                 JBitmapDrawable jbd = image.get();
                 recent = new Recent(f.getAbsolutePath(), currentPage);
@@ -158,8 +158,6 @@ public class ReadCache {
                         Integer.toString(jbd.getHeight())
                 );
             }
-
-            SettingsManager.addRecentAndFavorite(c, recent); //TODO: move to detach instead?
 
         }
 

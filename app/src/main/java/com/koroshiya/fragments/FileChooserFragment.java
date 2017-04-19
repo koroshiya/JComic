@@ -64,9 +64,12 @@ public class FileChooserFragment extends Fragment {
         bread.setAdapter(fpa);
 
         final SwipeRefreshLayout srl = (SwipeRefreshLayout) rootView.findViewById(R.id.file_chooser_swiperefreshlayout);
-        srl.setOnRefreshListener(() -> {
-            fia.setData(c);
-            srl.setRefreshing(false);
+        srl.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                fia.setData(c);
+                srl.setRefreshing(false);
+            }
         });
 
         return rootView;

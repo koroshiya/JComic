@@ -15,7 +15,6 @@ import android.widget.LinearLayout;
 import com.koroshiya.R;
 import com.koroshiya.controls.EllipsizingTextView;
 import com.koroshiya.io_utils.ImageParser;
-import com.koroshiya.settings.SettingsManager;
 import com.koroshiya.settings.classes.Recent;
 
 import java.io.File;
@@ -24,7 +23,6 @@ public class FileListAdapter extends FileAdapter {
 
     private final File cacheDir;
     public static final String ARG_SHEET_FILE = "sheet_file";
-    public static final String ARG_SHEET_PAGE_NO = "sheet_page";
 
     public FileListAdapter(Context c, Handler.Callback permCallback, boolean isRecent) {
         super(c, permCallback, isRecent);
@@ -40,7 +38,7 @@ public class FileListAdapter extends FileAdapter {
     public void setData(Context c){
 
         items.clear();
-        items.addAll(SettingsManager.getRecentAndFavorites(c, isRecent));
+        items.addAll(Recent.getPaths(c, isRecent));
 
         super.notifyDataSetChanged();
     }
@@ -63,11 +61,11 @@ public class FileListAdapter extends FileAdapter {
         @Override
         public void setDataOnView(final int position) {
 
-            final Recent p = getItem(position);
-            String t = p.getPath();
+            String t = getItem(position);
+            long uuid = Recent.getUuid(itemView.getContext(), t, isRecent, -1);
             final File f = new File(t);
 
-            File thumb = new File(cacheDir, p.getUuid() + ".webp");
+            File thumb = new File(cacheDir, Long.toString(uuid) + ".webp");
             Log.i("FLA", "Creating image from: "+thumb.getAbsolutePath());
 
             if (thumb.exists() && thumb.isFile() && thumb.canRead()){
@@ -98,7 +96,6 @@ public class FileListAdapter extends FileAdapter {
                 Message m = new Message();
                 Bundle b = new Bundle();
                 b.putString(ARG_SHEET_FILE, f.getAbsolutePath());
-                b.putInt(ARG_SHEET_PAGE_NO, position);
                 m.setData(b);
                 permCallback.handleMessage(m);
             });

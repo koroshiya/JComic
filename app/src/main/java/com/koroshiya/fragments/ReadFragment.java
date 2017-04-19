@@ -39,7 +39,7 @@ public class ReadFragment extends Fragment {
         Log.i("FLA", "Instance: "+file);
         if (file == null) {
 
-            ArrayList<Recent> recents = SettingsManager.getRecentAndFavorites(c, true);
+            ArrayList<Recent> recents = Recent.get(c, true);
 
             if (recents.size() == 0) {
                 return null;
