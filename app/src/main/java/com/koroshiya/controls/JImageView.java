@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
-import android.widget.ImageView;
 
 import com.koroshiya.io_utils.ImageParser;
 import com.koroshiya.settings.SettingsManager;
@@ -13,7 +12,7 @@ import com.koroshiya.settings.SettingsManager;
  * Purpose: ImageView with overridden onMeasure method.
  * 			Used for scaling images outside of the default ImageView algorithm.
  * */
-public class JImageView extends ImageView {
+public class JImageView extends android.support.v7.widget.AppCompatImageView {
 
 	private int originalWidth;
 	private int originalHeight;

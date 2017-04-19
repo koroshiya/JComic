@@ -20,9 +20,8 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.widget.TextView;
 
-public class EllipsizingTextView extends TextView {
+public class EllipsizingTextView extends android.support.v7.widget.AppCompatTextView {
     private static final int MAX_ELLIPSIZE_LINES = 100;
 
     private int mMaxLines;
