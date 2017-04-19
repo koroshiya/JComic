@@ -29,7 +29,7 @@ public class RecentFragment extends Fragment {
 
     public static final String ARG_RECENT = "recent";
 
-    final Handler.Callback callback = msg -> {
+    private final Handler.Callback callback = msg -> {
 
         Bundle b = msg.getData();
 

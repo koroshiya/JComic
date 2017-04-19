@@ -82,7 +82,7 @@ public class GestureListener extends GestureDetector.SimpleOnGestureListener imp
 
     }
 
-    public void up(View v, double x2, double y2) {
+    private void up(View v, double x2, double y2) {
 
         JImageView jiv = jsv.getJImageView();
         if (pageStartx == jsv.getRight() || pageStartx == jiv.getWidth() - jsv.getRight() || jsv.getRight() >= jiv.getWidth()) {

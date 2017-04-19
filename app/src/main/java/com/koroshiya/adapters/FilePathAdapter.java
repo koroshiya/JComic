@@ -116,19 +116,19 @@ public class FilePathAdapter extends RecyclerView.Adapter<FilePathAdapter.ViewHo
         return splitVals.length;
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder{
+    class ViewHolder extends RecyclerView.ViewHolder{
 
         private final CardView v;
         private final TextView tv;
 
-        public ViewHolder(View v) {
+        ViewHolder(View v) {
             super(v);
             this.v = (CardView) v;
             this.tv = (TextView) v.findViewById(R.id.list_item_breadcrumb_txt);
 
         }
 
-        public void setDataOnView(final int position) {
+        void setDataOnView(final int position) {
 
             String chunk = splitVals[position];
             if (chunk.length() == 0) chunk = "/";

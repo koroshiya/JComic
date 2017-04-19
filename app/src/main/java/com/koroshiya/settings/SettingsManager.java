@@ -115,7 +115,7 @@ public abstract class SettingsManager {
 
     }
 
-    public static void fillRecent(Context c){
+    private static void fillRecent(Context c){
 
         JSONObject root = getJSONCache(c);
 
@@ -279,7 +279,7 @@ public abstract class SettingsManager {
         return getPreferences(c).getBoolean(key, defaultVal);
     }
 
-    public static int getMaxRecent(Context c){
+    private static int getMaxRecent(Context c){
         return Integer.parseInt(getPreferences(c).getString(c.getString(R.string.pref_max_recent), c.getString(R.string.general_setting_max_recent_default)));
     }
 

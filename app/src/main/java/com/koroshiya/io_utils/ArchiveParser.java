@@ -2,6 +2,10 @@ package com.koroshiya.io_utils;
 
 import android.content.Context;
 
+import com.koroshiya.archive.steppable.JRarArchive;
+import com.koroshiya.archive.steppable.JZipArchive;
+import com.koroshiya.archive.steppable.SteppableArchive;
+
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -9,16 +13,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Locale;
 
-import com.koroshiya.archive.steppable.JRarArchive;
-import com.koroshiya.archive.steppable.JZipArchive;
-import com.koroshiya.archive.steppable.SteppableArchive;
-
 /**
  * Purpose: Used for testing archives and methods by which to implement them.
  * */
 public abstract class ArchiveParser {
 
-	public static final byte[] BUFFER = new byte[8192];
+	private static final byte[] BUFFER = new byte[8192];
     private static final String[] supportedArchives = {".zip", ".cbz", ".rar", ".cbr"};
 
     public static boolean isSupportedArchive(File f){
@@ -29,7 +29,7 @@ public abstract class ArchiveParser {
     	return isSupported(f, new String[]{".rar", ".cbr"});
     }
 	
-	public static boolean isSupported(File f, String[] exts){
+	private static boolean isSupported(File f, String[] exts){
 		
 		String name = f.getName().toLowerCase(Locale.getDefault());
     	for (String ext : exts) if (name.endsWith(ext)) return true;

@@ -10,13 +10,13 @@ import java.util.Locale;
  * This class may hold an actual File object, a String reference, etc.
  * The type of object held depends on the Steppable in use.
  * */
-public class JImage implements Comparable<JImage>{
+class JImage implements Comparable<JImage>{
 	
 	private final String name;
 	private final Object image;
 	private final static Collator myCollator = Collator.getInstance(Locale.getDefault());
 	
-	public JImage(Object image, String name){
+	JImage(Object image, String name){
 		
 		this.image = image;
 		this.name = name;

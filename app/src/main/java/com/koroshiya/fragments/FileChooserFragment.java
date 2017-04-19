@@ -19,7 +19,7 @@ import com.koroshiya.adapters.FilePathAdapter;
 
 public class FileChooserFragment extends Fragment {
 
-    final Handler.Callback callback = msg -> {
+    private final Handler.Callback callback = msg -> {
 
         Bundle b = msg.getData();
 

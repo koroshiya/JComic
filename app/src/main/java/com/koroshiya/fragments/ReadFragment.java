@@ -115,7 +115,7 @@ public class ReadFragment extends Fragment {
         showProgress(view.getContext());
     }
 
-    public void showProgress(Context c){
+    private void showProgress(Context c){
         if (cache != null) {
             cache.parseInitial(c, null);
         }else{

@@ -100,7 +100,7 @@ public class Nav extends AppCompatActivity
         return selectNavItem(resId, null, -1);
     }
 
-    public boolean selectNavItem (int resId, String fileName, int page){
+    private boolean selectNavItem(int resId, String fileName, int page){
 
         boolean success = true;
 
@@ -265,13 +265,13 @@ public class Nav extends AppCompatActivity
         startActivity(intent);
     }
 
-    public boolean hasStoragePermission(){
+    private boolean hasStoragePermission(){
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) return true;
         String perm = Manifest.permission.READ_EXTERNAL_STORAGE;
         return ContextCompat.checkSelfPermission(this, perm) == PackageManager.PERMISSION_GRANTED;
     }
 
-    public void askStoragePermission(){
+    private void askStoragePermission(){
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) return;
         String perm = Manifest.permission.READ_EXTERNAL_STORAGE;
         ActivityCompat.requestPermissions(this, new String[]{perm}, 0);

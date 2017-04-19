@@ -69,12 +69,12 @@ public class FileItemAdapter extends FileAdapter {
         return new ViewHolder(v);
     }
 
-    public class ViewHolder extends FileAdapter.ViewHolder{
+    private class ViewHolder extends FileAdapter.ViewHolder{
 
         private final CardView cardview;
         private final TextView textview, pageCount;
 
-        public ViewHolder(View v) {
+        ViewHolder(View v) {
             super(v);
 
             cardview = (CardView) v.findViewById(R.id.list_item_rv_card_view);

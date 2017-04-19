@@ -15,11 +15,11 @@ import java.util.Locale;
 
 public abstract class SteppableArchive {
 	
-	protected final File tempDir;
-	protected final boolean progressive;
-    protected final ArrayList<JImage> cache;
+	final File tempDir;
+	final boolean progressive;
+    final ArrayList<JImage> cache;
 	
-	public SteppableArchive(Context c){
+	SteppableArchive(Context c){
 
         this.tempDir = new File(c.getCacheDir(), "JComic");
 
@@ -57,7 +57,7 @@ public abstract class SteppableArchive {
 		
 	}
 
-    protected void addImageToCache(Object obj, String name){
+    void addImageToCache(Object obj, String name){
         this.cache.add(new JImage(obj, name));
     }
 
@@ -65,7 +65,7 @@ public abstract class SteppableArchive {
         return cache.size();
     }
 
-    public void sort(){
+    void sort(){
         Collections.sort(this.cache);
     }
 
@@ -75,7 +75,7 @@ public abstract class SteppableArchive {
 
     public abstract InputStream getStream(int i) throws IOException;
 
-    protected void createTempDir(){
+    void createTempDir(){
 
         if (!this.tempDir.mkdirs()){
             String msg = String.format(Locale.getDefault(), "Failed to create directory: %s", this.tempDir.getAbsolutePath());

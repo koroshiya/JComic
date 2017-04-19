@@ -132,7 +132,7 @@ public class JRarArchive extends SteppableArchive{
 		return this.rar;
 	}
 
-	public Object getEntry(int i){
+	private Object getEntry(int i){
 		if (i < getTotalPages()){
 			return rar.getFileHeaders().get((Integer)this.cache.get(i).getImage());
 		}

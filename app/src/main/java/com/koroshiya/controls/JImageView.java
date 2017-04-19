@@ -105,7 +105,7 @@ public class JImageView extends ImageView {
 		
 	}
 
-	public void zoom(Drawable drawable){
+	private void zoom(Drawable drawable){
 
 		int zoom = SettingsManager.getZoom(getContext());
 		if (SettingsManager.keepZoomOnPageChange(getContext())){
@@ -117,7 +117,7 @@ public class JImageView extends ImageView {
 
 	}
 	
-	public void zoom(double zoom, Drawable drawable){
+	private void zoom(double zoom, Drawable drawable){
 		
 		if (drawable != null){
 
@@ -130,7 +130,7 @@ public class JImageView extends ImageView {
 		
 	}
 	
-	public void pseudoZoom(Drawable drawable){
+	private void pseudoZoom(Drawable drawable){
 		
 		if (drawable != null){
 

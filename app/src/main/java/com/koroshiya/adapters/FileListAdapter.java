@@ -45,13 +45,13 @@ public class FileListAdapter extends FileAdapter {
         super.notifyDataSetChanged();
     }
 
-    public class ViewHolder extends FileAdapter.ViewHolder{
+    private class ViewHolder extends FileAdapter.ViewHolder{
 
         final LinearLayout llc;
         final ImageView iv;
         final EllipsizingTextView tv;
 
-        public ViewHolder(View v) {
+        ViewHolder(View v) {
             super(v);
 
             llc = (LinearLayout) v.findViewById(R.id.row_llc);

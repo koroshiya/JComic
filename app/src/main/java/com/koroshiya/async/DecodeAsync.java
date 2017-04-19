@@ -18,16 +18,16 @@ import java.lang.ref.SoftReference;
 
 public abstract class DecodeAsync extends AsyncTask<String, String, SoftReference<JBitmapDrawable>> {
 
-    protected final ReadCache readCache;
-    protected final ProgressDialog dialog;
-    protected final Snackbar snack;
-    protected final int cacheType;
-    protected int page;
-    protected File f;
-    protected final Point p;
-    protected final boolean resize;
+    private final ReadCache readCache;
+    private final ProgressDialog dialog;
+    private final Snackbar snack;
+    final int cacheType;
+    int page;
+    File f;
+    final Point p;
+    final boolean resize;
 
-    public DecodeAsync(Context c, ReadCache readCache, int cacheType, View v){
+    DecodeAsync(Context c, ReadCache readCache, int cacheType, View v){
         this.readCache = readCache;
         this.dialog = new ProgressDialog(c);
         this.dialog.setIcon(R.mipmap.icon);
@@ -38,7 +38,7 @@ public abstract class DecodeAsync extends AsyncTask<String, String, SoftReferenc
         resize = SettingsManager.getDynamicResizing(c);
     }
 
-    protected void readData(String... params){
+    void readData(String... params){
         f = new File(params[0]);
         page = Integer.parseInt(params[1]);
     }

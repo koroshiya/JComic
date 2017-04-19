@@ -13,9 +13,9 @@ public class Recent {
 	private int pageNumber;
     private final long uuid;
 
-    public static final String JSON_ARG_FILE = "file";
-    public static final String JSON_ARG_PAGE = "page";
-    public static final String JSON_ARG_UUID = "uuid";
+    private static final String JSON_ARG_FILE = "file";
+    private static final String JSON_ARG_PAGE = "page";
+    private static final String JSON_ARG_UUID = "uuid";
 
     public Recent(String path, int pageNumber){
         this(path, pageNumber, UUID.randomUUID().getMostSignificantBits());

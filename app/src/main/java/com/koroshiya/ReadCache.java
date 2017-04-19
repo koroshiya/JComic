@@ -38,8 +38,8 @@ public class ReadCache {
     private boolean parsingInitial = true;
 
     public static final int CACHE_DIRECT = 0;
-    public static final int CACHE_FORWARD = 1;
-    public static final int CACHE_BACKWARD = 2;
+    private static final int CACHE_FORWARD = 1;
+    private static final int CACHE_BACKWARD = 2;
 
     public ReadCache(File f, int page, ReadFragment fragment) throws IOException {
 
@@ -87,7 +87,7 @@ public class ReadCache {
         async.execute(f.getAbsolutePath(), Integer.toString(page));
     }
 
-    public int getTotalPages(){
+    private int getTotalPages(){
         return this.totalPages;
     }
 

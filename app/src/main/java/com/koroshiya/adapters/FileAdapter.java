@@ -26,12 +26,12 @@ import java.util.Arrays;
 
 public abstract class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
 
-    protected final boolean isRecent;
+    final boolean isRecent;
     final ArrayList<Recent> items = new ArrayList<>();
-    protected File curdir;
-    protected final Handler.Callback permCallback;
+    File curdir;
+    final Handler.Callback permCallback;
 
-    public FileAdapter(Context c, Handler.Callback permCallback, boolean isRecent) {
+    FileAdapter(Context c, Handler.Callback permCallback, boolean isRecent) {
         this.permCallback = permCallback;
         this.curdir = SettingsManager.getLastDirectory(c);
         this.isRecent = isRecent;
@@ -66,13 +66,13 @@ public abstract class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewH
         holder.setDataOnView(position);
     }
 
-    public abstract void setData(Context c);
+    protected abstract void setData(Context c);
 
-    public Recent getItem(int position) {
+    Recent getItem(int position) {
         return items.get(position);
     }
 
-    protected void setFile(final File f, final View v, boolean forceReturn){
+    void setFile(final File f, final View v, boolean forceReturn){
 
         Context c = v.getContext();
 
@@ -147,9 +147,9 @@ public abstract class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewH
         return false;
     }
 
-    public abstract class ViewHolder extends RecyclerView.ViewHolder{
+    abstract class ViewHolder extends RecyclerView.ViewHolder{
 
-        public ViewHolder(View v) {
+        ViewHolder(View v) {
             super(v);
         }
 
