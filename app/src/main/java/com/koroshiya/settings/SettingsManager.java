@@ -166,6 +166,12 @@ public abstract class SettingsManager {
         return getPreferences(c).getBoolean(key, defaultVal);
     }
 
+    public static boolean isTrimmingAllowed(Context c){
+        String key = c.getString(R.string.pref_trim_whitespace);
+        boolean defaultVal = Boolean.parseBoolean(c.getString(R.string.performance_setting_trim_default));
+        return getPreferences(c).getBoolean(key, defaultVal);
+    }
+
     public static int getMaxRecent(Context c){
         return Integer.parseInt(getPreferences(c).getString(c.getString(R.string.pref_max_recent), c.getString(R.string.general_setting_max_recent_default)));
     }

@@ -71,7 +71,7 @@ public abstract class SteppableArchive {
     }
 
     @Nullable
-    public abstract SoftReference<JBitmapDrawable> parseImage(int i, int width, boolean resize);
+    public abstract SoftReference<JBitmapDrawable> parseImage(int i, int width, boolean resize, boolean allowTrim);
 
     public abstract void close();
 

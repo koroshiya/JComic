@@ -5,6 +5,7 @@
     <string name="setting_backlight">Keep screen on while reading</string>
     <string name="setting_fullscreen">Hide the system pull-down menu when reading</string>
     <string name="setting_resize">Scale down images that are larger than your device</string>
+    <string name="setting_trim">Trim the white space around images, so the actual content of the image is easier to see (for manga)</string>
     <string name="setting_cache_on_startup">Cache on startup</string>
     <string name="setting_keep_zoom_page_change">Keep zoom on page change</string>
     <string name="setting_cache_rar">Cache RAR files*</string>
@@ -34,9 +35,11 @@
     <string name="setting_fullscreen_title">Pull-down Menu</string>
     <string name="setting_keep_zoom_page_change_title">Keep Zoom</string>
     <string name="setting_zoom_title">Default Zoom</string>
-    <string name="setting_resize_title">Resize large images</string>
+    <string name="setting_resize_title">Resize Large Images</string>
+    <string name="setting_trim_title">Trim White Space</string>
     <string name="setting_cache_on_startup_title">Cache On Start</string>
     <string name="performance_setting_resize_default">true</string>
+    <string name="performance_setting_trim_default">false</string>
     <string name="general_setting_default_zoom_default">0</string>
     <string name="general_setting_max_recent_default">10</string>
     <string name="st_fullscreen">fullscreen</string>
@@ -47,6 +50,7 @@
     <string name="pref_cache_on_start">cacheOnStart</string>
     <string name="pref_zoom_index">zoomIndex</string>
     <string name="pref_dynamic_resizing">dynamicResizing</string>
+    <string name="pref_trim_whitespace">trimWhiteSpace</string>
     <string name="pref_cache_rar_files_default">false</string>
     <string name="pref_cache_on_start_default">true</string>
     <string name="st_backlight_default">false</string>

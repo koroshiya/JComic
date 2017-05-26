@@ -40,7 +40,7 @@ public class DecodeBitmapFileAsync extends DecodeAsync {
                 }
 
                 is = new FileInputStream(f);
-                temp = ImageParser.parseImageFromDisk(is, pt, p.x, resize);
+                temp = ImageParser.parseImageFromDisk(is, pt, p.x, resize, allowTrim);
             } catch (IOException e) {
                 e.printStackTrace();
             }

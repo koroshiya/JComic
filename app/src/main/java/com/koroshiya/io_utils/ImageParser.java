@@ -3,6 +3,7 @@ package com.koroshiya.io_utils;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.Point;
 import android.util.Log;
 import android.view.Display;
@@ -101,7 +102,7 @@ public class ImageParser {
 	 * @param imageSize Height/Width of image
 	 * @return Return a JBitmapDrawable object to be displayed.
 	 * */
-    public static JBitmapDrawable parseImageFromDisk(InputStream is, Point imageSize, int screenWidth, boolean resize){
+    public static JBitmapDrawable parseImageFromDisk(InputStream is, Point imageSize, int screenWidth, boolean resize, boolean allowTrim){
 
         try{
 
@@ -109,7 +110,11 @@ public class ImageParser {
             Log.e("ImageParser", "InHeight: "+imageSize.y);
             Log.e("ImageParser", "Width: "+screenWidth);
             BitmapFactory.Options opts = getResizeOpts(imageSize, screenWidth, resize);
-            JBitmapDrawable b = new JBitmapDrawable(BitmapFactory.decodeStream(new BufferedInputStream(is), null, opts));
+            Bitmap bmp = BitmapFactory.decodeStream(new BufferedInputStream(is), null, opts);
+            if (allowTrim){
+                bmp = trimBitmap(bmp);
+            }
+            JBitmapDrawable b = new JBitmapDrawable(bmp);
             if (imageSize.x == 0 || imageSize.y == 0){
                 imageSize.x = b.getWidth();
                 imageSize.y = b.getHeight();
@@ -262,6 +267,74 @@ public class ImageParser {
         Point p = new Point();
         display.getSize(p);
         return p;
+    }
+
+    //Based on code by Manzotin https://stackoverflow.com/a/32797296
+    private static Bitmap trimBitmap(Bitmap bmp) {
+
+        int imgHeight = bmp.getHeight();
+        int imgWidth  = bmp.getWidth();
+
+        //left
+        int startWidth = 0;
+        for(int x = 0; x < imgWidth; x++) {
+            for (int y = 0; y < imgHeight; y++) {
+                if (bmp.getPixel(x, y) != Color.WHITE) {
+                    startWidth = x;
+                    break;
+                }
+            }
+            if (startWidth != 0) break;
+        }
+
+        //right
+        int endWidth  = 0;
+        for(int x = imgWidth - 1; x >= 0; x--) {
+            for (int y = 0; y < imgHeight; y++) {
+                if (bmp.getPixel(x, y) != Color.WHITE) {
+                    endWidth = x + 1; //because we start at -1
+                    break;
+                }
+            }
+            if (endWidth != 0) break;
+        }
+
+        //top
+        int startHeight = 0;
+        for(int y = 0; y < imgHeight; y++) {
+            for (int x = 0; x < imgWidth; x++) {
+                if (bmp.getPixel(x, y) != Color.WHITE) {
+                    startHeight = y;
+                    break;
+                }
+            }
+            if (startHeight != 0) break;
+        }
+
+        //bottom
+        int endHeight = 0;
+        for(int y = imgHeight - 1; y >= 0; y--) {
+            for (int x = 0; x < imgWidth; x++) {
+                if (bmp.getPixel(x, y) != Color.WHITE) {
+                    endHeight = y + 1; //because we start at -1
+                    break;
+                }
+            }
+            if (endHeight != 0) break;
+        }
+
+        if (startWidth != 0 || startHeight != 0 || endWidth != imgWidth || endHeight != imgHeight) {
+            return Bitmap.createBitmap(
+                    bmp,
+                    startWidth,
+                    startHeight,
+                    endWidth - startWidth,
+                    endHeight - startHeight
+            );
+        }else{
+            return bmp;
+        }
+
     }
 
 }

@@ -26,6 +26,7 @@ public abstract class DecodeAsync extends AsyncTask<String, String, SoftReferenc
     File f;
     final Point p;
     final boolean resize;
+    final boolean allowTrim;
 
     DecodeAsync(Context c, ReadCache readCache, int cacheType, View v){
         this.readCache = readCache;
@@ -36,6 +37,7 @@ public abstract class DecodeAsync extends AsyncTask<String, String, SoftReferenc
 
         p = ImageParser.getScreenSize(c);
         resize = SettingsManager.getDynamicResizing(c);
+        allowTrim = SettingsManager.isTrimmingAllowed(c);
     }
 
     void readData(String... params){

@@ -90,7 +90,7 @@ public class JZipArchive extends SteppableArchive{
 
 	@Override
     @Nullable
-	public SoftReference<JBitmapDrawable> parseImage(int i, int width, boolean resize){
+	public SoftReference<JBitmapDrawable> parseImage(int i, int width, boolean resize, boolean allowTrim){
 
         JImage j = this.cache.get(i);
         ZipEntry zipEntry = (ZipEntry)j.getImage();
@@ -117,13 +117,13 @@ public class JZipArchive extends SteppableArchive{
                             p = ImageParser.getImageSize(is);
                         }
                         is = new FileInputStream(f);
-                        temp = ImageParser.parseImageFromDisk(is, p, width, resize);
+                        temp = ImageParser.parseImageFromDisk(is, p, width, resize, allowTrim);
                     }
                 } else {
                         is = zip.getInputStream(zipEntry);
                         Point p = ImageParser.getImageSize(is);
                         is = zip.getInputStream(zipEntry);
-                        temp = ImageParser.parseImageFromDisk(is, p, width, resize);
+                        temp = ImageParser.parseImageFromDisk(is, p, width, resize, allowTrim);
                 }
             } catch (IOException e) {
                 e.printStackTrace();

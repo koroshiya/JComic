@@ -55,7 +55,7 @@ public class JRarArchive extends SteppableArchive{
 
     @Override
 	@Nullable
-	public SoftReference<JBitmapDrawable> parseImage(int i, int width, boolean resize) {
+	public SoftReference<JBitmapDrawable> parseImage(int i, int width, boolean resize, boolean allowTrim) {
 
 		FileHeader entry = (FileHeader)getEntry(i);
 		if (entry == null) return null;
@@ -88,14 +88,14 @@ public class JRarArchive extends SteppableArchive{
                     }
 
                     is = new FileInputStream(f);
-                    temp = ImageParser.parseImageFromDisk(is, p, width, resize);
+                    temp = ImageParser.parseImageFromDisk(is, p, width, resize, allowTrim);
                 } else {
 
                     is = rar.getInputStream(entry);
                     p = ImageParser.getImageSize(is);
 
                     is = rar.getInputStream(entry);
-                    temp = ImageParser.parseImageFromDisk(is, p, width, resize);
+                    temp = ImageParser.parseImageFromDisk(is, p, width, resize, allowTrim);
                 }
 
             } catch (IOException e) {

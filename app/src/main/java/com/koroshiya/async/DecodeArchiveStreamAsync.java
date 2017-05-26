@@ -26,7 +26,7 @@ public class DecodeArchiveStreamAsync extends DecodeAsync {
     protected SoftReference<JBitmapDrawable> doInBackground(String... params) {
         readData(params);
         if (cacheType == ReadCache.CACHE_DIRECT || !(archive instanceof JRarArchive) || isCacheRar)
-            return archive.parseImage(page, p.x, resize);
+            return archive.parseImage(page, p.x, resize, allowTrim);
         else
             return new SoftReference<>(null);
     }

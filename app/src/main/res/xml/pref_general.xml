@@ -84,6 +84,12 @@
             android:title="@string/setting_resize_title"
             android:summary="@string/setting_resize"
             />
+        <CheckBoxPreference
+            android:defaultValue="@string/performance_setting_trim_default"
+            android:key="@string/pref_trim_whitespace"
+            android:title="@string/setting_trim_title"
+            android:summary="@string/setting_trim"
+            />
     </PreferenceCategory>
     <PreferenceCategory android:title="Advanced Settings">
         <CheckBoxPreference
