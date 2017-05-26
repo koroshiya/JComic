@@ -347,13 +347,17 @@ public class ImageParser {
         }
 
         if (startWidth != 0 || startHeight != 0 || endWidth != imgWidth || endHeight != imgHeight) {
-            return Bitmap.createBitmap(
-                    bmp,
-                    startWidth,
-                    startHeight,
-                    endWidth - startWidth,
-                    endHeight - startHeight
-            );
+            if (endWidth - startWidth == 0 || endHeight - startHeight == 0){
+                return bmp; //In case the image was nothing but white
+            }else {
+                return Bitmap.createBitmap(
+                        bmp,
+                        startWidth,
+                        startHeight,
+                        endWidth - startWidth,
+                        endHeight - startHeight
+                );
+            }
         }else{
             return bmp;
         }
