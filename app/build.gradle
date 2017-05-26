@@ -3,14 +3,13 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 25
     buildToolsVersion "25.0.3"
-
     defaultConfig {
         applicationId "com.koroshiya.jcomic"
         minSdkVersion 14
         targetSdkVersion 25
-        versionCode 59
-        versionName "3.1.0"
-        vectorDrawables{
+        versionCode 60
+        versionName "3.2.0"
+        vectorDrawables {
             useSupportLibrary = true
         }
         //multiDexEnabled true
