@@ -7,8 +7,8 @@ android {
         applicationId "com.koroshiya.jcomic"
         minSdkVersion 14
         targetSdkVersion 25
-        versionCode 60
-        versionName "3.2.0"
+        versionCode 61
+        versionName "3.2.1"
         vectorDrawables {
             useSupportLibrary = true
         }
