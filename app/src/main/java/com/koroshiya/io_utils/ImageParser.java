@@ -106,13 +106,19 @@ public class ImageParser {
 
         try{
 
-            Log.e("ImageParser", "InWidth: "+imageSize.x);
-            Log.e("ImageParser", "InHeight: "+imageSize.y);
-            Log.e("ImageParser", "Width: "+screenWidth);
+            Log.d("ImageParser", "InWidth: "+imageSize.x);
+            Log.d("ImageParser", "InHeight: "+imageSize.y);
+            Log.d("ImageParser", "Width: "+screenWidth);
             BitmapFactory.Options opts = getResizeOpts(imageSize, screenWidth, resize);
             Bitmap bmp = BitmapFactory.decodeStream(new BufferedInputStream(is), null, opts);
+            Log.d("ImageParser", "RWidth: "+bmp.getWidth());
+            Log.d("ImageParser", "RHeight: "+bmp.getHeight());
             if (allowTrim){
                 bmp = trimBitmap(bmp);
+                Log.d("ImageParser", "TWidth: "+bmp.getWidth());
+                Log.d("ImageParser", "THeight: "+bmp.getHeight());
+                imageSize.x = bmp.getWidth();
+                imageSize.y = bmp.getHeight();
             }
             JBitmapDrawable b = new JBitmapDrawable(bmp);
             if (imageSize.x == 0 || imageSize.y == 0){
@@ -274,14 +280,19 @@ public class ImageParser {
 
         int imgHeight = bmp.getHeight();
         int imgWidth  = bmp.getWidth();
+        float threshold = .05f; //Don't trim if at least 5% of the pixels on a side are non-white
 
         //left
         int startWidth = 0;
         for(int x = 0; x < imgWidth; x++) {
+            int count = 0;
+            int target = (int) Math.floor(imgHeight * threshold);
             for (int y = 0; y < imgHeight; y++) {
                 if (bmp.getPixel(x, y) != Color.WHITE) {
-                    startWidth = x;
-                    break;
+                    if (++count >= target){
+                        startWidth = x;
+                        break;
+                    }
                 }
             }
             if (startWidth != 0) break;
@@ -290,10 +301,14 @@ public class ImageParser {
         //right
         int endWidth  = 0;
         for(int x = imgWidth - 1; x >= 0; x--) {
+            int count = 0;
+            int target = (int) Math.floor(imgHeight * threshold);
             for (int y = 0; y < imgHeight; y++) {
                 if (bmp.getPixel(x, y) != Color.WHITE) {
-                    endWidth = x + 1; //because we start at -1
-                    break;
+                    if (++count >= target) {
+                        endWidth = x + 1; //because we start at -1
+                        break;
+                    }
                 }
             }
             if (endWidth != 0) break;
@@ -302,10 +317,14 @@ public class ImageParser {
         //top
         int startHeight = 0;
         for(int y = 0; y < imgHeight; y++) {
+            int count = 0;
+            int target = (int) Math.floor(imgWidth * threshold);
             for (int x = 0; x < imgWidth; x++) {
                 if (bmp.getPixel(x, y) != Color.WHITE) {
-                    startHeight = y;
-                    break;
+                    if (++count >= target) {
+                        startHeight = y;
+                        break;
+                    }
                 }
             }
             if (startHeight != 0) break;
@@ -314,10 +333,14 @@ public class ImageParser {
         //bottom
         int endHeight = 0;
         for(int y = imgHeight - 1; y >= 0; y--) {
+            int count = 0;
+            int target = (int) Math.floor(imgWidth * threshold);
             for (int x = 0; x < imgWidth; x++) {
                 if (bmp.getPixel(x, y) != Color.WHITE) {
-                    endHeight = y + 1; //because we start at -1
-                    break;
+                    if (++count >= target) {
+                        endHeight = y + 1; //because we start at -1
+                        break;
+                    }
                 }
             }
             if (endHeight != 0) break;
