@@ -208,7 +208,11 @@ public class Nav extends AppCompatActivity
             }
             if (fm.getBackStackEntryCount() == 1) {
                 if (isFcf){
-                    super.onBackPressed();
+                    if (drawer != null){
+                        drawer.openDrawer(GravityCompat.START);
+                    }else {
+                        super.onBackPressed();
+                    }
                 }else {
                     fm.popBackStackImmediate();
                     selectNavItem(R.id.nav_select_comic);
