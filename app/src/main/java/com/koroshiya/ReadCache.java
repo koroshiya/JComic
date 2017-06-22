@@ -149,6 +149,7 @@ public class ReadCache {
             } else {
                 JBitmapDrawable jbd = image.get();
                 recent = new Recent(f.getAbsolutePath(), currentPage);
+                recent.setPageNumber(c, currentPage); //inserts into DB
                 GenerateThumbnailAsync async = new GenerateThumbnailAsync(c);
                 async.execute(
                         f.getAbsolutePath(),
