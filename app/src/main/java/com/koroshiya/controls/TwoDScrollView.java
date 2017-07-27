@@ -34,9 +34,7 @@ import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 import android.widget.Scroller;
-import android.widget.TextView;
 
 import java.util.List;
  
@@ -46,10 +44,10 @@ import java.util.List;
  * is a {@link FrameLayout}, meaning you should place one child in it
  * containing the entire contents to scroll; this child may itself be a layout
  * manager with a complex hierarchy of objects.  A child that is often used
- * is a {@link LinearLayout} in a vertical orientation, presenting a vertical
+ * is a {@link android.widget.LinearLayout} in a vertical orientation, presenting a vertical
  * array of top-level items that the user can scroll through.
  *
- * <p>The {@link TextView} class also
+ * <p>The {@link android.widget.TextView} class also
  * takes care of its own scrolling, so does not require a TwoDScrollView, but
  * using the two together is possible to achieve the effect of a text view
  * within a larger container.
