@@ -68,8 +68,16 @@ public class Recent {
         if (db.update(TABLE_NAME, cv, where, whereArgs) == 0){
             db.insert(TABLE_NAME, null, cv);
 
-            if (count(context, pageNumber >= 0) > SettingsManager.getMaxRecent(context)){
-                SettingsManager.deleteRecent(context, this);
+            long difference = count(context, pageNumber >= 0) - SettingsManager.getMaxRecent(context);
+            if (difference > 0){
+                Cursor c = db.query(TABLE_NAME, null, null, null, null, null, null, Long.toString(difference));
+                if (c.moveToFirst()) {
+                    do {
+                        Recent r = new Recent(c);
+                        SettingsManager.deleteRecent(context, r);
+                    }while(c.moveToNext());
+                }
+                c.close();
             }
         }
 
