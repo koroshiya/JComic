@@ -54,22 +54,19 @@ public class FileChooserFragment extends Fragment {
 
         View rootView = inflater.inflate(R.layout.fragment_file_list, container, false);
 
-        RecyclerView rgv = (RecyclerView) rootView.findViewById(R.id.file_chooser_recycler_view);
+        RecyclerView rgv = rootView.findViewById(R.id.file_chooser_recycler_view);
         final FileItemAdapter fia = new FileItemAdapter(c, callback);
         rgv.setAdapter(fia);
 
-        RecyclerView bread = (RecyclerView) rootView.findViewById(R.id.file_chooser_breadcrumbs);
+        RecyclerView bread = rootView.findViewById(R.id.file_chooser_breadcrumbs);
         bread.setLayoutManager(new LinearLayoutManager(c, LinearLayoutManager.HORIZONTAL, false));
         FilePathAdapter fpa = new FilePathAdapter(fia.getCurdir(), callback);
         bread.setAdapter(fpa);
 
-        final SwipeRefreshLayout srl = (SwipeRefreshLayout) rootView.findViewById(R.id.file_chooser_swiperefreshlayout);
-        srl.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                fia.setData(c);
-                srl.setRefreshing(false);
-            }
+        final SwipeRefreshLayout srl = rootView.findViewById(R.id.file_chooser_swiperefreshlayout);
+        srl.setOnRefreshListener(() -> {
+            fia.setData(c);
+            srl.setRefreshing(false);
         });
 
         return rootView;
@@ -80,7 +77,7 @@ public class FileChooserFragment extends Fragment {
         RecyclerView lvc = (RecyclerView) view;
         FileItemAdapter fia = (FileItemAdapter) lvc.getAdapter();
         if (goingBack || fia.setPath(view, path)){
-            RecyclerView bread = (RecyclerView) getActivity().findViewById(R.id.file_chooser_breadcrumbs);
+            RecyclerView bread = getActivity().findViewById(R.id.file_chooser_breadcrumbs);
             FilePathAdapter fpa = (FilePathAdapter) bread.getAdapter();
             boolean success = fpa.setNewPath(path, goingBack);
             if (success) {
@@ -103,7 +100,7 @@ public class FileChooserFragment extends Fragment {
 
     private void resetFilePathScrollPosition(){
 
-        RecyclerView bread = (RecyclerView) getActivity().findViewById(R.id.file_chooser_breadcrumbs);
+        RecyclerView bread = getActivity().findViewById(R.id.file_chooser_breadcrumbs);
         FilePathAdapter fpa = (FilePathAdapter) bread.getAdapter();
 
         fpa.notifyDataSetChanged();

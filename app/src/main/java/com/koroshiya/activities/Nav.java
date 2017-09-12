@@ -51,22 +51,22 @@ public class Nav extends AppCompatActivity
 
         setContentView(R.layout.activity_nav2);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView mNavigationDrawerFragment = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView mNavigationDrawerFragment = findViewById(R.id.nav_view);
         if (mNavigationDrawerFragment != null){
             mNavigationDrawerFragment.setNavigationItemSelectedListener(this);
 
             View v = mNavigationDrawerFragment.getHeaderView(0);
 
-            TextView actv = (TextView) v.findViewById(R.id.nav_header_main_title);
+            TextView actv = v.findViewById(R.id.nav_header_main_title);
             if (actv != null){
                 try {
                     PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);

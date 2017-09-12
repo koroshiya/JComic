@@ -124,7 +124,7 @@ public class FilePathAdapter extends RecyclerView.Adapter<FilePathAdapter.ViewHo
         ViewHolder(View v) {
             super(v);
             this.v = (CardView) v;
-            this.tv = (TextView) v.findViewById(R.id.list_item_breadcrumb_txt);
+            this.tv = v.findViewById(R.id.list_item_breadcrumb_txt);
 
         }
 

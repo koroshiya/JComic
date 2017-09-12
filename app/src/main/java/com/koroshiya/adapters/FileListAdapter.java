@@ -52,9 +52,9 @@ public class FileListAdapter extends FileAdapter {
         ViewHolder(View v) {
             super(v);
 
-            llc = (LinearLayout) v.findViewById(R.id.row_llc);
-            iv = (ImageView) llc.findViewById(R.id.row_img);
-            tv = (EllipsizingTextView) llc.findViewById(R.id.list_item_text);
+            llc = v.findViewById(R.id.row_llc);
+            iv = llc.findViewById(R.id.row_img);
+            tv = llc.findViewById(R.id.list_item_text);
 
         }
 

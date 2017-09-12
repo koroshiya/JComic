@@ -78,7 +78,7 @@ public class RecentFragment extends Fragment {
 
     private void showAlertPrompt(final String filePath){
 
-        RecyclerView rgv = (RecyclerView) getActivity().findViewById(R.id.file_chooser_grid_view);
+        RecyclerView rgv = getActivity().findViewById(R.id.file_chooser_grid_view);
 
         if (rgv != null && rgv.getAdapter() instanceof FileListAdapter) {
 

@@ -64,9 +64,9 @@ public class FileItemAdapter extends FileAdapter {
         ViewHolder(View v) {
             super(v);
 
-            cardview = (CardView) v.findViewById(R.id.list_item_rv_card_view);
-            textview = (TextView) v.findViewById(R.id.list_item_rv_text_view);
-            pageCount = (TextView) v.findViewById(R.id.list_item_rv_page_count);
+            cardview = v.findViewById(R.id.list_item_rv_card_view);
+            textview = v.findViewById(R.id.list_item_rv_text_view);
+            pageCount = v.findViewById(R.id.list_item_rv_page_count);
 
         }
 
