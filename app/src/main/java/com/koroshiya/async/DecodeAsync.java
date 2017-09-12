@@ -1,10 +1,10 @@
 package com.koroshiya.async;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Point;
 import android.os.AsyncTask;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.view.View;
 
 import com.koroshiya.R;
@@ -19,7 +19,7 @@ import java.lang.ref.SoftReference;
 public abstract class DecodeAsync extends AsyncTask<String, String, SoftReference<JBitmapDrawable>> {
 
     private final ReadCache readCache;
-    private final ProgressDialog dialog;
+    private final AlertDialog dialog;
     private final Snackbar snack;
     final int cacheType;
     int page;
@@ -30,8 +30,10 @@ public abstract class DecodeAsync extends AsyncTask<String, String, SoftReferenc
 
     DecodeAsync(Context c, ReadCache readCache, int cacheType, View v){
         this.readCache = readCache;
-        this.dialog = new ProgressDialog(c);
-        this.dialog.setIcon(R.mipmap.icon);
+        this.dialog = new AlertDialog.Builder(c)
+                                        .setIcon(R.mipmap.icon)
+                                        .setMessage("Loading image...")
+                                        .create();
         this.cacheType = cacheType;
         this.snack = v != null ? Snackbar.make(v, "Loading image...", Snackbar.LENGTH_INDEFINITE) : null;
 
@@ -51,7 +53,6 @@ public abstract class DecodeAsync extends AsyncTask<String, String, SoftReferenc
             if (this.snack != null){
                 this.snack.show();
             }else {
-                this.dialog.setMessage("Loading image...");
                 this.dialog.show();
             }
         }
