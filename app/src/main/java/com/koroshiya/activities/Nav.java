@@ -141,21 +141,9 @@ public class Nav extends AppCompatActivity
                         if (Recent.count(this, true) > 0) {
                             frag = new RecentFragment();
                             Bundle b = new Bundle();
-                            b.putBoolean(RecentFragment.ARG_RECENT, true);
                             frag.setArguments(b);
                         } else {
                             Snackbar.make(drawer, "No recent comics found", Snackbar.LENGTH_SHORT).show();
-                            success = false;
-                        }
-                        break;
-                    case R.id.nav_favorites:
-                        if (Recent.count(this, false) > 0) {
-                            frag = new RecentFragment();
-                            Bundle b = new Bundle();
-                            b.putBoolean(RecentFragment.ARG_RECENT, false);
-                            frag.setArguments(b);
-                        } else {
-                            Snackbar.make(drawer, "No favorites found", Snackbar.LENGTH_SHORT).show();
                             success = false;
                         }
                         break;

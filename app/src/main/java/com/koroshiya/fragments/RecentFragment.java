@@ -26,9 +26,6 @@ import java.io.File;
 
 public class RecentFragment extends Fragment {
 
-    public static final String ARG_RECENT = "recent";
-    private boolean isRecent = true;
-
     private final Handler.Callback callback = msg -> {
 
         Bundle b = msg.getData();
@@ -52,8 +49,6 @@ public class RecentFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        Bundle b = getArguments();
-        isRecent = b.getBoolean(ARG_RECENT, true);
         Context c;
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -70,7 +65,7 @@ public class RecentFragment extends Fragment {
 
         RecyclerView rgv = (RecyclerView) inflater.inflate(R.layout.fragment_file_chooser, container, false);
         rgv.setLayoutManager(new GridLayoutManager(c, cols));
-        FileListAdapter fld = new FileListAdapter(c, callback, isRecent);
+        FileListAdapter fld = new FileListAdapter(c, callback);
         rgv.setAdapter(fld);
 
         return rgv;
@@ -110,11 +105,11 @@ public class RecentFragment extends Fragment {
                         fla.continueReading(rgv, filePath);
                         break;
                     case 1:
-                        Recent.delete(c, filePath, isRecent);
+                        Recent.delete(c, filePath);
                         fla.removeItem(filePath);
                         break;
                     case 2:
-                        Recent.delete(c, isRecent);
+                        Recent.deleteAll(c);
                         fla.removeAllItems();
                         break;
                 }

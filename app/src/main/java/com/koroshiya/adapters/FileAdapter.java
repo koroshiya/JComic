@@ -27,15 +27,13 @@ import java.util.Arrays;
 
 public abstract class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
 
-    final boolean isRecent;
     final ArrayList<String> items = new ArrayList<>();
     File curdir;
     final Handler.Callback permCallback;
 
-    FileAdapter(Context c, Handler.Callback permCallback, boolean isRecent) {
+    FileAdapter(Context c, Handler.Callback permCallback) {
         this.permCallback = permCallback;
         this.curdir = SettingsManager.getLastDirectory(c);
-        this.isRecent = isRecent;
         setData(c);
     }
 

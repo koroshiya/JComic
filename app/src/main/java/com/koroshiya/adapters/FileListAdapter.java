@@ -24,8 +24,8 @@ public class FileListAdapter extends FileAdapter {
     private final File cacheDir;
     public static final String ARG_SHEET_FILE = "sheet_file";
 
-    public FileListAdapter(Context c, Handler.Callback permCallback, boolean isRecent) {
-        super(c, permCallback, isRecent);
+    public FileListAdapter(Context c, Handler.Callback permCallback) {
+        super(c, permCallback);
         this.cacheDir = c.getCacheDir();
     }
 
@@ -38,7 +38,7 @@ public class FileListAdapter extends FileAdapter {
     public void setData(Context c){
 
         items.clear();
-        items.addAll(Recent.getPaths(c, isRecent));
+        items.addAll(Recent.getPaths(c));
 
         super.notifyDataSetChanged();
     }
@@ -62,7 +62,7 @@ public class FileListAdapter extends FileAdapter {
         public void setDataOnView(final int position) {
 
             String t = getItem(position);
-            long uuid = Recent.getUuid(itemView.getContext(), t, isRecent, -1);
+            long uuid = Recent.getUuid(itemView.getContext(), t, -1);
             final File f = new File(t);
 
             File thumb = new File(cacheDir, Long.toString(uuid) + ".webp");

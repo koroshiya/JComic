@@ -25,7 +25,7 @@ public class FileItemAdapter extends FileAdapter {
     private final DisplayMetrics metrics;
 
     public FileItemAdapter(Context c, Handler.Callback permCallback) {
-        super(c, permCallback, false);
+        super(c, permCallback);
         metrics = c.getResources().getDisplayMetrics();
     }
 

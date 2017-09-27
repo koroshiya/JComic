@@ -79,6 +79,7 @@ public class Recent {
                 }
                 c.close();
             }
+
         }
 
     }
@@ -103,19 +104,13 @@ public class Recent {
     }
 
     @Nullable
-    public static Recent get(Context context, String path, boolean isRecent){
+    public static Recent get(Context context, String path){
 
         SettingsDb sdb = new SettingsDb(context);
         SQLiteDatabase db = sdb.getReadableDatabase();
 
-        String where = String.format(Locale.ENGLISH, "%s = ? AND ", JSON_ARG_FILE);
+        String where = String.format(Locale.ENGLISH, "%s = ?", JSON_ARG_FILE);
         String[] whereArgs = {path};
-
-        if (isRecent){
-            where += JSON_ARG_PAGE + " >= 0";
-        }else{
-            where += JSON_ARG_PAGE + " < 0";
-        }
 
         Recent r = null;
         Cursor c = null;
@@ -134,19 +129,13 @@ public class Recent {
 
     }
 
-    public static void delete(Context context, String path, boolean isRecent){
+    public static void delete(Context context, String path){
 
         SettingsDb sdb = new SettingsDb(context);
         SQLiteDatabase db = sdb.getWritableDatabase();
 
         String where = String.format(Locale.ENGLISH, "%s = ? AND ", JSON_ARG_FILE);
         String[] whereArgs = {path};
-
-        if (isRecent){
-            where += JSON_ARG_PAGE + " >= 0";
-        }else{
-            where += JSON_ARG_PAGE + " < 0";
-        }
 
         try {
             db.delete(TABLE_NAME, where, whereArgs);
@@ -156,39 +145,37 @@ public class Recent {
 
     }
 
-    public static void delete(Context context, boolean isRecent){
+    public static void deleteAll(Context context){
 
         SettingsDb sdb = new SettingsDb(context);
         SQLiteDatabase db = sdb.getWritableDatabase();
 
-        String where;
-        if (isRecent){
-            where = JSON_ARG_PAGE + " >= 0";
-        }else{
-            where = JSON_ARG_PAGE + " < 0";
-        }
-
+        ArrayList<Recent> r = new ArrayList<>();
+        Cursor c = null;
         try {
-            db.delete(TABLE_NAME, where, null);
+            c = db.query(TABLE_NAME, null, null, null, null, null, null, "1");
+            if (c.moveToFirst()) {
+                do {
+                    r.add(new Recent(c));
+                }while(c.moveToNext());
+            }
         } catch (Exception e){
             e.printStackTrace();
+        } finally{
+            if (c != null) c.close();
         }
+
+        for (Recent recent : r) recent.delete(context);
 
     }
 
     @NonNull
-    public static ArrayList<String> getPaths(Context context, boolean isRecent){
+    public static ArrayList<String> getPaths(Context context){
 
         SettingsDb sdb = new SettingsDb(context);
         SQLiteDatabase db = sdb.getReadableDatabase();
 
-        String where;
-
-        if (isRecent){
-            where = JSON_ARG_PAGE + " >= 0";
-        }else{
-            where = JSON_ARG_PAGE + " < 0";
-        }
+        String where = JSON_ARG_PAGE + " >= 0";
 
         ArrayList<String> r = new ArrayList<>();
         ArrayList<Recent> toDelete = new ArrayList<>();
@@ -280,7 +267,7 @@ public class Recent {
 
     }
 
-    public static long getUuid(Context context, String path, boolean isRecent, long defaultVal){
+    public static long getUuid(Context context, String path, long defaultVal){
 
         SettingsDb sdb = new SettingsDb(context);
         SQLiteDatabase db = sdb.getReadableDatabase();
@@ -288,13 +275,6 @@ public class Recent {
         String[] selection = {JSON_ARG_UUID};
 
         String where = String.format(Locale.ENGLISH, "%s = ? AND ", JSON_ARG_FILE);
-
-        if (isRecent){
-            where += JSON_ARG_PAGE + " >= 0";
-        }else{
-            where += JSON_ARG_PAGE + " < 0";
-        }
-
         String[] whereArgs = {path};
 
         long result = defaultVal;

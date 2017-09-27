@@ -141,7 +141,7 @@ public class ReadCache {
             }
 
             if (recent == null) {
-                recent = Recent.get(c, f.getAbsolutePath(), true);
+                recent = Recent.get(c, f.getAbsolutePath());
             }
 
             if (recent != null) {
