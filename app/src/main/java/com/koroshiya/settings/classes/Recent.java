@@ -164,7 +164,7 @@ public class Recent {
         ArrayList<Recent> r = new ArrayList<>();
         Cursor c = null;
         try {
-            c = db.query(TABLE_NAME, null, null, null, null, null, null, "1");
+            c = db.query(TABLE_NAME, null, null, null, null, null, null);
             if (c.moveToFirst()) {
                 do {
                     r.add(new Recent(c));
