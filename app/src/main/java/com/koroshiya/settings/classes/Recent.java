@@ -182,7 +182,6 @@ public class Recent {
         SettingsDb sdb = new SettingsDb(context);
         SQLiteDatabase db = sdb.getReadableDatabase();
 
-        String[] selection = {JSON_ARG_FILE};
         String where;
 
         if (isRecent){
@@ -192,12 +191,18 @@ public class Recent {
         }
 
         ArrayList<String> r = new ArrayList<>();
+        ArrayList<Recent> toDelete = new ArrayList<>();
         Cursor c = null;
         try {
-            c = db.query(TABLE_NAME, selection, where, null, null, null, null);
+            c = db.query(TABLE_NAME, null, where, null, null, null, null);
             if (c.moveToFirst()){
                 do {
-                    r.add(c.getString(c.getColumnIndex(JSON_ARG_FILE)));
+                    String path = c.getString(c.getColumnIndex(JSON_ARG_FILE));
+                    if (new File(path).exists()) {
+                        r.add(path);
+                    }else{
+                        toDelete.add(new Recent(c));
+                    }
                 }while(c.moveToNext());
             }
         } catch (Exception e){
@@ -205,6 +210,8 @@ public class Recent {
         } finally{
             if (c != null) c.close();
         }
+
+        for (Recent recent : toDelete) recent.delete(context);
 
         return r;
 
