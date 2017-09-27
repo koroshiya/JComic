@@ -7,6 +7,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
@@ -150,6 +151,22 @@ public abstract class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewH
             Snackbar.make(v, "Invalid path", Snackbar.LENGTH_SHORT).show();
         }
         return false;
+    }
+
+    /**
+     * @return If path changed, returns path. Else, null.
+     * */
+    @Nullable
+    public File goToNearestValidPath(){
+        if (!curdir.exists() || !curdir.canRead()){
+            File parent = curdir.getParentFile();
+            if (!curdir.getAbsolutePath().equals(parent.getAbsolutePath())){
+                curdir = curdir.getParentFile();
+                goToNearestValidPath();
+            }
+            return curdir;
+        }
+        return null;
     }
 
     abstract class ViewHolder extends RecyclerView.ViewHolder{

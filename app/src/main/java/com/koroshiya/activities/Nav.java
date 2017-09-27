@@ -97,10 +97,18 @@ public class Nav extends AppCompatActivity
     }
 
     public boolean selectNavItem (int resId){
-        return selectNavItem(resId, null, -1);
+        return selectNavItem(resId, false);
+    }
+
+    public boolean selectNavItem (int resId, boolean popFirst){
+        return selectNavItem(resId, null, -1, popFirst);
     }
 
     private boolean selectNavItem(int resId, String fileName, int page){
+        return selectNavItem(resId, fileName, page, false);
+    }
+
+    private boolean selectNavItem(int resId, String fileName, int page, boolean popFirst){
 
         boolean success = true;
 
@@ -168,6 +176,9 @@ public class Nav extends AppCompatActivity
                 }
 
                 if (frag != null) {
+                    if (popFirst) {
+                        fm.popBackStack();
+                    }
                     FragmentTransaction ft = fm.beginTransaction();
                     ft.replace(R.id.container, frag);
                     ft.addToBackStack(null);

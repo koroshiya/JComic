@@ -276,5 +276,22 @@ public class ReadCache {
         }
     }
 
+    public boolean hasChanged(){
+        if (f.exists() && f.canRead()) {
+            if (f.isDirectory()){
+                int len = 0;
+                for (File file : f.listFiles()) {
+                    if (ImageParser.isSupportedImage(file)){
+                        len++;
+                    }
+                }
+                return len != totalPages;
+            }else{
+                return archive.getTotalPages() != totalPages;
+            }
+        }
+        return true;
+    }
+
 
 }

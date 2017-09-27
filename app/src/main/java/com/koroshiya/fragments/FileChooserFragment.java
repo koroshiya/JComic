@@ -17,6 +17,8 @@ import com.koroshiya.activities.Nav;
 import com.koroshiya.adapters.FileItemAdapter;
 import com.koroshiya.adapters.FilePathAdapter;
 
+import java.io.File;
+
 public class FileChooserFragment extends Fragment {
 
     private final Handler.Callback callback = msg -> {
@@ -100,11 +102,23 @@ public class FileChooserFragment extends Fragment {
 
     private void resetFilePathScrollPosition(){
 
+        View view = getActivity().findViewById(R.id.file_chooser_recycler_view);
+        RecyclerView lvc = (RecyclerView) view;
+        FileItemAdapter fia = (FileItemAdapter) lvc.getAdapter();
+        File newPath = fia.goToNearestValidPath();
+
         RecyclerView bread = getActivity().findViewById(R.id.file_chooser_breadcrumbs);
         FilePathAdapter fpa = (FilePathAdapter) bread.getAdapter();
 
-        fpa.notifyDataSetChanged();
-        bread.invalidateItemDecorations();
+        if (newPath != null){
+            fia.setData(getActivity());
+            fia.notifyDataSetChanged();
+            fpa = new FilePathAdapter(newPath, callback);
+            bread.setAdapter(fpa);
+        }else {
+            fpa.notifyDataSetChanged();
+            bread.invalidateItemDecorations();
+        }
 
         int chunk = fpa.getCurrentChunk();
         if (chunk > 0) {

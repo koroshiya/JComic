@@ -148,6 +148,9 @@ public class ReadFragment extends Fragment {
     public void onResume(){
         super.onResume();
         applySettings(true);
+        if (cache.hasChanged()){
+            ((Nav)getActivity()).selectNavItem(R.id.nav_select_comic, true);
+        }
     }
 
     @Override
