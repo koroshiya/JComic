@@ -13,8 +13,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 
 import com.koroshiya.R;
 import com.koroshiya.activities.Nav;
@@ -87,36 +85,26 @@ public class RecentFragment extends Fragment {
                     c.getString(R.string.remove_everything_from_recent_list)
             };
 
-            ListView lv = new ListView(c);
-            ArrayAdapter<String> adapter = new ArrayAdapter<>(c,android.R.layout.simple_list_item_1,names);
-            lv.setAdapter(adapter);
-            lv.setDividerHeight(20);
-            lv.setPadding(20,20,20,20);
-
             AlertDialog alert = new AlertDialog.Builder(c)
                     .setTitle(f.getName())
-                    .setView(lv)
+                    .setItems(names, (dialogInterface, i) -> {
+                        switch (i){
+                            case 0:
+                                fla.continueReading(rgv, filePath);
+                                break;
+                            case 1:
+                                Recent.delete(c, filePath);
+                                fla.removeItem(filePath);
+                                break;
+                            case 2:
+                                Recent.deleteAll(c);
+                                fla.removeAllItems();
+                                break;
+                        }
+
+                        dialogInterface.dismiss();
+                    })
                     .create();
-
-            lv.setOnItemClickListener((adapterView, view, position, id) -> {
-
-                switch (position){
-                    case 0:
-                        fla.continueReading(rgv, filePath);
-                        break;
-                    case 1:
-                        Recent.delete(c, filePath);
-                        fla.removeItem(filePath);
-                        break;
-                    case 2:
-                        Recent.deleteAll(c);
-                        fla.removeAllItems();
-                        break;
-                }
-
-                alert.dismiss();
-
-            });
 
             alert.show();
 
