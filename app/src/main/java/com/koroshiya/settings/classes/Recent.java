@@ -66,18 +66,29 @@ public class Recent {
         cv.put(JSON_ARG_UUID, uuid);
 
         if (db.update(TABLE_NAME, cv, where, whereArgs) == 0){
-            db.insert(TABLE_NAME, null, cv);
 
-            long difference = count(context, pageNumber >= 0) - SettingsManager.getMaxRecent(context);
-            if (difference > 0){
-                Cursor c = db.query(TABLE_NAME, null, null, null, null, null, null, Long.toString(difference));
-                if (c.moveToFirst()) {
-                    do {
-                        Recent r = new Recent(c);
-                        SettingsManager.deleteRecent(context, r);
-                    }while(c.moveToNext());
+            Recent old = get(context, path);
+            if (old != null){
+
+                whereArgs = new String[]{Long.toString(old.getUuid())};
+                db.update(TABLE_NAME, cv, where, whereArgs);
+
+            }else {
+
+                db.insert(TABLE_NAME, null, cv);
+
+                long difference = count(context, pageNumber >= 0) - SettingsManager.getMaxRecent(context);
+                if (difference > 0) {
+                    Cursor c = db.query(TABLE_NAME, null, null, null, null, null, null, Long.toString(difference));
+                    if (c.moveToFirst()) {
+                        do {
+                            Recent r = new Recent(c);
+                            SettingsManager.deleteRecent(context, r);
+                        } while (c.moveToNext());
+                    }
+                    c.close();
                 }
-                c.close();
+
             }
 
         }
