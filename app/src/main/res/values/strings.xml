@@ -70,7 +70,6 @@
     <string name="pref_only_delete_finished_summary">Only delete items purged from the recent list if you were already on the last page of that chapter</string>
     <string name="str_unsupported_file_type_or_unreadable_directory">Unsupported file type or unreadable directory</string>
     <string name="st_last_directory">lastDirectory</string>
-    <string name="st_recent">recent</string>
     <string name="st_hideactionbar">hideActionBar</string>
     <string name="st_hideactionbar_default">true</string>
     <string name="setting_hideactionbar_title">Action Bar</string>

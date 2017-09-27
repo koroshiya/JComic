@@ -216,23 +216,15 @@ public class Recent {
     }
 
     @NonNull
-    public static ArrayList<Recent> get(Context context, boolean isRecent){
+    public static ArrayList<Recent> get(Context context){
 
         SettingsDb sdb = new SettingsDb(context);
         SQLiteDatabase db = sdb.getReadableDatabase();
 
-        String where;
-
-        if (isRecent){
-            where = JSON_ARG_PAGE + " >= 0";
-        }else{
-            where = JSON_ARG_PAGE + " < 0";
-        }
-
         ArrayList<Recent> r = new ArrayList<>();
         Cursor c = null;
         try {
-            c = db.query(TABLE_NAME, null, where, null, null, null, null);
+            c = db.query(TABLE_NAME, null, null, null, null, null, null);
             if (c.moveToFirst()){
                 do {
                     r.add(new Recent(c));
