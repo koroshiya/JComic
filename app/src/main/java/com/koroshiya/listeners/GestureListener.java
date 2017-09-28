@@ -22,6 +22,7 @@ public class GestureListener extends GestureDetector.SimpleOnGestureListener imp
     private float currentx = 0, currenty = 0;
     private int pageStartx;
     private boolean lastDown = true;
+    private boolean allowSwipe = true;
 
     public GestureListener(JScrollView jsv, ReadFragment readFragment){
         this.jsv = jsv;
@@ -87,7 +88,7 @@ public class GestureListener extends GestureDetector.SimpleOnGestureListener imp
         JImageView jiv = jsv.getJImageView();
         if (pageStartx == jsv.getRight() || pageStartx == jiv.getWidth() - jsv.getRight() || jsv.getRight() >= jiv.getWidth()) {
             Log.i("GL", "Right");
-            if ((Math.abs(startx - x2) > Math.abs(starty - y2))) {
+            if (allowSwipe && (Math.abs(startx - x2) > Math.abs(starty - y2))) {
                 Log.i("GL", "Moving");
                 if (startx > x2) {
                     readFragment.next(v);
@@ -97,7 +98,7 @@ public class GestureListener extends GestureDetector.SimpleOnGestureListener imp
             }
         } else if (pageStartx == jsv.getLeft()) {
             Log.i("GL", "Left");
-            if ((Math.abs(startx - x2) > Math.abs(starty - y2)) && startx < x2) {
+            if (allowSwipe && (Math.abs(startx - x2) > Math.abs(starty - y2)) && startx < x2) {
                 readFragment.previous(v);
             }
         } else {
@@ -111,5 +112,7 @@ public class GestureListener extends GestureDetector.SimpleOnGestureListener imp
         }
 
     }
+
+    public void setAllowSwipe(boolean allow){ this.allowSwipe = allow; }
 
 }

@@ -13,7 +13,6 @@ import com.koroshiya.R;
  * */
 public class JScrollView extends TwoDScrollView {
 
-
     public JScrollView(Context context) {
         super(context);
     }
@@ -29,10 +28,6 @@ public class JScrollView extends TwoDScrollView {
     public JImageView getJImageView(){
         return (JImageView) findViewById(R.id.read_fragment_jimageview);
     }
-
-
-
-
 
 	/**
 	 * @param drawable

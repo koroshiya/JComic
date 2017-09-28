@@ -184,6 +184,7 @@ public class ReadCache {
                 setImage(cacheForward, CACHE_DIRECT, null);
                 cacheNext(c);
             } else {
+                fragment.setAllowSwipe(false);
                 parseInitial(c, v); //Parse current page and cache next page
             }
 
@@ -229,6 +230,7 @@ public class ReadCache {
                 setImage(cacheBackward, CACHE_DIRECT, null);
             } else {
                 Log.i("ReadCache", "bcache is null");
+                fragment.setAllowSwipe(false);
                 parseImage(c, CACHE_DIRECT, currentPage, v); //Parse only current page
             }
             cacheBackward = new SoftReference<>(null);

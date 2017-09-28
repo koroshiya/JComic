@@ -32,6 +32,7 @@ public class ReadFragment extends Fragment {
 
     private JScrollView jsv;
     private ReadCache cache;
+    private GestureListener gestureListener;
 
     public static ReadFragment newInstance(String file, int page, Context c) {
         ReadFragment fragment = new ReadFragment();
@@ -91,9 +92,7 @@ public class ReadFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_read, container, false);
         jsv = v.findViewById(R.id.read_fragment_jscrollview);
-
-        GestureListener gestureListener = new GestureListener(jsv, this);
-
+        gestureListener = new GestureListener(jsv, this);
         jsv.setOnTouchListener(gestureListener);
 
         readBundleArgs(savedInstanceState);
@@ -178,6 +177,11 @@ public class ReadFragment extends Fragment {
     public void setImage(JBitmapDrawable drawable){
         jsv.setImageDrawable(drawable);
         jsv.invalidate();
+        setAllowSwipe(true);
+    }
+
+    public void setAllowSwipe(boolean allow){
+        gestureListener.setAllowSwipe(allow);
     }
 
     public JBitmapDrawable getImage(){
