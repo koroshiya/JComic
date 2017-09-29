@@ -280,16 +280,23 @@ public class ImageParser {
 
         int imgHeight = bmp.getHeight();
         int imgWidth  = bmp.getWidth();
-        float threshold = .05f; //Don't trim if at least 5% of the pixels on a side are non-white
+        float threshold = .05f; //Stop trimming at a maximum of 5% of the pixels on a given side.
+
+        Log.i("ImageParser", Long.toString(System.currentTimeMillis()));
 
         //left
         int startWidth = 0;
+        int count;
+        int target;
+        target = (int) Math.floor(imgHeight * threshold);
+        int[] pixels;
         for(int x = 0; x < imgWidth; x++) {
-            int count = 0;
-            int target = (int) Math.floor(imgHeight * threshold);
-            for (int y = 0; y < imgHeight; y++) {
-                if (bmp.getPixel(x, y) != Color.WHITE) {
-                    if (++count >= target){
+            count = 0;
+            pixels = new int[imgHeight];
+            bmp.getPixels(pixels, 0, 1, x, 0, 1, imgHeight);
+            for (int px : pixels){
+                if (px != Color.WHITE) {
+                    if (++count >= target || px == Color.BLACK){
                         startWidth = x;
                         break;
                     }
@@ -300,12 +307,14 @@ public class ImageParser {
 
         //right
         int endWidth  = 0;
+        target = (int) Math.floor(imgHeight * threshold);
         for(int x = imgWidth - 1; x >= 0; x--) {
-            int count = 0;
-            int target = (int) Math.floor(imgHeight * threshold);
-            for (int y = 0; y < imgHeight; y++) {
-                if (bmp.getPixel(x, y) != Color.WHITE) {
-                    if (++count >= target) {
+            count = 0;
+            pixels = new int[imgHeight];
+            bmp.getPixels(pixels, 0, 1, x, 0, 1, imgHeight);
+            for (int px : pixels) {
+                if (px != Color.WHITE) {
+                    if (++count >= target || px == Color.BLACK) {
                         endWidth = x + 1; //because we start at -1
                         break;
                     }
@@ -316,12 +325,14 @@ public class ImageParser {
 
         //top
         int startHeight = 0;
+        target = (int) Math.floor(imgWidth * threshold);
         for(int y = 0; y < imgHeight; y++) {
-            int count = 0;
-            int target = (int) Math.floor(imgWidth * threshold);
-            for (int x = 0; x < imgWidth; x++) {
-                if (bmp.getPixel(x, y) != Color.WHITE) {
-                    if (++count >= target) {
+            count = 0;
+            pixels = new int[imgWidth];
+            bmp.getPixels(pixels, 0, imgWidth, 0, y, imgWidth, 1);
+            for (int px : pixels) {
+                if (px != Color.WHITE) {
+                    if (++count >= target || px == Color.BLACK) {
                         startHeight = y;
                         break;
                     }
@@ -332,12 +343,14 @@ public class ImageParser {
 
         //bottom
         int endHeight = 0;
+        target = (int) Math.floor(imgWidth * threshold);
         for(int y = imgHeight - 1; y >= 0; y--) {
-            int count = 0;
-            int target = (int) Math.floor(imgWidth * threshold);
-            for (int x = 0; x < imgWidth; x++) {
-                if (bmp.getPixel(x, y) != Color.WHITE) {
-                    if (++count >= target) {
+            count = 0;
+            pixels = new int[imgWidth];
+            bmp.getPixels(pixels, 0, imgWidth, 0, y, imgWidth, 1);
+            for (int px : pixels) {
+                if (px != Color.WHITE) {
+                    if (++count >= target || px == Color.BLACK) {
                         endHeight = y + 1; //because we start at -1
                         break;
                     }
@@ -345,6 +358,8 @@ public class ImageParser {
             }
             if (endHeight != 0) break;
         }
+
+        Log.i("ImageParser", Long.toString(System.currentTimeMillis()));
 
         if (startWidth != 0 || startHeight != 0 || endWidth != imgWidth || endHeight != imgHeight) {
             if (endWidth - startWidth == 0 || endHeight - startHeight == 0){
