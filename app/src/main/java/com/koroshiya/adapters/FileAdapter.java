@@ -23,7 +23,7 @@ import com.koroshiya.settings.classes.Recent;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 
 public abstract class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
 
@@ -115,15 +115,20 @@ public abstract class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewH
                 i = Recent.getPageNumber(c, f.getAbsolutePath(), 0);
             }else{
                 Log.d("ItemClickListener", "Processing item after " + f.getName());
-                File[] files = f.getParentFile().listFiles();
-                Arrays.sort(files);
+                ArrayList<File> tempList = new ArrayList<>();
+                for (File s : f.getParentFile().listFiles()){
+                    if ((s.isDirectory() || ImageParser.isSupportedFile(s)) && !s.isHidden()){tempList.add(s);}
+                }
+                Collections.sort(tempList);
                 Log.d("ItemClickListener", "List of files: ");
-                for (File file : files) {
-                    if (ImageParser.isSupportedImage(file)) {
-                        Log.d("ItemClickListener", file.getName());
-                        if (file.getName().equals(f.getName())) {
-                            break;
-                        }
+                for (File file : tempList) {
+                    Log.d("ItemClickListener", "Comparing "+file.getAbsolutePath()+" to "+f.getAbsolutePath());
+                    if (file.getAbsolutePath().equals(f.getAbsolutePath())) {
+                        break;
+                    }
+                    if (file.isFile()) {
+                        //Don't increment for directories.
+                        //The cache won't track them, so if we increment here, we'll get an incorrect index.
                         i++;
                     }
                 }

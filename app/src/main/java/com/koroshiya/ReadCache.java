@@ -1,7 +1,9 @@
 package com.koroshiya;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.View;
@@ -56,10 +58,8 @@ public class ReadCache {
         }else{
             archive = null;
             if (f.isFile()) f = f.getParentFile();
-            for (File file : f.listFiles()){
-                if (ImageParser.isSupportedImage(file)){
-                    totalPages++;
-                }
+            for (File file : f.listFiles(ImageParser.fnf)){
+                if (ImageParser.isSupportedFile(file) && !file.isHidden()){ totalPages++; }
             }
         }
 
@@ -106,12 +106,13 @@ public class ReadCache {
                 setThumb(image);
                 fragment.hideProgress();
 
-                if (cacheForward.get() == null || cacheBackward.get() == null){
-                    cacheNext(fragment.getActivity());
+                Activity c = fragment.getActivity();
+                if (c != null && (cacheForward.get() == null || cacheBackward.get() == null)){
+                    cacheNext(c);
                 }
-                if (parsingInitial){
+                if (parsingInitial && c != null){
                     if (msg != null){
-                        View v = fragment.getActivity().findViewById(R.id.drawer_layout);
+                        View v = c.findViewById(R.id.drawer_layout);
                         if (v != null){
                             Snackbar.make(v, msg, Snackbar.LENGTH_SHORT).show();
                         }
@@ -139,6 +140,7 @@ public class ReadCache {
             } else {
                 c = fragment.getActivity();
             }
+            if (c == null) return;
 
             if (recent == null) {
                 recent = Recent.get(c, f.getAbsolutePath());
@@ -264,7 +266,7 @@ public class ReadCache {
 
     }
 
-    private void cacheNext(Context c){
+    private void cacheNext(@NonNull Context c){
 
         cacheForward = new SoftReference<>(null);
 

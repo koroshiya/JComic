@@ -12,6 +12,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.lang.ref.SoftReference;
+import java.util.ArrayList;
+import java.util.Collections;
 
 public class DecodeBitmapFileAsync extends DecodeAsync {
 
@@ -25,10 +27,14 @@ public class DecodeBitmapFileAsync extends DecodeAsync {
         JBitmapDrawable temp = null;
         readData(params);
 
-        File[] files = f.listFiles(ImageParser.fnf);
+        ArrayList<File> tempList = new ArrayList<>();
+        for (File s : f.listFiles()){
+            if (ImageParser.isSupportedFile(s) && !s.isHidden()){tempList.add(s);}
+        }
+        Collections.sort(tempList);
 
-        if (files.length > page || page < 0) {
-            f = files[page];
+        if (tempList.size() > page || page < 0) {
+            f = tempList.get(page);
             try {
                 Point pt;
                 FileInputStream is;
