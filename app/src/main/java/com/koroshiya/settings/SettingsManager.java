@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Environment;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -57,11 +58,11 @@ public abstract class SettingsManager {
 
     }
 
-    private static SharedPreferences getPreferences(Context c){
+    private static SharedPreferences getPreferences(@NonNull Context c){
         return PreferenceManager.getDefaultSharedPreferences(c);
     }
 
-	public static void setBacklightAlwaysOn(Activity act, boolean alwaysOn){
+	public static void setBacklightAlwaysOn(@NonNull Activity act, boolean alwaysOn){
         alwaysOn = alwaysOn && getPreferences(act).getBoolean(act.getString(R.string.st_backlight),Boolean.parseBoolean(act.getString(R.string.st_backlight_default)));
 		try{
 			int flag = android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
@@ -145,7 +146,7 @@ public abstract class SettingsManager {
         }
     }
 
-    public static boolean isCacheOnStart(Context c){
+    public static boolean isCacheOnStart(@NonNull Context c){
         return getPreferences(c).getBoolean(c.getString(R.string.pref_cache_on_start), Boolean.parseBoolean(c.getString(R.string.pref_cache_on_start_default)));
     }
 

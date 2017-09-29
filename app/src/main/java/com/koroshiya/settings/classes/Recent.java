@@ -52,7 +52,7 @@ public class Recent {
 
     public long getUuid(){return this.uuid;}
 
-    private void insertOrUpdate(Context context) {
+    private void insertOrUpdate(@NonNull Context context) {
 
         SettingsDb sdb = new SettingsDb(context);
         SQLiteDatabase db = sdb.getWritableDatabase();
@@ -115,7 +115,7 @@ public class Recent {
     }
 
     @Nullable
-    public static Recent get(Context context, String path){
+    public static Recent get(@NonNull Context context, String path){
 
         SettingsDb sdb = new SettingsDb(context);
         SQLiteDatabase db = sdb.getReadableDatabase();
@@ -314,7 +314,7 @@ public class Recent {
 
     }
 
-    public void setPageNumber(Context context, int pageNumber) {
+    public void setPageNumber(@NonNull Context context, int pageNumber) {
         this.pageNumber = pageNumber;
         this.insertOrUpdate(context);
     }

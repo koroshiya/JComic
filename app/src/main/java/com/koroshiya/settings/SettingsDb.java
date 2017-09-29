@@ -3,6 +3,7 @@ package com.koroshiya.settings;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.koroshiya.settings.classes.Recent;
@@ -18,7 +19,7 @@ public class SettingsDb extends SQLiteOpenHelper {
             Recent.SQL, Setting.SQL
     };
 
-    public SettingsDb(Context context) {
+    public SettingsDb(@NonNull Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
 
         File cFile = new File(context.getCacheDir(), "cache.json");

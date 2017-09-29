@@ -139,8 +139,10 @@ public class ReadFragment extends Fragment {
 
     private void applySettings(boolean enabled){
         Activity act = getActivity();
-        SettingsManager.setBacklightAlwaysOn(act, enabled);
-        SettingsManager.setImmersiveMode(act, enabled);
+        if (act != null) {
+            SettingsManager.setBacklightAlwaysOn(act, enabled);
+            SettingsManager.setImmersiveMode(act, enabled);
+        }
     }
 
     @Override
