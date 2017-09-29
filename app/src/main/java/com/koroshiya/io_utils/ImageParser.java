@@ -315,7 +315,7 @@ public class ImageParser {
             for (int px : pixels) {
                 if (px != Color.WHITE) {
                     if (++count >= target || px == Color.BLACK) {
-                        endWidth = x + 1; //because we start at -1
+                        endWidth = x;
                         break;
                     }
                 }
@@ -351,7 +351,7 @@ public class ImageParser {
             for (int px : pixels) {
                 if (px != Color.WHITE) {
                     if (++count >= target || px == Color.BLACK) {
-                        endHeight = y + 1; //because we start at -1
+                        endHeight = y;
                         break;
                     }
                 }
